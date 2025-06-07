@@ -8,31 +8,29 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/images/app-icon-all.png",
+    "icon": "./assets/images/third-party/airbnb-logo.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "newArchEnabled": false,
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
-      "icon": "./assets/images/app-icon-android-legacy.png",
+      "icon": "./assets/images/third-party/airbnb-logo.png",
       "package": "com.travelchecklist",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
-        "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
+        "foregroundImage": "./assets/images/third-party/airbnb-logo.png",
+        "backgroundImage": "./assets/images/third-party/airbnb-logo.png"
       },
       "allowBackup": false
     },
     "ios": {
-      "icon": "./assets/images/app-icon-ios.png",
+      "icon": "./assets/images/third-party/airbnb-logo.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.travelchecklist"
     },
     "web": {
-      "favicon": "./assets/images/app-icon-web-favicon.png",
+      "favicon": "./assets/images/third-party/airbnb-logo.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -41,7 +39,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/app-icon-android-adaptive-foreground.png",
+          "image": "./assets/images/third-party/airbnb-logo.png",
           "imageWidth": 300,
           "resizeMode": "contain",
           "backgroundColor": "#191015"
@@ -50,6 +48,11 @@
     ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6de59b35-7330-4742-b4e8-d16368a29fdd"
+      }
     }
   },
   "ignite": {

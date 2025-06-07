@@ -14,42 +14,72 @@ if (__DEV__) {
   // Load Reactotron in development only.
   // Note that you must be using metro's `inlineRequires` for this to work.
   // If you turn it off in metro.config.js, you'll have to manually import it.
-  require("./devtools/ReactotronConfig.ts")
+  require('./devtools/ReactotronConfig.ts')
 }
-import "./utils/gestureHandler"
-import { initI18n } from "./i18n"
-import { useFonts } from "expo-font"
-import { useEffect, useState } from "react"
-import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import * as Linking from "expo-linking"
-import * as SplashScreen from "expo-splash-screen"
-import { useInitialRootStore } from "./models"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
-import * as storage from "./utils/storage"
-import { customFontsToLoad } from "./theme"
-import { KeyboardProvider } from "react-native-keyboard-controller"
-import { loadDateFnsLocale } from "./utils/formatDate"
+import './utils/gestureHandler'
+import {initI18n} from './i18n'
+import {useFonts} from 'expo-font'
+import {useEffect, useState} from 'react'
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context'
+import * as Linking from 'expo-linking'
+import * as SplashScreen from 'expo-splash-screen'
+import {useInitialRootStore} from './models'
+import {AppNavigator, useNavigationPersistence} from './navigators'
+import * as storage from './utils/storage'
+import {customFontsToLoad} from './theme'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
+import {loadDateFnsLocale} from './utils/formatDate'
+import {I18nProvider} from '@lingui/react'
+import {i18n} from '@lingui/core'
 
-export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+export const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 
 // Web linking configuration
-const prefix = Linking.createURL("/")
+const prefix = Linking.createURL('/')
 const config = {
   screens: {
-    Login: {
-      path: "",
-    },
-    Welcome: "welcome",
-    Demo: {
-      screens: {
-        DemoShowroom: {
-          path: "showroom/:queryIndex?/:itemIndex?",
-        },
-        DemoDebug: "debug",
-        DemoPodcastList: "podcast",
-        DemoCommunity: "community",
-      },
-    },
+    // Login: {
+    //   path: '',
+    // },
+    // Welcome: 'welcome',
+    // Demo: {
+    //   screens: {
+    //     DemoShowroom: {
+    //       path: 'showroom/:queryIndex?/:itemIndex?',
+    //     },
+    //     DemoDebug: 'debug',
+    //     DemoPodcastList: 'podcast',
+    //     DemoCommunity: 'community',
+    //   },
+    // },
+    /*  */
+    Welcome: 'welcome',
+    DestinationSetting: 'new/:checklistId/destination',
+    DestinationSearch: 'new/:checklistId/destination/search',
+    ScheduleSetting: 'new/:checklistId/schedule',
+    TitleSetting: 'new/:checklistId/title',
+    ChecklistSetting: 'new/:checklistId/checklist',
+    /*  */
+    Checklist: 'checklist/:checklistId?',
+    ChecklistMeta: 'checklist/:checklistId?/meta',
+    ChecklistAdd: 'checklist/:checklistId?/add',
+    ChecklistDelete: 'checklist/:checklistId?/delete',
+    ChecklistReorder: 'checklist/:checklistId?/reorder',
+    /*  */
+    ChecklistItemCreate: 'checklist/:checklistId?/:checklistItemId?/create',
+    ChecklistItemTitle: 'checklist/:checklistId?/:checklistItemId?/title',
+    ChecklistItemNote: 'checklist/:checklistId?/:checklistItemId?/note',
+    /*  */
+    ConfirmPassport: 'confirm/passport/id',
+    ConfirmFlight: 'confirm/flight/id',
+    /*  */
+    AccomodationPlan: 'checklist/:checklistId?/accomodationPlan',
+    Accomodation: 'checklist/:checklistId?/accomodation/:accomodationId?',
+    AccomodationNote:
+      'checklist/:checklistId?/accomodation/:accomodationId?/note',
   },
 }
 
@@ -74,7 +104,7 @@ export function App() {
       .then(() => loadDateFnsLocale())
   }, [])
 
-  const { rehydrated } = useInitialRootStore(() => {
+  const {rehydrated} = useInitialRootStore(() => {
     // This runs after the root store has been initialized and rehydrated.
 
     // If your initialization scripts run very fast, it's good to show the splash screen for just a bit longer to prevent flicker.
@@ -102,15 +132,19 @@ export function App() {
     config,
   }
 
+  // https://lingui.dev/tutorials/react-native#internationalization-in-react-native
+  i18n.loadAndActivate({locale: 'ko', messages: {}})
   // otherwise, we're ready to render the app
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <KeyboardProvider>
-        <AppNavigator
-          linking={linking}
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
+        <I18nProvider i18n={i18n}>
+          <AppNavigator
+            linking={linking}
+            initialState={initialNavigationState}
+            onStateChange={onNavigationStateChange}
+          />
+        </I18nProvider>
       </KeyboardProvider>
     </SafeAreaProvider>
   )

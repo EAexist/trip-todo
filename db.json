@@ -1,0 +1,521 @@
+{
+  "checklist": [
+    {
+      "title": "Vaundy 보러 가는 도쿠시마 여행 재미있겠다",
+      "destinations": [
+        {
+          "id": "1",
+          "nation": "jp",
+          "title": "도쿠시마",
+          "state": "시코쿠"
+        }
+      ],
+      "startDateISOString": "2025-02-20T00:00:00.001Z",
+      "endDateISOString": "2025-02-25T00:00:00.001Z",
+      "checklistItem": {
+        "1": {
+          "id": "1",
+          "type": "accomodation",
+          "category": "reservation",
+          "title": "숙소 예약",
+          "iconId": "🛌",
+          "note": ""
+        },
+        "2": {
+          "id": "2",
+          "type": "passport",
+          "category": "foreign",
+          "title": "여권",
+          "iconId": "여권",
+          "note": "미리미리 할 것"
+        },
+        "3": {
+          "id": "3",
+          "type": "currency",
+          "category": "foreign",
+          "title": "환전",
+          "iconId": "💱",
+          "note": "미리미리 할 것"
+        },
+        "4": {
+          "id": "4",
+          "type": "roaming",
+          "category": "foreign",
+          "title": "로밍",
+          "iconId": "📶",
+          "note": "미리미리 할 것"
+        },
+        "5": {
+          "id": "5",
+          "type": "visit-japan",
+          "category": "foreign",
+          "title": "Visit Japan",
+          "iconId": "📝",
+          "note": "미리미리 할 것"
+        },
+        "7": {
+          "id": "7",
+          "type": "military-approvement",
+          "category": "foreign",
+          "title": "국외여행허가",
+          "iconId": "🛌",
+          "note": ""
+        },
+        "8": {
+          "id": "8",
+          "type": "goods",
+          "category": "goods",
+          "title": "세면도구",
+          "iconId": "🧴",
+          "note": ""
+        },
+        "9": {
+          "id": "9",
+          "type": "goods",
+          "category": "goods",
+          "title": "어댑터",
+          "iconId": "🔌",
+          "note": ""
+        },
+        "10": {
+          "id": "10",
+          "type": "goods",
+          "category": "goods",
+          "title": "선글라스",
+          "iconId": "🕶",
+          "note": ""
+        },
+        "11": {
+          "id": "11",
+          "type": "goods",
+          "category": "goods",
+          "title": "캐리어",
+          "iconId": "🧳",
+          "note": ""
+        },
+        "12": {
+          "id": "12",
+          "type": "goods",
+          "category": "goods",
+          "title": "우산",
+          "iconId": "☂️",
+          "note": ""
+        }
+      },
+      "checklistItemIds": [],
+      "preset": [
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "1"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "2"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "3"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "4"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "5"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "7"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "8"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "9"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "10"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "11"
+        },
+        {
+          "isFlaggedToAdd": true,
+          "checklistItem_id": "12"
+        }
+      ],
+      "id": 3,
+      "accomodation": [
+        {
+          "id": "1",
+          "title": "Hostel PAQ Tokushima",
+          "roomTitle": "혼성 도미토리 내 베드",
+          "numberofClient": 2,
+          "clientName": "PYO HYEON",
+          "checkinDate": "2025-07-01T00:00:00.001Z",
+          "checkoutDate": "2025-07-03T00:00:00.001Z",
+          "checkinStartTime": "2025-07-01T15:00.000Z",
+          "checkinEndTime": "2025-07-01T21:00.000Z",
+          "checkoutTime": "2025-07-01T10:00.000Z",
+          "links": ["googlemap", "airbnb"]
+        }
+      ]
+    }
+  ],
+  "destination": [
+    {
+      "id": 1,
+      "name": "도쿠시마",
+      "nation": "jp"
+    }
+  ],
+  "checkListSection": [
+    {
+      "id": 1,
+      "title": "예약 · 티켓",
+      "items": [1, 2, 3]
+    },
+    {
+      "id": 2,
+      "title": "해외여행",
+      "items": [1, 2, 3]
+    },
+    {
+      "id": 3,
+      "title": "짐",
+      "items": [1, 2, 3]
+    }
+  ],
+  "checklistItem": [
+    {
+      "type": "",
+      "category": "foreign",
+      "title": "",
+      "iconId": "",
+      "note": "",
+      "isFlaggedToDelete": false,
+      "checklistId": "17",
+      "id": 1
+    },
+    {
+      "type": "",
+      "category": "foreign",
+      "title": "",
+      "iconId": "",
+      "note": "",
+      "isFlaggedToDelete": false,
+      "checklistId": "17",
+      "id": 2
+    },
+    {
+      "type": "",
+      "category": "foreign",
+      "title": "",
+      "iconId": "",
+      "note": "",
+      "isFlaggedToDelete": false,
+      "checklistId": "17",
+      "id": 3
+    }
+  ],
+  "checklistItemType": [
+    {
+      "id": 1,
+      "preset": true,
+      "title": "항공권 예약",
+      "iconId": "✈️"
+    },
+    {
+      "id": 2,
+      "preset": true,
+      "title": "숙소 예약",
+      "iconId": "🛌"
+    },
+    {
+      "id": 3,
+      "preset": true,
+      "title": "환전",
+      "iconId": "💱"
+    },
+    {
+      "id": 4,
+      "preset": true,
+      "title": "로밍",
+      "iconId": "📶"
+    },
+    {
+      "id": 5,
+      "preset": true,
+      "title": "Visit Japan",
+      "iconId": "Visit Japan"
+    },
+    {
+      "id": 6,
+      "preset": true,
+      "title": "여권",
+      "iconId": "여권"
+    }
+  ],
+  "flight": [
+    {
+      "id": 1,
+      "from": "ICN",
+      "to": "TKS",
+      "depart": true
+    },
+    {
+      "id": 1,
+      "from": "TKS",
+      "to": "ICN",
+      "depart": false
+    }
+  ],
+  "preset": {
+    "presetIds": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14"
+    ],
+    "preset": [
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "reservation",
+          "id": "1",
+          "title": "숙소 예약",
+          "iconId": "🛌",
+          "type": "flight"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "foreign",
+          "id": "2",
+          "title": "여권",
+          "iconId": "여권",
+          "note": "미리미리 할 것",
+          "type": "passport"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "foreign",
+          "id": "3",
+          "title": "환전",
+          "iconId": "💱",
+          "note": "미리미리 할 것",
+          "type": "currency"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "foreign",
+          "id": "4",
+          "title": "로밍",
+          "iconId": "📶",
+          "note": "미리미리 할 것",
+          "type": "roaming"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "foreign",
+          "id": "5",
+          "title": "Visit Japan",
+          "iconId": "📝",
+          "note": "미리미리 할 것",
+          "type": "visit-japan"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "foreign",
+          "id": "7",
+          "title": "국외여행허가",
+          "iconId": "🛌",
+          "type": "military-approvement"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "goods",
+          "id": "8",
+          "title": "세면도구",
+          "iconId": "🧴",
+          "type": "goods"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "goods",
+          "id": "9",
+          "title": "어댑터",
+          "iconId": "🔌",
+          "type": "goods"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "goods",
+          "id": "10",
+          "title": "선글라스",
+          "iconId": "🕶",
+          "type": "goods"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "goods",
+          "id": "11",
+          "title": "캐리어",
+          "iconId": "🧳",
+          "type": "goods"
+        }
+      },
+      {
+        "isFlaggedToAdd": true,
+        "item": {
+          "category": "goods",
+          "id": "12",
+          "title": "우산",
+          "iconId": "☂️",
+          "type": "goods"
+        }
+      }
+    ]
+  },
+  "accomodationPlan": [
+    {
+      "id": 1,
+      "from": "ICN",
+      "to": "TKS",
+      "depart": true
+    }
+  ],
+  "accomodation": [
+    {
+      "id": "1",
+      "checklist_id": "4",
+      "title": "Hostel PAQ Tokushima",
+      "roomTitle": "혼성 도미토리 내 베드",
+      "numberofClient": 2,
+      "clientName": "PYO HYEON",
+      "checkinDate": "2025-02-20T00:00:00.001Z",
+      "checkoutDate": "2025-02-22T00:00:00.001Z",
+      "checkinStartTime": "2025-07-01T18:00:00",
+      "checkinEndTime": "2025-07-01T21:00:00",
+      "checkoutTime": "2025-07-01T10:00:00",
+      "region": "도쿠시마",
+      "type": "dorm",
+      "links": [
+        {
+          "provider": "googleMap",
+          "url": "https://maps.app.goo.gl/81rvb62d2LKrYPNV7"
+        },
+        {
+          "provider": "airbnb",
+          "url": "https://www.airbnb.co.kr/hotels/35388028?guests=1&adults=1&s=67&unique_share_id=be1c9ac3-c029-4927-a05e-efe2166f1903"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "checklist_id": "4",
+      "title": "Tokushima Washington Hotel Plaza",
+      "roomTitle": "1 X 스몰 더블베드",
+      "numberofClient": 2,
+      "clientName": "PYO HYEON",
+      "checkinDate": "2025-02-22T00:00:00.001Z",
+      "checkoutDate": "2025-02-23T00:00:00.001Z",
+      "checkinStartTime": "2025-07-01T14:00:00",
+      "checkinEndTime": "2025-07-01T22:00:00",
+      "checkoutTime": "2025-07-01T10:00:00",
+      "region": "도쿠시마",
+      "type": "hotel",
+      "links": [
+        {
+          "provider": "googleMap",
+          "url": "https://maps.app.goo.gl/81rvb62d2LKrYPNV7"
+        },
+        {
+          "provider": "airbnb",
+          "url": "https://www.airbnb.co.kr/hotels/35388028?guests=1&adults=1&s=67&unique_share_id=be1c9ac3-c029-4927-a05e-efe2166f1903"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "checklist_id": "4",
+      "title": "Yoshiko 님의 숙소",
+      "roomTitle": "",
+      "numberofClient": 2,
+      "clientName": "PYO HYEON",
+      "checkinDate": "2025-02-23T00:00:00.001Z",
+      "checkoutDate": "2025-02-24T00:00:00.001Z",
+      "checkinStartTime": "2025-07-01T17:00:00",
+      "checkinEndTime": "2025-07-01T21:00:00",
+      "checkoutTime": "2025-07-01T10:00:00",
+      "region": "나루토",
+      "type": "airbnb",
+      "links": [
+        {
+          "provider": "googleMap",
+          "url": "https://maps.app.goo.gl/yGivrbvsiyPBDVyR8"
+        },
+        {
+          "provider": "airbnb",
+          "url": "https://www.airbnb.co.kr/rooms/12317142?viralityEntryPoint=1&s=76"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "checklist_id": "4",
+      "title": "Hostel PAQ Tokushima",
+      "roomTitle": "혼성 도미토리 내 베드",
+      "numberofClient": 2,
+      "clientName": "PYO HYEON",
+      "checkinDate": "2025-02-24T00:00:00.001Z",
+      "checkoutDate": "2025-02-25T00:00:00.001Z",
+      "checkinStartTime": "2025-07-01T18:00:00",
+      "checkinEndTime": "2025-07-01T21:00:00",
+      "checkoutTime": "2025-07-01T10:00:00",
+      "region": "도쿠시마",
+      "type": "dorm",
+      "links": [
+        {
+          "provider": "googleMap",
+          "url": "https://maps.app.goo.gl/81rvb62d2LKrYPNV7"
+        },
+        {
+          "provider": "airbnb",
+          "url": "https://www.airbnb.co.kr/hotels/35388028?guests=1&adults=1&s=67&unique_share_id=be1c9ac3-c029-4927-a05e-efe2166f1903"
+        }
+      ]
+    }
+  ]
+}

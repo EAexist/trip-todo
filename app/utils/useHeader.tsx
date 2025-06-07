@@ -1,7 +1,15 @@
-import { useEffect, useLayoutEffect } from "react"
-import { useNavigation } from "@react-navigation/native"
-import { Header, HeaderProps } from "../components"
-import { Platform } from "react-native"
+import {useEffect, useLayoutEffect} from 'react'
+import {useNavigation} from '@react-navigation/native'
+import {Platform} from 'react-native'
+import {Header} from '@rneui/themed'
+import {BackButton, RightActionButton} from '@/components/Header'
+
+interface HeaderProps {
+  headerShown?: boolean
+  hideBackButton?: boolean
+  rightActionTitle?: string
+  onRightPress?: () => void
+}
 
 /**
  * A hook that can be used to easily set the Header of a react-navigation screen from within the screen's component.
@@ -10,7 +18,12 @@ import { Platform } from "react-native"
  * @param {any[]} deps - The dependencies to watch for changes to update the header.
  */
 export function useHeader(
-  headerProps: HeaderProps,
+  {
+    headerShown = true,
+    hideBackButton = false,
+    rightActionTitle,
+    onRightPress,
+  }: HeaderProps,
   deps: Parameters<typeof useLayoutEffect>[1] = [],
 ) {
   const navigation = useNavigation()
@@ -21,14 +34,24 @@ export function useHeader(
    * In mobile and also to avoid a visible header jump when navigating between screens, we use
    * `useLayoutEffect`, which will apply the settings before the screen renders.
    */
-  const usePlatformEffect = Platform.OS === "web" ? useEffect : useLayoutEffect
+  const usePlatformEffect = Platform.OS === 'web' ? useEffect : useLayoutEffect
 
   // To avoid a visible header jump when navigating between screens, we use
   // `useLayoutEffect`, which will apply the settings before the screen renders.
   usePlatformEffect(() => {
     navigation.setOptions({
-      headerShown: true,
-      header: () => <Header {...headerProps} />,
+      headerShown,
+      header: () => (
+        <Header
+          leftComponent={hideBackButton ? undefined : <BackButton />}
+          rightComponent={
+            <RightActionButton
+              onPress={onRightPress}
+              title={rightActionTitle}
+            />
+          }
+        />
+      ),
     })
     // intentionally created API to have user set when they want to update the header via `deps`
     // eslint-disable-next-line react-hooks/exhaustive-deps

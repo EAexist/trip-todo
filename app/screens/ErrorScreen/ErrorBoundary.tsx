@@ -1,9 +1,9 @@
-import { Component, ErrorInfo, ReactNode } from "react"
-import { ErrorDetails } from "./ErrorDetails"
+import {Component, ErrorInfo, ReactNode} from 'react'
+import {ErrorDetails} from './ErrorDetails'
 
 interface Props {
   children: ReactNode
-  catchErrors: "always" | "dev" | "prod" | "never"
+  catchErrors: 'always' | 'dev' | 'prod' | 'never'
 }
 
 interface State {
@@ -22,7 +22,7 @@ interface State {
  * @returns {JSX.Element} The rendered `ErrorBoundary` component.
  */
 export class ErrorBoundary extends Component<Props, State> {
-  state = { error: null, errorInfo: null }
+  state = {error: null, errorInfo: null}
 
   // If an error in a child is encountered, this will run
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -43,20 +43,23 @@ export class ErrorBoundary extends Component<Props, State> {
 
   // Reset the error back to null
   resetError = () => {
-    this.setState({ error: null, errorInfo: null })
+    this.setState({error: null, errorInfo: null})
   }
 
   // To avoid unnecessary re-renders
-  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
+  shouldComponentUpdate(
+    nextProps: Readonly<Props>,
+    nextState: Readonly<State>,
+  ): boolean {
     return nextState.error !== this.state.error
   }
 
   // Only enable if we're catching errors in the right environment
   isEnabled(): boolean {
     return (
-      this.props.catchErrors === "always" ||
-      (this.props.catchErrors === "dev" && __DEV__) ||
-      (this.props.catchErrors === "prod" && !__DEV__)
+      this.props.catchErrors === 'always' ||
+      (this.props.catchErrors === 'dev' && __DEV__) ||
+      (this.props.catchErrors === 'prod' && !__DEV__)
     )
   }
 

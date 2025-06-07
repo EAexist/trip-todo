@@ -4,7 +4,7 @@
 appId: ${MAESTRO_APP_ID}
 ---
 - runFlow:
-    file: "./_OpenAppClearStateAndKeychain.yaml"
+    file: './_OpenAppClearStateAndKeychain.yaml'
 
 # Wait for animation subflow
 - waitForAnimationToEnd
@@ -14,15 +14,15 @@ appId: ${MAESTRO_APP_ID}
     when:
       platform: Android
     commands:
-      - tapOn: ".*8081.*"
+      - tapOn: '.*8081.*'
 - runFlow:
     when:
       platform: iOS
     commands:
-      - tapOn: "http://localhost:8081"
+      - tapOn: 'http://localhost:8081'
 
 - waitForAnimationToEnd
 - extendedWaitUntil:
-    visible: "Continue"
+    visible: 'Continue'
 - swipe:
     direction: DOWN

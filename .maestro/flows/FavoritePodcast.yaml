@@ -2,16 +2,16 @@
 
 appId: ${MAESTRO_APP_ID}
 env:
-  FAVORITES_TEXT: "Switch on to only show favorites"
+  FAVORITES_TEXT: 'Switch on to only show favorites'
 onFlowStart:
   - runFlow: ../shared/_OnFlowStart.yaml
 ---
 - runFlow: ../shared/_Login.yaml
-- tapOn: "Podcast"
-- assertVisible: "React Native Radio episodes"
+- tapOn: 'Podcast'
+- assertVisible: 'React Native Radio episodes'
 - tapOn:
     text: ${FAVORITES_TEXT}
-- assertVisible: "This looks a bit empty"
+- assertVisible: 'This looks a bit empty'
 - tapOn:
     text: ${FAVORITES_TEXT}
     # https://maestro.mobile.dev/troubleshooting/known-issues#android-accidental-double-tap
@@ -21,7 +21,7 @@ onFlowStart:
     commands:
       - scroll
 - copyTextFrom:
-    text: "^RNR.*" # assumes all podcast titles start with RNR
+    text: '^RNR.*' # assumes all podcast titles start with RNR
     index: 1 # grab the second one, the first one might not be fully visible
 - longPressOn: ${maestro.copiedText}
 - scrollUntilVisible:
@@ -34,4 +34,3 @@ onFlowStart:
 - tapOn:
     text: ${FAVORITES_TEXT}
 - assertVisible: ${maestro.copiedText}
-

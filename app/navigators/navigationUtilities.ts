@@ -1,16 +1,17 @@
-import { useState, useEffect, useRef } from "react"
-import { BackHandler, Linking, Platform } from "react-native"
+import {useState, useEffect, useRef, useCallback} from 'react'
+import {BackHandler, Linking, Platform} from 'react-native'
 import {
   NavigationState,
   PartialState,
   createNavigationContainerRef,
-} from "@react-navigation/native"
-import Config from "../config"
-import type { PersistNavigationConfig } from "../config/config.base"
-import { useIsMounted } from "../utils/useIsMounted"
-import type { AppStackParamList, NavigationProps } from "./AppNavigator"
+} from '@react-navigation/native'
+import Config from '../config'
+import type {PersistNavigationConfig} from '../config/config.base'
+import {useIsMounted} from '../utils/useIsMounted'
+import type {AppStackParamList, NavigationProps} from './AppNavigator'
 
-import * as storage from "../utils/storage"
+import * as storage from '../utils/storage'
+import {useStores} from '@/models'
 
 type Storage = typeof storage
 
@@ -31,7 +32,9 @@ export const navigationRef = createNavigationContainerRef<AppStackParamList>()
  * @param {NavigationState | PartialState<NavigationState>} state - The navigation state to traverse.
  * @returns {string} - The name of the current screen.
  */
-export function getActiveRouteName(state: NavigationState | PartialState<NavigationState>): string {
+export function getActiveRouteName(
+  state: NavigationState | PartialState<NavigationState>,
+): string {
   const route = state.routes[state.index ?? 0]
 
   // Found the active route -- return the name
@@ -53,7 +56,7 @@ const iosExit = () => false
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
   // The reason we're using a ref here is because we need to be able
   // to update the canExit function without re-setting up all the listeners
-  const canExitRef = useRef(Platform.OS !== "android" ? iosExit : canExit)
+  const canExitRef = useRef(Platform.OS !== 'android' ? iosExit : canExit)
 
   useEffect(() => {
     canExitRef.current = canExit
@@ -86,10 +89,11 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     }
 
     // Subscribe when we come to life
-    BackHandler.addEventListener("hardwareBackPress", onBackPress)
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
 
     // Unsubscribe when we're done
-    return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress)
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress)
   }, [])
 }
 
@@ -99,10 +103,12 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
  * @param {PersistNavigationConfig} persistNavigation - The config setting for navigation persistence.
  * @returns {boolean} - Whether to restore navigation state by default.
  */
-function navigationRestoredDefaultState(persistNavigation: PersistNavigationConfig) {
-  if (persistNavigation === "always") return false
-  if (persistNavigation === "dev" && __DEV__) return false
-  if (persistNavigation === "prod" && !__DEV__) return false
+function navigationRestoredDefaultState(
+  persistNavigation: PersistNavigationConfig,
+) {
+  if (persistNavigation === 'always') return false
+  if (persistNavigation === 'dev' && __DEV__) return false
+  if (persistNavigation === 'prod' && !__DEV__) return false
 
   // all other cases, disable restoration by returning true
   return true
@@ -114,9 +120,12 @@ function navigationRestoredDefaultState(persistNavigation: PersistNavigationConf
  * @param {string} persistenceKey - The key to use for storing the navigation state.
  * @returns {object} - The navigation state and persistence functions.
  */
-export function useNavigationPersistence(storage: Storage, persistenceKey: string) {
+export function useNavigationPersistence(
+  storage: Storage,
+  persistenceKey: string,
+) {
   const [initialNavigationState, setInitialNavigationState] =
-    useState<NavigationProps["initialState"]>()
+    useState<NavigationProps['initialState']>()
   const isMounted = useIsMounted()
 
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation)
@@ -150,7 +159,9 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
 
       // Only restore the state if app has not started from a deep link
       if (!initialUrl) {
-        const state = (await storage.load(persistenceKey)) as NavigationProps["initialState"] | null
+        const state = (await storage.load(persistenceKey)) as
+          | NavigationProps['initialState']
+          | null
         if (state) setInitialNavigationState(state)
       }
     } finally {
@@ -164,7 +175,12 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { onNavigationStateChange, restoreState, isRestored, initialNavigationState }
+  return {
+    onNavigationStateChange,
+    restoreState,
+    isRestored,
+    initialNavigationState,
+  }
 }
 
 /**
@@ -178,6 +194,33 @@ export function navigate(name: unknown, params?: unknown) {
   if (navigationRef.isReady()) {
     // @ts-expect-error
     navigationRef.navigate(name as never, params as never)
+  }
+}
+
+/**
+ * use this to navigate without the navigation
+ * prop. If you have access to the navigation prop, do not use this.
+ * @see {@link https://reactnavigation.org/docs/navigating-without-navigation-prop/}
+ * @param {unknown} name - The name of the route to navigate to.
+ * @param {object} unknown - The params to pass to the route.
+ */
+export function useNavigate() {
+  const {
+    checklistStore,
+    // : {id: checklistId},
+  } = useStores()
+
+  const navigateWithChecklist = useCallback(
+    (name: unknown, params?: unknown) => {
+      console.log(`[useNavigate] ${checklistStore.id}`)
+
+      navigate(name, {checklistId: checklistStore.id, ...(params as object)})
+    },
+    [checklistStore.id],
+  )
+
+  return {
+    navigateWithChecklist,
   }
 }
 
@@ -199,7 +242,7 @@ export function goBack() {
  * @returns {void}
  */
 export function resetRoot(
-  state: Parameters<typeof navigationRef.resetRoot>[0] = { index: 0, routes: [] },
+  state: Parameters<typeof navigationRef.resetRoot>[0] = {index: 0, routes: []},
 ) {
   if (navigationRef.isReady()) {
     navigationRef.resetRoot(state)

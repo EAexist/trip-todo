@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { RootStore, RootStoreModel } from "../RootStore"
-import { setupRootStore } from "./setupRootStore"
+import {createContext, useContext, useEffect, useState} from 'react'
+import {RootStore, RootStoreModel} from '../RootStore'
+import {setupRootStore} from './setupRootStore'
 
 /**
  * Create the initial (empty) global RootStore instance here.
@@ -58,7 +58,7 @@ export const useInitialRootStore = (callback?: () => void | Promise<void>) => {
     let _unsubscribe: () => void | undefined
     ;(async () => {
       // set up the RootStore (returns the state restored from AsyncStorage)
-      const { unsubscribe } = await setupRootStore(rootStore)
+      const {unsubscribe} = await setupRootStore(rootStore)
       _unsubscribe = unsubscribe
 
       // reactotron integration with the MST root store (DEV only)
@@ -82,5 +82,5 @@ export const useInitialRootStore = (callback?: () => void | Promise<void>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { rootStore, rehydrated }
+  return {rootStore, rehydrated}
 }

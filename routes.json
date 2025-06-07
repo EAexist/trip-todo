@@ -1,0 +1,5 @@
+{
+  "/checklist/1/accomodation/*": "/accomodation/$1",
+  "/checklist/1/preset/*": "/preset/$1",
+  "/checklist/1/checklistItem": "/checklistItem"
+}

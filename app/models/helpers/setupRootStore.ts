@@ -9,14 +9,14 @@
  *
  * @refresh reset
  */
-import { applySnapshot, IDisposer, onSnapshot } from "mobx-state-tree"
-import { RootStore, RootStoreSnapshot } from "../RootStore"
-import * as storage from "../../utils/storage"
+import {applySnapshot, IDisposer, onAction, onSnapshot} from 'mobx-state-tree'
+import {RootStore, RootStoreSnapshot} from '../RootStore'
+import * as storage from '../../utils/storage'
 
 /**
  * The key we'll be saving our state as within async storage.
  */
-const ROOT_STATE_STORAGE_KEY = "root-v1"
+const ROOT_STATE_STORAGE_KEY = 'root-v1'
 
 /**
  * Setup the root state.
@@ -26,8 +26,10 @@ export async function setupRootStore(rootStore: RootStore) {
   let restoredState: RootStoreSnapshot | undefined | null
 
   try {
+    storage.clear()
     // load the last known state from AsyncStorage
-    restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ?? {}) as RootStoreSnapshot
+    restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ??
+      {}) as RootStoreSnapshot
     applySnapshot(rootStore, restoredState)
   } catch (e) {
     // if there's any problems loading, then inform the dev what happened
@@ -40,12 +42,14 @@ export async function setupRootStore(rootStore: RootStore) {
   if (_disposer) _disposer()
 
   // track changes & save to AsyncStorage
-  _disposer = onSnapshot(rootStore, (snapshot) => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
+  _disposer = onSnapshot(rootStore, snapshot =>
+    storage.save(ROOT_STATE_STORAGE_KEY, snapshot),
+  )
 
   const unsubscribe = () => {
     _disposer?.()
     _disposer = undefined
   }
 
-  return { rootStore, restoredState, unsubscribe }
+  return {rootStore, restoredState, unsubscribe}
 }
