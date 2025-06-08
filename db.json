@@ -7,7 +7,7 @@
           "id": "1",
           "nation": "jp",
           "title": "도쿠시마",
-          "state": "시코쿠"
+          "region": "시코쿠"
         }
       ],
       "startDateISOString": "2025-02-20T00:00:00.001Z",
