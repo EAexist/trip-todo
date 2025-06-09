@@ -18,14 +18,14 @@ import {
   GestureHandlerRootViewWrapper,
 } from '@/components/BottomSheetModal'
 import {
-  AccomodationChecklistItem,
-  CompleteChecklistItem,
-} from '@/components/ChecklistItem'
-import {ChecklistItemBottomSheet} from '@/components/ChecklistItem/ChecklistItemModal'
+  AccomodationTodo,
+  CompleteTodo,
+} from '@/components/Todo'
+import {TodoBottomSheet} from '@/components/Todo/TodoModal'
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
-import {ChecklistItem} from '@/models/ChecklistItem'
+import {Todo} from '@/models/Todo'
 import {AppStackScreenProps, useNavigate} from '@/navigators'
 // import BottomSheet from '@gorhom/bottom-sheet'
 import {useHeader} from '@/utils/useHeader'
@@ -58,31 +58,31 @@ import {observer} from 'mobx-react-lite'
 //   )
 // }
 
-export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
+export const TripScreen: FC<AppStackScreenProps<'Trip'>> = observer(
   ({route}) => {
-    const {checklistStore} = useStores()
-    const {checklistId} = route.params
+    const {tripStore} = useStores()
+    const {tripId} = route.params
     const bottomSheetModalRef = useRef<BottomSheet>(null)
     const [pathToOpen, setPathToOpen] = useState<string | undefined>(undefined)
-    const {navigateWithChecklist} = useNavigate()
+    const {navigateWithTrip} = useNavigate()
 
     useEffect(() => {
-      checklistStore.fetch(checklistId).then(() => {
-        console.log(checklistStore)
+      tripStore.fetch(tripId).then(() => {
+        console.log(tripStore)
       })
     }, [])
 
-    const renderItem: SectionListRenderItem<ChecklistItem, DefaultSectionT> =
+    const renderItem: SectionListRenderItem<Todo, DefaultSectionT> =
       useCallback(
         ({item}) =>
           item.type === 'accomodation' ? (
-            <AccomodationChecklistItem item={item} />
+            <AccomodationTodo item={item} />
           ) : item.type === 'passport' ? (
-            <CompleteChecklistItem item={item} />
+            <CompleteTodo item={item} />
           ) : (
-            <CompleteChecklistItem
+            <CompleteTodo
               item={item}
-              // onPress={() => handleChecklistItemPress(item)}
+              // onPress={() => handleTodoPress(item)}
             />
           ),
         [],
@@ -99,9 +99,9 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
     type SettingsListItemData = {title: string; path: string; primary?: boolean}
 
     const settingsMenu: SettingsListItemData[] = [
-      {title: '할 일 추가', path: 'ChecklistAdd', primary: true},
-      {title: '목록 순서 변경', path: 'ChecklistReorder'},
-      {title: '목록에서 할 일 삭제', path: 'ChecklistDelete'},
+      {title: '할 일 추가', path: 'TodolistAdd', primary: true},
+      {title: '목록 순서 변경', path: 'TodolistReorder'},
+      {title: '목록에서 할 일 삭제', path: 'TodolistDelete'},
     ]
 
     const renderSettingsListItem: ListRenderItem<SettingsListItemData> =
@@ -139,12 +139,12 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
       (index: number) => {
         console.log(`[onChange] ${index} ${pathToOpen}`)
         if (pathToOpen && index < 0) {
-          navigateWithChecklist(pathToOpen, {checklistId})
+          navigateWithTrip(pathToOpen, {tripId})
         } else {
           setPathToOpen(undefined)
         }
       },
-      [checklistId, pathToOpen, setPathToOpen],
+      [tripId, pathToOpen, setPathToOpen],
     )
 
     // useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
@@ -155,10 +155,10 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
           <Header
             leftComponent={
               <Text ellipsizeMode="tail" numberOfLines={1} h2>
-                {checklistStore.title}
+                {tripStore.title}
               </Text>
             }
-            // centerComponent={<Text h2>{checklistStore.title}</Text>}
+            // centerComponent={<Text h2>{tripStore.title}</Text>}
             rightComponent={
               <TouchableOpacity
                 onPress={handleSettingsButtonPress}
@@ -171,7 +171,7 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
           />
           <ScrollView>
             <SectionList
-              sections={checklistStore.incompleteChecklist}
+              sections={tripStore.incompleteTrip}
               keyExtractor={item => item.title}
               renderItem={renderItem}
               renderSectionHeader={renderSectionHeader}
@@ -183,7 +183,7 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
               </Text>
             </View>
             <SectionList
-              sections={checklistStore.completedChecklist}
+              sections={tripStore.completedTrip}
               keyExtractor={item => item.title}
               renderItem={renderItem}
               renderSectionHeader={renderSectionHeader}
@@ -198,7 +198,7 @@ export const ChecklistScreen: FC<AppStackScreenProps<'Checklist'>> = observer(
               keyExtractor={item => item.title}
             />
           </BottomSheetModal>
-          <ChecklistItemBottomSheet />
+          <TodoBottomSheet />
         </Screen>
         {/* </BottomSheetModalProvider> */}
       </GestureHandlerRootViewWrapper>

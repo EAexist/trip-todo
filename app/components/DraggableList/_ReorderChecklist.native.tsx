@@ -2,16 +2,16 @@ import DraggableFlatList, {
   DraggableFlatListProps,
 } from 'react-native-draggable-flatlist'
 
-export default function ReorderChecklist<T>(props: DraggableFlatListProps<T>) {
+export default function ReorderTrip<T>(props: DraggableFlatListProps<T>) {
   const [listData, setListData] = useState(
-    checklistStore.sectionedNonEmptyChecklistforDraggableFlatList,
+    tripStore.sectionedNonEmptyTripforDraggableFlatList,
   )
 
   const renderItem = useCallback(
-    ({item, drag, isActive}: RenderItemParams<ChecklistItem> & {}) => {
+    ({item, drag, isActive}: RenderItemParams<Todo> & {}) => {
       return (
         // <ScaleDecorator>
-        <ReorderChecklistItem
+        <ReorderTodo
           onLongPress={drag}
           disabled={isActive}
           {...item}
@@ -23,7 +23,7 @@ export default function ReorderChecklist<T>(props: DraggableFlatListProps<T>) {
   )
 
   const renderDraggableFlatList: SectionListRenderItem<
-    ChecklistItem[],
+    Todo[],
     DefaultSectionT
   > = useCallback(
     ({item, section}) => (

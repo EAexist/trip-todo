@@ -122,7 +122,7 @@ const ScheduleSettingCalendar = ({
 
   return (
     <Calendar
-      // initialDate={toCalendarString(checklistStore.start)}
+      // initialDate={toCalendarString(tripStore.start)}
       markingType="period"
       markedDates={markedDates}
       onDayPress={handleDayPress}
@@ -131,17 +131,17 @@ const ScheduleSettingCalendar = ({
 }
 
 export const ScheduleSettingScreen: FC = () => {
-  const {checklistStore} = useStores()
+  const {tripStore} = useStores()
   const {
     theme: {colors},
   } = useTheme()
 
   const [dateInterval, setDateInterval] = useState<DateInterval>({
-    start: checklistStore.startDateISOString
-      ? new Date(checklistStore.startDateISOString)
+    start: tripStore.startDateISOString
+      ? new Date(tripStore.startDateISOString)
       : undefined,
-    end: checklistStore.endDateISOString
-      ? new Date(checklistStore.endDateISOString)
+    end: tripStore.endDateISOString
+      ? new Date(tripStore.endDateISOString)
       : undefined,
   })
 
@@ -179,15 +179,15 @@ export const ScheduleSettingScreen: FC = () => {
     </>
   )
   const handleNextPress = useCallback(async () => {
-    checklistStore.setProp(
+    tripStore.setProp(
       'startDateISOString',
       dateInterval.start?.toISOString() || '',
     )
-    checklistStore.setProp(
+    tripStore.setProp(
       'endDateISOString',
       dateInterval.end?.toISOString() || '',
     )
-  }, [checklistStore, dateInterval.start, dateInterval.end])
+  }, [tripStore, dateInterval.start, dateInterval.end])
 
   return (
     <Screen>

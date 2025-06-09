@@ -6,7 +6,7 @@ import {InputProps} from '@rneui/base'
 import {FC, useCallback, useState} from 'react'
 import {View} from 'react-native'
 
-export const ChecklistTitleSettingScreenBase: FC<
+export const TripTitleSettingScreenBase: FC<
   {
     title: string
     instruction?: string

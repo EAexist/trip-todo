@@ -1,13 +1,13 @@
 import {AppStackScreenProps} from '@/navigators'
-import {useChecklistItem} from '@/utils/useChecklistItem'
+import {useTodo} from '@/utils/useTodo'
 import {observer} from 'mobx-react-lite'
 import {FC, useCallback} from 'react'
-import {ChecklistTitleSettingScreenBase} from '../New/TitleSettingScreenBase'
+import {TripTitleSettingScreenBase} from '../New/TitleSettingScreenBase'
 
-export const ChecklistItemTitleScreen: FC<
-  AppStackScreenProps<'ChecklistItemTitle'>
+export const TodoTitleScreen: FC<
+  AppStackScreenProps<'TodoTitle'>
 > = observer(({route}) => {
-  const item = useChecklistItem(route)
+  const item = useTodo(route)
   const handleNextPress = useCallback(
     async (value: string) => {
       item.setProp('title', value)
@@ -16,14 +16,14 @@ export const ChecklistItemTitleScreen: FC<
   )
 
   return (
-    <ChecklistTitleSettingScreenBase
+    <TripTitleSettingScreenBase
       inputProps={{
         label: `할 일 이름`,
         placeholder: `할 일 이름 입력하기`,
       }}
       title={`어떤 할 일을 추가할까요?`}
-      name="ChecklistItemNote"
-      params={{checklistItemId: item.id}}
+      name="TodoNote"
+      params={{todoId: item.id}}
       onConfirm={handleNextPress}
     />
   )

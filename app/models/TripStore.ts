@@ -8,11 +8,11 @@ import {
 import {api} from '../services/api'
 import {
   CATEGORY_TO_TITLE,
-  ChecklistItem,
-  ChecklistItemModel,
-  ChecklistItemSnapshotIn,
-  defaultChecklistItem,
-} from './ChecklistItem'
+  Todo,
+  TodoModel,
+  TodoSnapshotIn,
+  defaultTodo,
+} from './Todo'
 import {DestinationModel} from './Destination'
 import {withSetPropAction} from './helpers/withSetPropAction'
 
@@ -20,7 +20,7 @@ export const PresetItemModel = types
   .model('Preset')
   .props({
     isFlaggedToAdd: types.boolean,
-    item: types.reference(ChecklistItemModel),
+    item: types.reference(TodoModel),
   })
   .actions(withSetPropAction)
   .actions(presetItem => ({
@@ -31,42 +31,42 @@ export const PresetItemModel = types
 
 export interface Preset extends Instance<typeof PresetItemModel> {}
 
-export const ChecklistStoreModel = types
-  .model('ChecklistStore')
+export const TripStoreModel = types
+  .model('TripStore')
   .props({
     id: '',
     title: '',
     destinations: types.array(DestinationModel),
     startDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
     endDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
-    checklistItemMap: types.map(ChecklistItemModel),
-    checklistItems: types.map(types.array(types.reference(ChecklistItemModel))),
+    todoMap: types.map(TodoModel),
+    todos: types.map(types.array(types.reference(TodoModel))),
     preset: types.array(PresetItemModel),
-    activeItem: types.maybe(types.reference(ChecklistItemModel)),
+    activeItem: types.maybe(types.reference(TodoModel)),
     // _presets: types.model({
-    //   reservation: types.array(ChecklistItemModel),
-    //   foreign: types.array(ChecklistItemModel),
-    //   goods: types.array(ChecklistItemModel),
+    //   reservation: types.array(TodoModel),
+    //   foreign: types.array(TodoModel),
+    //   goods: types.array(TodoModel),
     // }),
     // doSync: types.maybe(types.boolean),
   })
   .actions(withSetPropAction)
   .actions(store => ({
-    initalizeChecklistKeys() {
-      // Array.from(store.checklistItemMap.values()).forEach(item =>
-      //   store.checklistItems.push(item),
+    initalizeTripKeys() {
+      // Array.from(store.todoMap.values()).forEach(item =>
+      //   store.todos.push(item),
       // )
     },
-    createItem(item: ChecklistItemSnapshotIn) {
-      store.checklistItemMap.put(item)
-      store.checklistItems.get(item.category)?.push(item.id)
+    createItem(item: TodoSnapshotIn) {
+      store.todoMap.put(item)
+      store.todos.get(item.category)?.push(item.id)
     },
-    addItem(item: ChecklistItemSnapshotIn) {
-      store.checklistItems.get(item.category)?.push(item.id)
+    addItem(item: TodoSnapshotIn) {
+      store.todos.get(item.category)?.push(item.id)
     },
-    // _addItem(item: ChecklistItem) {
-    //   store.checklistItemMap.put(item)
-    //   store.checklistItems.push(item)
+    // _addItem(item: Todo) {
+    //   store.todoMap.put(item)
+    //   store.todos.push(item)
     // },
     // addPreset(preset: Preset) {
     //   store.preset.push({
@@ -74,58 +74,58 @@ export const ChecklistStoreModel = types
     //     item: preset.item.id,
     //   })
     // },
-    set(checklist: ChecklistStoreSnapshot) {
-      store.setProp('id', checklist.id)
-      store.setProp('title', checklist.title)
-      store.setProp('destinations', checklist.destinations)
-      store.setProp('startDateISOString', checklist.startDateISOString)
-      store.setProp('endDateISOString', checklist.endDateISOString)
+    set(trip: TripStoreSnapshot) {
+      store.setProp('id', trip.id)
+      store.setProp('title', trip.title)
+      store.setProp('destinations', trip.destinations)
+      store.setProp('startDateISOString', trip.startDateISOString)
+      store.setProp('endDateISOString', trip.endDateISOString)
       store.setProp(
-        'checklistItemMap',
-        checklist.checklistItemMap,
+        'todoMap',
+        trip.todoMap,
         // Object.fromEntries(
-        //   checklist.checklistItems.map(item => [item.id, item]),
+        //   trip.todos.map(item => [item.id, item]),
         // ),
       )
-      store.setProp('checklistItems', checklist.checklistItems)
+      store.setProp('todos', trip.todos)
       /* Nested Object: UseSetProps */
-      store.setProp('preset', checklist.preset)
+      store.setProp('preset', trip.preset)
     },
   }))
   .actions(store => ({
-    add(item: ChecklistItemSnapshotIn) {
-      store.checklistItemMap.put(item)
+    add(item: TodoSnapshotIn) {
+      store.todoMap.put(item)
       store.addItem(item)
     },
   }))
   .actions(store => ({
-    add(item: ChecklistItemSnapshotIn) {
-      store.checklistItemMap.put(item)
+    add(item: TodoSnapshotIn) {
+      store.todoMap.put(item)
       store.addItem(item)
     },
     /**
-     * Create an empty checklist and fetch it with backend-generated id.
+     * Create an empty trip and fetch it with backend-generated id.
      */
     async create() {
-      const response = (await api.createChecklist()) as ChecklistStoreSnapshot
+      const response = (await api.createTrip()) as TripStoreSnapshot
       store.set(response)
     },
     /**
-     * Create an empty checklist and fetch it with backend-generated id.
+     * Create an empty trip and fetch it with backend-generated id.
      */
     async fetch(id: string) {
-      const response = await api.getChecklist(id)
+      const response = await api.getTrip(id)
       if (response.kind === 'ok') {
-        store.set(response as ChecklistStoreSnapshot)
+        store.set(response as TripStoreSnapshot)
       } else {
-        console.error(`Error fetching Checklist: ${JSON.stringify(response)}`)
+        console.error(`Error fetching Trip: ${JSON.stringify(response)}`)
       }
       console.log(store)
     },
     async put() {
-      const response = (await api.putChecklist(
+      const response = (await api.putTrip(
         getSnapshot(store),
-      )) as ChecklistStoreSnapshot
+      )) as TripStoreSnapshot
       store.set(response)
     },
     // async fetchPreset() {
@@ -138,36 +138,36 @@ export const ChecklistStoreModel = types
     //     })
     //     console.log(store.preset)
     //   } else {
-    //     console.error(`Error fetching Checklist: ${JSON.stringify(response)}`)
+    //     console.error(`Error fetching Trip: ${JSON.stringify(response)}`)
     //   }
     // },
-    async createChecklistItem(
-      item: Partial<Omit<ChecklistItemSnapshotIn, 'id'>>,
+    async createTodo(
+      item: Partial<Omit<TodoSnapshotIn, 'id'>>,
     ) {
-      const response = (await api.createChecklistItem(store.id, {
-        ...defaultChecklistItem,
+      const response = (await api.createTodo(store.id, {
+        ...defaultTodo,
         ...item,
-      })) as ChecklistItemSnapshotIn
+      })) as TodoSnapshotIn
       store.add(response)
       return response.id
     },
-    setActiveItem(checklistItem?: ChecklistItem) {
-      console.log('SETACTIVE', checklistItem?.title)
-      store.setProp('activeItem', checklistItem ? checklistItem.id : undefined)
+    setActiveItem(todo?: Todo) {
+      console.log('SETACTIVE', todo?.title)
+      store.setProp('activeItem', todo ? todo.id : undefined)
     },
     removeActiveItem() {
-      // console.log('SETACTIVE', checklistItem?.title)
+      // console.log('SETACTIVE', todo?.title)
       store.setProp('activeItem', undefined)
     },
-    remove(item: ChecklistItem) {
-      store.checklistItems.get(item.category)?.remove(item)
+    remove(item: Todo) {
+      store.todos.get(item.category)?.remove(item)
       if (!store.preset.map(({item}) => item).includes(item))
-        store.checklistItemMap.delete(item.id)
+        store.todoMap.delete(item.id)
     },
     initializePreset() {
       // https://stackoverflow.com/questions/39007637/javascript-set-vs-array-performance
       // const usedPresets = new Set(data.map((item) => item.type))
-      // const usedPreset = Array.from(store.checklistItems.values()).map(
+      // const usedPreset = Array.from(store.todos.values()).map(
       //   item => item.type,
       // )
       // const preset = presets.filter(
@@ -225,7 +225,7 @@ export const ChecklistStoreModel = types
       return `${date} ${monthLocale && `${monthLocale}/`}${month} ${year}`
     },
     get nonEmptysections() {
-      return Array.from(store.checklistItems.entries())
+      return Array.from(store.todos.entries())
         .filter(([category, data]) => data.length > 0)
         .map(([category, _]) => ({
           category,
@@ -236,14 +236,14 @@ export const ChecklistStoreModel = types
     get sections() {
       return [
         ...new Set(
-          Array.from(store.checklistItemMap.values()).map(
+          Array.from(store.todoMap.values()).map(
             item => item.category,
           ),
         ),
       ]
     },
-    get sectionedChecklist() {
-      return Array.from(store.checklistItems.entries()).map(
+    get sectionedTrip() {
+      return Array.from(store.todos.entries()).map(
         ([category, data]) => ({
           category,
           title: CATEGORY_TO_TITLE[category],
@@ -251,16 +251,16 @@ export const ChecklistStoreModel = types
         }),
       )
     },
-    get sectionedNonEmptyChecklist() {
-      return this.sectionedChecklist.filter(({data}) => data.length > 0)
+    get sectionedNonEmptyTrip() {
+      return this.sectionedTrip.filter(({data}) => data.length > 0)
     },
-    get incompleteChecklist() {
-      return this.sectionedNonEmptyChecklist.map(({title, data}) => {
+    get incompleteTrip() {
+      return this.sectionedNonEmptyTrip.map(({title, data}) => {
         return {title, data: data.filter(item => !item.completeDateISOString)}
       })
     },
-    get completedChecklist() {
-      return this.sectionedNonEmptyChecklist
+    get completedTrip() {
+      return this.sectionedNonEmptyTrip
         .map(({title, data}) => {
           return {
             title,
@@ -269,8 +269,8 @@ export const ChecklistStoreModel = types
         })
         .filter(({data}) => data.length > 0)
     },
-    get deleteFlaggedChecklist() {
-      return this.sectionedNonEmptyChecklist.map(({title, data}) => {
+    get deleteFlaggedTrip() {
+      return this.sectionedNonEmptyTrip.map(({title, data}) => {
         // const completeData = data.sort((a, b) =>
         //   a.isFlaggedToDelete === b.isFlaggedToDelete
         //     ? 0
@@ -290,10 +290,10 @@ export const ChecklistStoreModel = types
         }
       })
     },
-    get checklistWithPreset() {
+    get tripWithPreset() {
       console.log(
         this.sections.map(category => {
-          const addedItems = store.checklistItems.get(category)
+          const addedItems = store.todos.get(category)
           const addedItemIds = addedItems?.map(item => item.id) as string[]
           return {
             category,
@@ -319,7 +319,7 @@ export const ChecklistStoreModel = types
         }),
       )
       return this.sections.map(category => {
-        const addedItems = store.checklistItems.get(category)
+        const addedItems = store.todos.get(category)
         const addedItemIds = addedItems?.map(item => item.id) as string[]
         return {
           category,
@@ -347,16 +347,16 @@ export const ChecklistStoreModel = types
     get isActive() {
       return store.activeItem !== undefined
     },
-    // get ChecklistForList() {
-    //   return store.favoritesOnly ? store.favorites : store.Checklist
+    // get TripForList() {
+    //   return store.favoritesOnly ? store.favorites : store.Trip
     // },
-    // hasFavorite(item: ChecklistItem) {
-    //   return store.favorites.includes(checklistItem)
+    // hasFavorite(item: Todo) {
+    //   return store.favorites.includes(todo)
     // },
   }))
   .actions(store => ({
     async deleteItems() {
-      Array.from(store.checklistItemMap.values())
+      Array.from(store.todoMap.values())
         .filter(item => item.isFlaggedToDelete)
         .forEach(item => {
           item.setProp('isFlaggedToDelete', false)
@@ -374,17 +374,17 @@ export const ChecklistStoreModel = types
       store.put()
     },
     async reorder(category: string, ids: string[]) {
-      store.checklistItems.set(category, ids)
+      store.todos.set(category, ids)
       store.put()
     },
     // setPreset() {
     //   store.setProp('_presets', [])
     // },
-    // toggleFavorite(item: ChecklistItem) {
-    //   if (store.hasFavorite(checklistItem)) {
-    //     store.removeFavorite(checklistItem)
+    // toggleFavorite(item: Todo) {
+    //   if (store.hasFavorite(todo)) {
+    //     store.removeFavorite(todo)
     //   } else {
-    //     store.addFavorite(checklistItem)
+    //     store.addFavorite(todo)
     //   }
     // },
   }))
@@ -392,6 +392,6 @@ export const ChecklistStoreModel = types
 // reaction(()=>
 // )
 
-export interface ChecklistStore extends Instance<typeof ChecklistStoreModel> {}
-export interface ChecklistStoreSnapshot
-  extends SnapshotOut<typeof ChecklistStoreModel> {}
+export interface TripStore extends Instance<typeof TripStoreModel> {}
+export interface TripStoreSnapshot
+  extends SnapshotOut<typeof TripStoreModel> {}

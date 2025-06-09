@@ -6,22 +6,22 @@
  * documentation for more details.
  */
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
-import {ChecklistItem, ChecklistItemSnapshotIn} from '@/models/ChecklistItem'
+import {Todo, TodoSnapshotIn} from '@/models/Todo'
 import {
-  ChecklistStore,
-  ChecklistStoreSnapshot,
+  TripStore,
+  TripStoreSnapshot,
   Preset,
-} from '@/models/ChecklistStore'
+} from '@/models/TripStore'
 import {ApiResponse, ApisauceInstance, create} from 'apisauce'
 import type {
   ApiAccomodationResponse,
-  ApiChecklistItemResponse,
-  ApiCreateChecklistResponse,
+  ApiTodoResponse,
+  ApiCreateTripResponse,
   ApiConfig,
   ApiPresetResponse,
 } from './api.types'
 import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
-import {defaultChecklist} from '@/models/defaultChecklist'
+import {defaultTrip} from '@/models/defaultTrip'
 
 /**
  * Configuring the apisauce instance.
@@ -90,12 +90,12 @@ export class Api {
   /**
    * Gets a list of recent React Native Radio episodes.
    */
-  async getChecklist(
+  async getTrip(
     id: string,
-  ): Promise<({kind: 'ok'} & ChecklistStoreSnapshot) | GeneralApiProblem> {
+  ): Promise<({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ApiCreateChecklistResponse> =
-      await this.apisauce.get(`checklist/${id}`)
+    const response: ApiResponse<ApiCreateTripResponse> =
+      await this.apisauce.get(`trip/${id}`)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -125,17 +125,17 @@ export class Api {
       return {kind: 'bad-data'}
     }
   }
-  async createChecklist(): Promise<
-    ({kind: 'ok'} & ChecklistStoreSnapshot) | GeneralApiProblem
+  async createTrip(): Promise<
+    ({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem
   > {
     // make the api call
-    const response: ApiResponse<ApiCreateChecklistResponse> =
+    const response: ApiResponse<ApiCreateTripResponse> =
       /* @TODO
         Block this and unblock following line when connecting to the constructed backend.
-        defaultChecklist is only used for mocking the backend with json-server
+        defaultTrip is only used for mocking the backend with json-server
      */
-      await this.apisauce.post(`checklist`, defaultChecklist)
-    // await this.apisauce.post(`checklist`, {})
+      await this.apisauce.post(`trip`, defaultTrip)
+    // await this.apisauce.post(`trip`, {})
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -162,17 +162,17 @@ export class Api {
     }
   }
 
-  async putChecklist(
-    checklist: ChecklistStoreSnapshot,
-  ): Promise<({kind: 'ok'} & ChecklistStoreSnapshot) | GeneralApiProblem> {
+  async putTrip(
+    trip: TripStoreSnapshot,
+  ): Promise<({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ApiCreateChecklistResponse> =
+    const response: ApiResponse<ApiCreateTripResponse> =
       /* @TODO
         Block this and unblock following line when connecting to the constructed backend.
-        defaultChecklist is only used for mocking the backend with json-server
+        defaultTrip is only used for mocking the backend with json-server
      */
-      await this.apisauce.put(`/checklist/${checklist.id}`, checklist)
-    // await this.apisauce.post(`checklist`, {})
+      await this.apisauce.put(`/trip/${trip.id}`, trip)
+    // await this.apisauce.post(`trip`, {})
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -199,14 +199,14 @@ export class Api {
     }
   }
 
-  async createChecklistItem(
-    checklistId: string,
-    item: Omit<ChecklistItemSnapshotIn, 'id'>,
-  ): Promise<({kind: 'ok'} & ChecklistItemSnapshotIn) | GeneralApiProblem> {
+  async createTodo(
+    tripId: string,
+    item: Omit<TodoSnapshotIn, 'id'>,
+  ): Promise<({kind: 'ok'} & TodoSnapshotIn) | GeneralApiProblem> {
     // make the api call
-    console.log(`[createChecklistItem] item=${JSON.stringify(item)}`)
-    const response: ApiResponse<ApiChecklistItemResponse> =
-      await this.apisauce.post(`/checklist/${checklistId}/checklistItem`, item)
+    console.log(`[createTodo] item=${JSON.stringify(item)}`)
+    const response: ApiResponse<ApiTodoResponse> =
+      await this.apisauce.post(`/trip/${tripId}/todo`, item)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -233,12 +233,12 @@ export class Api {
     }
   }
 
-  async getChecklistItems(
-    checklistId: string,
-  ): Promise<({kind: 'ok'} & ChecklistStoreSnapshot) | GeneralApiProblem> {
+  async getTodos(
+    tripId: string,
+  ): Promise<({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ApiCreateChecklistResponse> =
-      await this.apisauce.get(`/checklist/${checklistId}/checklistItem`)
+    const response: ApiResponse<ApiCreateTripResponse> =
+      await this.apisauce.get(`/trip/${tripId}/todo`)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -265,12 +265,12 @@ export class Api {
     }
   }
 
-  async updateChecklist(
-    checklist: Omit<ChecklistStoreSnapshot, 'id' | 'activeItem' | 'preset'>,
-  ): Promise<({kind: 'ok'} & ChecklistStoreSnapshot) | GeneralApiProblem> {
+  async updateTrip(
+    trip: Omit<TripStoreSnapshot, 'id' | 'activeItem' | 'preset'>,
+  ): Promise<({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ApiCreateChecklistResponse> =
-      await this.apisauce.post(`checklist`, checklist)
+    const response: ApiResponse<ApiCreateTripResponse> =
+      await this.apisauce.post(`trip`, trip)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -307,7 +307,7 @@ export class Api {
   > {
     // make the api call
     const response: ApiResponse<ApiPresetResponse> = await this.apisauce.get(
-      `checklist/${id}/preset`,
+      `trip/${id}/preset`,
     )
 
     // the typical ways to die when calling an api
@@ -343,7 +343,7 @@ export class Api {
   > {
     // make the api call
     const response: ApiResponse<ApiAccomodationResponse> =
-      await this.apisauce.get(`checklist/1/accomodation`)
+      await this.apisauce.get(`trip/1/accomodation`)
 
     // the typical ways to die when calling an api
     if (!response.ok) {

@@ -49,7 +49,7 @@ const GooglePlacesSearchBar = () => {
 }
 
 export const DestinationSearchScreen: FC = () => {
-  const {checklistStore} = useStores()
+  const {tripStore} = useStores()
   const handleNextPress = useCallback(() => {
     // Handle next button press
     console.log('Next button pressed')
@@ -68,10 +68,10 @@ export const DestinationSearchScreen: FC = () => {
 
   const {t} = useLingui()
 
-  const titleText = checklistStore.isDestinationSet ? (
+  const titleText = tripStore.isDestinationSet ? (
     <TransText h2>
       <TransText h2 primary>
-        {checklistStore.destinationTitles.map(title => title).join('')}
+        {tripStore.destinationTitles.map(title => title).join('')}
       </TransText>
       {'와\n함께 방문할 도시를 검색해주세요'}
     </TransText>

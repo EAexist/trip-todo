@@ -3,29 +3,29 @@ import {useNavigate} from '@/navigators'
 import {useHeader} from '@/utils/useHeader'
 import {observer} from 'mobx-react-lite'
 import {useCallback} from 'react'
-import {ChecklistAddScreenBase} from './ChecklistAddScreenBase'
+import {TodolistAddScreenBase} from './TodolistAddScreenBase'
 
-interface ChecklistAddScreenProps {}
+interface TodolistAddScreenProps {}
 
-export const ChecklistAddScreen = observer((props: ChecklistAddScreenProps) => {
-  const {checklistStore} = useStores()
-  const {navigateWithChecklist} = useNavigate()
+export const TodolistAddScreen = observer((props: TodolistAddScreenProps) => {
+  const {tripStore} = useStores()
+  const {navigateWithTrip} = useNavigate()
   const handleToDeleteScreenPress = useCallback(() => {
-    navigateWithChecklist('ChecklistDelete')
+    navigateWithTrip('TodolistDelete')
   }, [])
 
   useHeader({rightActionTitle: '삭제', onRightPress: handleToDeleteScreenPress})
   return (
-    <ChecklistAddScreenBase
+    <TodolistAddScreenBase
       title={'새 할 일 추가하기'}
       instruction={'체크리스트에서 관리할 할 일을 추가해보세요'}
       nextButtonProps={{
-        name: 'Checklist',
-        params: {checklistId: checklistStore.id},
+        name: 'Trip',
+        params: {tripId: tripStore.id},
         buttonProps: {title: '확인'},
       }}
     />
   )
 })
 
-// export default withTheme<ChecklistAddScreenProps>(ChecklistAddScreen, 'ChecklistAddScreen')
+// export default withTheme<TodolistAddScreenProps>(TodolistAddScreen, 'TodolistAddScreen')

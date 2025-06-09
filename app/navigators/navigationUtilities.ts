@@ -206,21 +206,21 @@ export function navigate(name: unknown, params?: unknown) {
  */
 export function useNavigate() {
   const {
-    checklistStore,
-    // : {id: checklistId},
+    tripStore,
+    // : {id: tripId},
   } = useStores()
 
-  const navigateWithChecklist = useCallback(
+  const navigateWithTrip = useCallback(
     (name: unknown, params?: unknown) => {
-      console.log(`[useNavigate] ${checklistStore.id}`)
+      console.log(`[useNavigate] ${tripStore.id}`)
 
-      navigate(name, {checklistId: checklistStore.id, ...(params as object)})
+      navigate(name, {tripId: tripStore.id, ...(params as object)})
     },
-    [checklistStore.id],
+    [tripStore.id],
   )
 
   return {
-    navigateWithChecklist,
+    navigateWithTrip,
   }
 }
 

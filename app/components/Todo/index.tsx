@@ -1,6 +1,6 @@
 import {useStores} from '@/models'
-import {ChecklistItem} from '@/models/ChecklistItem'
-import {Preset} from '@/models/ChecklistStore'
+import {Todo} from '@/models/Todo'
+import {Preset} from '@/models/TripStore'
 import {useNavigate} from '@/navigators'
 import {Trans} from '@lingui/react/macro'
 import {Icon, ListItem, ListItemProps, useTheme} from '@rneui/themed'
@@ -16,7 +16,7 @@ import {
 import {Avatar, AvatarProps} from '../Avatar'
 import {ListItemCaption} from '../ListItemCaption'
 
-interface ChecklistItemBaseProps
+interface TodoBaseProps
   extends Pick<AvatarProps, 'iconId'>,
     ListItemProps {
   title: string
@@ -30,7 +30,7 @@ interface ChecklistItemBaseProps
   onPressContent?: () => void
 }
 
-export const ChecklistItemBase: FC<ChecklistItemBaseProps> = ({
+export const TodoBase: FC<TodoBaseProps> = ({
   iconId,
   title,
   subtitle,
@@ -70,8 +70,8 @@ export const ChecklistItemBase: FC<ChecklistItemBaseProps> = ({
   )
 }
 
-export type ChecklistItemProps = {id: string} & Pick<
-  ChecklistItemBaseProps,
+export type TodoProps = {id: string} & Pick<
+  TodoBaseProps,
   'iconId' | 'title' | 'subtitle'
 >
 // {
@@ -83,7 +83,7 @@ export type ChecklistItemProps = {id: string} & Pick<
 //   onPress?: () => void
 // }
 
-export const AddChecklistItem: FC<{item: ChecklistItem}> = ({item}) => {
+export const AddTodo: FC<{item: Todo}> = ({item}) => {
   const [isAdded, setIsAdded] = useState(true)
 
   const handlePress = useCallback(() => {
@@ -91,7 +91,7 @@ export const AddChecklistItem: FC<{item: ChecklistItem}> = ({item}) => {
   }, [isAdded, setIsAdded])
 
   return (
-    <ChecklistItemBase
+    <TodoBase
       caption={'추가함'}
       onPress={handlePress}
       // useDisabledStyle
@@ -100,7 +100,7 @@ export const AddChecklistItem: FC<{item: ChecklistItem}> = ({item}) => {
   )
 }
 
-export const AddPresetChecklistItem: FC<{preset: Preset}> = observer(
+export const AddPresetTodo: FC<{preset: Preset}> = observer(
   ({preset}) => {
     const handlePress = useCallback(() => {
       preset.toggleAddFlag()
@@ -110,7 +110,7 @@ export const AddPresetChecklistItem: FC<{preset: Preset}> = observer(
       theme: {colors},
     } = useTheme()
     return (
-      <ChecklistItemBase
+      <TodoBase
         rightContent={
           <ListItem.CheckBox
             onPress={handlePress}
@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   disabled: {opacity: 0.5},
 })
 
-export const CompleteChecklistItem: FC<{item: ChecklistItem}> = observer(
+export const CompleteTodo: FC<{item: Todo}> = observer(
   ({item}) => {
     const displayDelay = 500
-    const {navigateWithChecklist} = useNavigate()
-    const {checklistStore} = useStores()
+    const {navigateWithTrip} = useNavigate()
+    const {tripStore} = useStores()
 
     const [displayComplete, setDisplayComplete] = useState(item.isCompleted)
 
@@ -177,23 +177,23 @@ export const CompleteChecklistItem: FC<{item: ChecklistItem}> = observer(
     const handleCompletePress = useCallback(() => {
       console.log(item.title)
       if (!item.isCompleted && item.type === 'passport')
-        navigateWithChecklist('ConfirmPassport', {checklistItemId: item.id})
+        navigateWithTrip('ConfirmPassport', {todoId: item.id})
       else setDisplayComplete(prev => !prev)
       // if (!item.isCompleted) item.complete()
       // else item.setIncomplete()
-    }, [item, navigateWithChecklist])
+    }, [item, navigateWithTrip])
 
     const handlePress = useCallback(
       (e: GestureResponderEvent) => {
         console.log(item.title)
         e.stopPropagation()
-        checklistStore.setActiveItem(item)
+        tripStore.setActiveItem(item)
       },
-      [checklistStore, item],
+      [tripStore, item],
     )
 
     return (
-      <ChecklistItemBase
+      <TodoBase
         rightContent={
           <ListItem.CheckBox
             onPress={handleCompletePress}
@@ -210,23 +210,23 @@ export const CompleteChecklistItem: FC<{item: ChecklistItem}> = observer(
   },
 )
 
-// export const PassportChecklistItem: FC<{item: ChecklistItem}> = ({item}) => {
-//   const {checklistStore} = useStores()
+// export const PassportTodo: FC<{item: Todo}> = ({item}) => {
+//   const {tripStore} = useStores()
 
 //   const handleCompletePress = useCallback(() => {
 //     if(item.isCompleted)
 
 //       else
-//     navigateWithChecklist('ConfirmPassport', {checklistItemId: item.id})
+//     navigateWithTrip('ConfirmPassport', {todoId: item.id})
 //   }, [item.id])
 
 //   const handlePress = useCallback(() => {
 //     console.log(item.title)
-//     checklistStore.setActiveItem(item)
-//   }, [checklistStore, item])
+//     tripStore.setActiveItem(item)
+//   }, [tripStore, item])
 
 //   return (
-//     <ChecklistItemBase
+//     <TodoBase
 //       rightContent={
 //         <ListItem.CheckBox
 //           onPress={handleCompletePress}
@@ -241,16 +241,16 @@ export const CompleteChecklistItem: FC<{item: ChecklistItem}> = observer(
 //   )
 // }
 
-export const AccomodationChecklistItem: FC<{item: ChecklistItem}> = ({
+export const AccomodationTodo: FC<{item: Todo}> = ({
   item,
 }) => {
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
   const handlePress = useCallback(() => {
-    navigateWithChecklist('AccomodationPlan')
-  }, [navigateWithChecklist])
+    navigateWithTrip('AccomodationPlan')
+  }, [navigateWithTrip])
 
   return (
-    <ChecklistItemBase
+    <TodoBase
       rightContent={<ListItem.Chevron size={32} onPress={handlePress} />}
       onPress={handlePress}
       {...item}
@@ -258,16 +258,16 @@ export const AccomodationChecklistItem: FC<{item: ChecklistItem}> = ({
   )
 }
 
-export const ReorderChecklistItem: FC<{item: ChecklistItem}> = ({item}) => {
+export const ReorderTodo: FC<{item: Todo}> = ({item}) => {
   return (
-    <ChecklistItemBase
+    <TodoBase
       rightContent={<ListItem.Chevron name="drag-handle" type="material" />}
       {...item}
     />
   )
 }
 
-export const DeleteChecklistItem: FC<{item: ChecklistItem}> = observer(
+export const DeleteTodo: FC<{item: Todo}> = observer(
   ({item}) => {
     const setComplete = useCallback(
       (isCompleted: boolean) => {
@@ -287,7 +287,7 @@ export const DeleteChecklistItem: FC<{item: ChecklistItem}> = observer(
     }, [setDisplayComplete])
 
     return (
-      <ChecklistItemBase
+      <TodoBase
         rightContent={
           <ListItem.CheckBox
             onPress={handlePress}

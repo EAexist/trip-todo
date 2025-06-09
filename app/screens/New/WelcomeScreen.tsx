@@ -11,13 +11,13 @@ import {View} from 'react-native'
 
 export const WelcomeScreen: FC<AppStackScreenProps<'Welcome'>> = observer(
   () => {
-    const {checklistStore} = useStores()
-    const {navigateWithChecklist} = useNavigate()
+    const {tripStore} = useStores()
+    const {navigateWithTrip} = useNavigate()
 
     useEffect(() => {
-      checklistStore.create().then(() => {
-        console.log(checklistStore)
-        navigateWithChecklist('DestinationSetting')
+      tripStore.create().then(() => {
+        console.log(tripStore)
+        navigateWithTrip('DestinationSetting')
       })
     }, [])
 

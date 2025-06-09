@@ -34,33 +34,33 @@ import {FabProvider} from '@/components/Fab'
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
-type ChecklistStackProps = {checklistId: string}
+type TripStackProps = {tripId: string}
 
 export type AppStackParamList = {
   // 🔥 Your screens go here
-  /* Create Checklist */
+  /* Create Trip */
   Welcome: undefined
-  DestinationSetting: ChecklistStackProps
-  DestinationSearch: ChecklistStackProps
-  ScheduleSetting: ChecklistStackProps
-  TitleSetting: ChecklistStackProps
-  ChecklistSetting: ChecklistStackProps
-  /* Edit Checklist */
-  Checklist: ChecklistStackProps
-  ChecklistAdd: ChecklistStackProps
-  ChecklistDelete: ChecklistStackProps
-  ChecklistReorder: ChecklistStackProps
+  DestinationSetting: TripStackProps
+  DestinationSearch: TripStackProps
+  ScheduleSetting: TripStackProps
+  TitleSetting: TripStackProps
+  TripSetting: TripStackProps
+  /* Edit Trip */
+  Trip: TripStackProps
+  TodolistAdd: TripStackProps
+  TodolistDelete: TripStackProps
+  TodolistReorder: TripStackProps
   /* Confirm */
-  ConfirmPassport: ChecklistStackProps & {checklistItemId: string}
-  ConfirmFlight: ChecklistStackProps & {checklistItemId: string}
-  /* Edit ChecklistItem */
-  ChecklistItemTitle: ChecklistStackProps & {checklistItemId: string}
-  ChecklistItemNote: ChecklistStackProps & {checklistItemId: string}
-  ChecklistItemCreate: ChecklistStackProps & {checklistItemId: string}
+  ConfirmPassport: TripStackProps & {todoId: string}
+  ConfirmFlight: TripStackProps & {todoId: string}
+  /* Edit Todo */
+  TodoTitle: TripStackProps & {todoId: string}
+  TodoNote: TripStackProps & {todoId: string}
+  TodoCreate: TripStackProps & {todoId: string}
   /* Accomodation */
-  AccomodationPlan: ChecklistStackProps & {accomodationId: string}
-  Accomodation: ChecklistStackProps & {accomodationId: string}
-  AccomodationNote: ChecklistStackProps & {accomodationId: string}
+  AccomodationPlan: TripStackProps & {accomodationId: string}
+  Accomodation: TripStackProps & {accomodationId: string}
+  AccomodationNote: TripStackProps & {accomodationId: string}
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -117,12 +117,12 @@ const AppStack = observer(function AppStack() {
             component={Screens.New.TitleSetting}
           />
           <Stack.Screen
-            name="ChecklistSetting"
-            component={Screens.New.ChecklistSetting}
+            name="TripSetting"
+            component={Screens.New.TripSetting}
           />
           <Stack.Screen
-            name="ChecklistItemCreate"
-            component={Screens.Checklist.Create}
+            name="TodoCreate"
+            component={Screens.Trip.Create}
           />
           {/* <Stack.Screen
               name="New"
@@ -131,17 +131,17 @@ const AppStack = observer(function AppStack() {
           {/* </Stack.Group> */}
           {/* <Stack.Group> */}
           <Stack.Screen
-            name="Checklist"
-            component={Screens.Checklist.ChecklistScreen}
+            name="Trip"
+            component={Screens.Trip.TripScreen}
           />
-          <Stack.Screen name="ChecklistAdd" component={Screens.Checklist.Add} />
+          <Stack.Screen name="TodolistAdd" component={Screens.Trip.Add} />
           <Stack.Screen
-            name="ChecklistReorder"
-            component={Screens.Checklist.Reorder}
+            name="TodolistReorder"
+            component={Screens.Trip.Reorder}
           />
           <Stack.Screen
-            name="ChecklistDelete"
-            component={Screens.Checklist.Delete}
+            name="TodolistDelete"
+            component={Screens.Trip.Delete}
           />
           <Stack.Screen
             name="ConfirmPassport"
@@ -164,12 +164,12 @@ const AppStack = observer(function AppStack() {
             component={Screens.Accomodation.Note}
           />
           <Stack.Screen
-            name="ChecklistItemNote"
-            component={Screens.Checklist.Note}
+            name="TodoNote"
+            component={Screens.Trip.Note}
           />
           <Stack.Screen
-            name="ChecklistItemTitle"
-            component={Screens.Checklist.Title}
+            name="TodoTitle"
+            component={Screens.Trip.Title}
           />
         </>
       )}

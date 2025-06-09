@@ -4,7 +4,7 @@ import {Screen} from '@/components/Screen'
 import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {AppStackScreenProps, goBack} from '@/navigators'
-import {useChecklistItem} from '@/utils/useChecklistItem'
+import {useTodo} from '@/utils/useTodo'
 import {observer} from 'mobx-react-lite'
 import {FC, useCallback} from 'react'
 
@@ -13,9 +13,9 @@ interface ConfirmPassportScreenProps
 
 export const ConfirmPassportScreen: FC<AppStackScreenProps<'ConfirmPassport'>> =
   observer(({route}) => {
-    const {checklistStore} = useStores()
+    const {tripStore} = useStores()
 
-    const item = useChecklistItem(route)
+    const item = useTodo(route)
     const handleConfirmPress = useCallback(() => {
       item?.complete()
       goBack()
@@ -35,7 +35,7 @@ export const ConfirmPassportScreen: FC<AppStackScreenProps<'ConfirmPassport'>> =
             <>
               <TransText h2>여권 만료일이</TransText>
               <TransText h2 primary>
-                {checklistStore.passportExpiryRequiredAfterThisDate}
+                {tripStore.passportExpiryRequiredAfterThisDate}
               </TransText>
               <TransText h2>이후인지 확인해주세요.</TransText>
             </>

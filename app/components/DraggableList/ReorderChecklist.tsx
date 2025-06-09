@@ -1,5 +1,5 @@
 import {useStores} from '@/models'
-import {ChecklistItem} from '@/models/ChecklistItem'
+import {Todo} from '@/models/Todo'
 import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
@@ -8,17 +8,17 @@ import type {
   SortableGridRenderItem,
 } from 'react-native-sortables'
 import Sortable from 'react-native-sortables'
-import {ReorderChecklistItem} from '../ChecklistItem'
+import {ReorderTodo} from '../Todo'
 import {Text} from '@rneui/themed'
 
-export const ReorderChecklist = () => {
+export const ReorderTrip = () => {
   const scrollableRef = useAnimatedRef<Animated.ScrollView>()
 
-  const {checklistStore} = useStores()
+  const {tripStore} = useStores()
 
-  const DATA = checklistStore.checklistItems
-  const renderItem = useCallback<SortableGridRenderItem<ChecklistItem>>(
-    ({item}) => <ReorderChecklistItem item={item} />,
+  const DATA = tripStore.todos
+  const renderItem = useCallback<SortableGridRenderItem<Todo>>(
+    ({item}) => <ReorderTodo item={item} />,
     [],
   )
 

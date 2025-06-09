@@ -2,7 +2,7 @@ import ContentTitle from '@/components/Layout/Content'
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
-import {ChecklistItem} from '@/models/ChecklistItem'
+import {Todo} from '@/models/Todo'
 import {Divider} from '@rneui/themed'
 import {
   ComponentType,
@@ -25,7 +25,7 @@ export interface CheckListEditScreenBaseProps<SectionT = DefaultSectionT>
   > {
   title: string
   instruction?: string
-  ChecklistItem?: ComponentType<{item: ChecklistItem}>
+  Todo?: ComponentType<{item: Todo}>
 }
 
 const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
@@ -34,14 +34,14 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
   instruction,
   renderItem,
   renderSectionHeader,
-  ChecklistItem,
+  Todo,
   sections,
   children,
 }: PropsWithChildren<CheckListEditScreenBaseProps<SectionT>>) {
-  // const {checklistStore} = useStores()
+  // const {tripStore} = useStores()
   // useEffect(() => {
-  //   checklistStore.fetch('30').then(() => {
-  //     console.log(checklistStore)
+  //   tripStore.fetch('30').then(() => {
+  //     console.log(tripStore)
   //   })
   // }, [])
 
@@ -54,10 +54,10 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
     [setActiveTabIndex],
   )
 
-  const renderItemInner: SectionListRenderItem<ChecklistItem, DefaultSectionT> =
+  const renderItemInner: SectionListRenderItem<Todo, DefaultSectionT> =
     useCallback(
-      ({item}) => (ChecklistItem ? <ChecklistItem item={item} /> : <></>),
-      [ChecklistItem],
+      ({item}) => (Todo ? <Todo item={item} /> : <></>),
+      [Todo],
     )
 
   const renderSectionHeaderInner = useCallback(
@@ -79,7 +79,7 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
       {/* <Tab
           value={activeTabIndex}
           onChange={handleTabChange}
-          // indicatorStyle={checklistStyles.TabIndicator}
+          // indicatorStyle={tripStyles.TabIndicator}
         >
           <FlatList
             data={sections}

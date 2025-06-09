@@ -3,13 +3,13 @@ import ContentTitle from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {TransText} from '@/components/TransText'
 import {AppStackScreenProps, goBack} from '@/navigators'
-import {useChecklistItem} from '@/utils/useChecklistItem'
+import {useTodo} from '@/utils/useTodo'
 import {FC, useCallback} from 'react'
 
 export const ConfirmFlightScreen: FC<AppStackScreenProps<'ConfirmFlight'>> = ({
   route,
 }) => {
-  const item = useChecklistItem(route)
+  const item = useTodo(route)
   const handleUploadPress = useCallback(() => {
     // Handle next button press
     console.log('Next button pressed')

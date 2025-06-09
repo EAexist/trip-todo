@@ -57,29 +57,29 @@ const config = {
     // },
     /*  */
     Welcome: 'welcome',
-    DestinationSetting: 'new/:checklistId/destination',
-    DestinationSearch: 'new/:checklistId/destination/search',
-    ScheduleSetting: 'new/:checklistId/schedule',
-    TitleSetting: 'new/:checklistId/title',
-    ChecklistSetting: 'new/:checklistId/checklist',
+    DestinationSetting: 'new/:tripId/destination',
+    DestinationSearch: 'new/:tripId/destination/search',
+    ScheduleSetting: 'new/:tripId/schedule',
+    TitleSetting: 'new/:tripId/title',
+    TripSetting: 'new/:tripId/trip',
     /*  */
-    Checklist: 'checklist/:checklistId?',
-    ChecklistMeta: 'checklist/:checklistId?/meta',
-    ChecklistAdd: 'checklist/:checklistId?/add',
-    ChecklistDelete: 'checklist/:checklistId?/delete',
-    ChecklistReorder: 'checklist/:checklistId?/reorder',
+    Trip: 'trip/:tripId?',
+    TripMeta: 'trip/:tripId?/meta',
+    TodolistAdd: 'trip/:tripId?/add',
+    TodolistDelete: 'trip/:tripId?/delete',
+    TodolistReorder: 'trip/:tripId?/reorder',
     /*  */
-    ChecklistItemCreate: 'checklist/:checklistId?/:checklistItemId?/create',
-    ChecklistItemTitle: 'checklist/:checklistId?/:checklistItemId?/title',
-    ChecklistItemNote: 'checklist/:checklistId?/:checklistItemId?/note',
+    TodoCreate: 'trip/:tripId?/:todoId?/create',
+    TodoTitle: 'trip/:tripId?/:todoId?/title',
+    TodoNote: 'trip/:tripId?/:todoId?/note',
     /*  */
     ConfirmPassport: 'confirm/passport/id',
     ConfirmFlight: 'confirm/flight/id',
     /*  */
-    AccomodationPlan: 'checklist/:checklistId?/accomodationPlan',
-    Accomodation: 'checklist/:checklistId?/accomodation/:accomodationId?',
+    AccomodationPlan: 'trip/:tripId?/accomodationPlan',
+    Accomodation: 'trip/:tripId?/accomodation/:accomodationId?',
     AccomodationNote:
-      'checklist/:checklistId?/accomodation/:accomodationId?/note',
+      'trip/:tripId?/accomodation/:accomodationId?/note',
   },
 }
 

@@ -7,7 +7,7 @@ import {Input} from '@/components/Input'
 import ContentTitle from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
-import {CATEGORY_TO_TITLE, ChecklistItem} from '@/models/ChecklistItem'
+import {CATEGORY_TO_TITLE, Todo} from '@/models/Todo'
 import {AppStackScreenProps, goBack, useNavigate} from '@/navigators'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {ListItem} from '@rneui/themed'
@@ -21,14 +21,14 @@ import {
   ViewStyle,
 } from 'react-native'
 
-export const ChecklistItemCreateScreen: FC<
-  AppStackScreenProps<'ChecklistItemCreate'>
+export const TodoCreateScreen: FC<
+  AppStackScreenProps<'TodoCreate'>
 > = observer(({route}) => {
-  const {checklistStore} = useStores()
-  const {checklistItemId} = route.params
-  const item = checklistStore.checklistItemMap.get(
-    checklistItemId,
-  ) as ChecklistItem
+  const {tripStore} = useStores()
+  const {todoId} = route.params
+  const item = tripStore.todoMap.get(
+    todoId,
+  ) as Todo
   const [note, setNote] = useState('')
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
@@ -48,9 +48,9 @@ export const ChecklistItemCreateScreen: FC<
   }, [])
 
   const handleNotePress = useCallback(() => {
-    console.log(`handleInputPress navigate to [ChecklistItemNote]`)
-    navigate('ChecklistItemNote', {
-      checklistItemId: item.id,
+    console.log(`handleInputPress navigate to [TodoNote]`)
+    navigate('TodoNote', {
+      todoId: item.id,
     })
   }, [navigate, item.id])
 

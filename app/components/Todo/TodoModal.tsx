@@ -1,6 +1,6 @@
 import * as Fab from '@/components/Fab'
 import {useStores} from '@/models'
-import {ChecklistItem} from '@/models/ChecklistItem'
+import {Todo} from '@/models/Todo'
 import {useNavigate} from '@/navigators'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {Input, ListItem} from '@rneui/themed'
@@ -12,12 +12,12 @@ import BottomSheetModal, {BottomSheetModalType} from '../BottomSheetModal'
 import {Title} from '../Layout/Content'
 import {TransText} from '../TransText'
 
-export const ChecklistItemBottomSheet: FC = observer(({}) => {
-  const {checklistStore} = useStores()
-  const item = checklistStore.activeItem as ChecklistItem
+export const TodoBottomSheet: FC = observer(({}) => {
+  const {tripStore} = useStores()
+  const item = tripStore.activeItem as Todo
   const ref = useRef<BottomSheetModalType>(null)
   const {t} = useLingui()
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
   const [pathToOpen, setPathToOpen] = useState<string | undefined>(undefined)
 
   const handleCompletePress = useCallback(() => {
@@ -37,27 +37,27 @@ export const ChecklistItemBottomSheet: FC = observer(({}) => {
       console.log(`handleSheetChanges index=${index}`)
       if (index < 0) {
         if (pathToOpen)
-          navigateWithChecklist('ConfirmPassport', {checklistItemId: item.id})
-        checklistStore.removeActiveItem()
+          navigateWithTrip('ConfirmPassport', {todoId: item.id})
+        tripStore.removeActiveItem()
       } else {
         setPathToOpen(undefined)
       }
     },
-    [item, pathToOpen, checklistStore, navigateWithChecklist],
+    [item, pathToOpen, tripStore, navigateWithTrip],
   )
 
   useEffect(() => {
-    if (checklistStore.isActive) {
+    if (tripStore.isActive) {
       ref.current?.expand()
     }
-  }, [ref, checklistStore.isActive])
+  }, [ref, tripStore.isActive])
 
   const handleInputPress = useCallback(() => {
-    console.log(`handleInputPress navigateWithChecklist to [ChecklistItemNote]`)
-    navigateWithChecklist('ChecklistItemNote', {
-      checklistItemId: item?.id,
+    console.log(`handleInputPress navigateWithTrip to [TodoNote]`)
+    navigateWithTrip('TodoNote', {
+      todoId: item?.id,
     })
-  }, [navigateWithChecklist, item?.id])
+  }, [navigateWithTrip, item?.id])
 
   return (
     <BottomSheetModal ref={ref} onChange={handleSheetChanges}>

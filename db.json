@@ -1,5 +1,5 @@
 {
-  "checklist": [
+  "trip": [
     {
       "title": "Vaundy 보러 가는 도쿠시마 여행 재미있겠다",
       "destinations": [
@@ -12,7 +12,7 @@
       ],
       "startDateISOString": "2025-02-20T00:00:00.001Z",
       "endDateISOString": "2025-02-25T00:00:00.001Z",
-      "checklistItem": {
+      "todo": {
         "1": {
           "id": "1",
           "type": "accomodation",
@@ -102,51 +102,51 @@
           "note": ""
         }
       },
-      "checklistItemIds": [],
+      "todoIds": [],
       "preset": [
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "1"
+          "todo_id": "1"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "2"
+          "todo_id": "2"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "3"
+          "todo_id": "3"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "4"
+          "todo_id": "4"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "5"
+          "todo_id": "5"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "7"
+          "todo_id": "7"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "8"
+          "todo_id": "8"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "9"
+          "todo_id": "9"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "10"
+          "todo_id": "10"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "11"
+          "todo_id": "11"
         },
         {
           "isFlaggedToAdd": true,
-          "checklistItem_id": "12"
+          "todo_id": "12"
         }
       ],
       "id": 3,
@@ -191,7 +191,7 @@
       "items": [1, 2, 3]
     }
   ],
-  "checklistItem": [
+  "todo": [
     {
       "type": "",
       "category": "foreign",
@@ -199,7 +199,7 @@
       "iconId": "",
       "note": "",
       "isFlaggedToDelete": false,
-      "checklistId": "17",
+      "tripId": "17",
       "id": 1
     },
     {
@@ -209,7 +209,7 @@
       "iconId": "",
       "note": "",
       "isFlaggedToDelete": false,
-      "checklistId": "17",
+      "tripId": "17",
       "id": 2
     },
     {
@@ -219,11 +219,11 @@
       "iconId": "",
       "note": "",
       "isFlaggedToDelete": false,
-      "checklistId": "17",
+      "tripId": "17",
       "id": 3
     }
   ],
-  "checklistItemType": [
+  "todoType": [
     {
       "id": 1,
       "preset": true,
@@ -419,7 +419,7 @@
   "accomodation": [
     {
       "id": "1",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Hostel PAQ Tokushima",
       "roomTitle": "혼성 도미토리 내 베드",
       "numberofClient": 2,
@@ -444,7 +444,7 @@
     },
     {
       "id": "3",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Tokushima Washington Hotel Plaza",
       "roomTitle": "1 X 스몰 더블베드",
       "numberofClient": 2,
@@ -469,7 +469,7 @@
     },
     {
       "id": "2",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Yoshiko 님의 숙소",
       "roomTitle": "",
       "numberofClient": 2,
@@ -494,7 +494,7 @@
     },
     {
       "id": "4",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Hostel PAQ Tokushima",
       "roomTitle": "혼성 도미토리 내 베드",
       "numberofClient": 2,

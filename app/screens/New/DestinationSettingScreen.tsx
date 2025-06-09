@@ -60,7 +60,7 @@ const DestinationListItem: FC<DestinationListItemProps> = ({item}) => {
   )
 }
 export const DestinationSettingScreen: FC = () => {
-  const {checklistStore} = useStores()
+  const {tripStore} = useStores()
   const {t} = useLingui()
 
   const renderDestinationListItem: ListRenderItem<Destination> = useCallback(
@@ -68,17 +68,17 @@ export const DestinationSettingScreen: FC = () => {
     [],
   )
 
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
 
   const handleSearchPress = useCallback(() => {
-    navigateWithChecklist('DestinationSearch')
+    navigateWithTrip('DestinationSearch')
   }, [])
   const handleNextPress = useCallback(() => {
     // Handle next button press
     console.log('Next button pressed')
   }, [])
 
-  const {titleText, subtitlteText} = checklistStore.isDestinationSet
+  const {titleText, subtitlteText} = tripStore.isDestinationSet
     ? {
         titleText: `다른 도시도 방문할 예정인가요?`,
         subtitlteText: `여행 중 방문할 도시를 모두 추가해주세요.`,
@@ -92,13 +92,13 @@ export const DestinationSettingScreen: FC = () => {
     <Screen>
       <ContentTitle title={titleText} subtitle={subtitlteText} />
       <View>
-        {checklistStore.isDestinationSet && (
+        {tripStore.isDestinationSet && (
           <View>
             <ListSubheader
-              title={`선택한 여행지 (${checklistStore.destinations.length})`}
+              title={`선택한 여행지 (${tripStore.destinations.length})`}
             />
             <FlatList
-              data={checklistStore.destinations}
+              data={tripStore.destinations}
               renderItem={renderDestinationListItem}
               keyExtractor={item => item.id}
             />

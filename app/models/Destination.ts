@@ -2,7 +2,7 @@ import {Instance, SnapshotIn, SnapshotOut, types} from 'mobx-state-tree'
 import {withSetPropAction} from './helpers/withSetPropAction'
 
 /**
- * This represents a Checklist
+ * This represents a Trip
  */
 
 export const DestinationModel = types
@@ -27,7 +27,7 @@ export const DestinationModel = types
       item.setProp('isFlaggedToAdd', !item.isFlaggedToAdd)
     },
     // removeFavorite(Destination: Destination) {
-    //   store.favorites.remove(checklistItem)
+    //   store.favorites.remove(todo)
     // },
   }))
   .views(item => ({

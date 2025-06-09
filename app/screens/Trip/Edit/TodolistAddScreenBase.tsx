@@ -1,12 +1,12 @@
 import {
-  AddChecklistItem,
-  AddPresetChecklistItem,
-  ChecklistItemBase,
-} from '@/components/ChecklistItem'
+  AddTodo,
+  AddPresetTodo,
+  TodoBase,
+} from '@/components/Todo'
 import * as Fab from '@/components/Fab'
 import ListSubheader from '@/components/ListSubheader'
 import {useStores} from '@/models'
-import {Preset} from '@/models/ChecklistStore'
+import {Preset} from '@/models/TripStore'
 import {useNavigate} from '@/navigators'
 import {observer} from 'mobx-react-lite'
 import {useCallback} from 'react'
@@ -18,26 +18,26 @@ import {
 } from 'react-native'
 import CheckListEditScreenBase, {
   CheckListEditScreenBaseProps,
-} from './ChecklistEditScreenBase'
-interface ChecklistAddScreenBaseProps
+} from './TodolistEditScreenBase'
+interface TodolistAddScreenBaseProps
   extends Pick<CheckListEditScreenBaseProps, 'title' | 'instruction'> {
   nextButtonProps: Fab.NextButtonBaseProps
 }
 
-export const ChecklistAddScreenBase = observer(
-  ({title, instruction, nextButtonProps}: ChecklistAddScreenBaseProps) => {
-    const {checklistStore} = useStores()
-    const {navigateWithChecklist} = useNavigate()
+export const TodolistAddScreenBase = observer(
+  ({title, instruction, nextButtonProps}: TodolistAddScreenBaseProps) => {
+    const {tripStore} = useStores()
+    const {navigateWithTrip} = useNavigate()
 
     const handlePressAddItem = useCallback(
       (category: string) => {
-        checklistStore.createChecklistItem({category}).then(id => {
-          navigateWithChecklist('ChecklistItemCreate', {
-            checklistItemId: id,
+        tripStore.createTodo({category}).then(id => {
+          navigateWithTrip('TodoCreate', {
+            todoId: id,
           })
         })
       },
-      [checklistStore, navigateWithChecklist],
+      [tripStore, navigateWithTrip],
     )
 
     const renderItem: SectionListRenderItem<
@@ -45,16 +45,16 @@ export const ChecklistAddScreenBase = observer(
       DefaultSectionT
     > = ({item}) =>
       item.isPreset ? (
-        <AddPresetChecklistItem preset={item.preset} />
+        <AddPresetTodo preset={item.preset} />
       ) : (
-        <AddChecklistItem item={item.preset.item} />
+        <AddTodo item={item.preset.item} />
       )
 
     const renderSectionHeader = useCallback(
       ({section: {category, title}}: {section: DefaultSectionT}) => (
         <View>
           <ListSubheader lg title={title} />
-          <ChecklistItemBase
+          <TodoBase
             avatarProps={{icon: {name: 'plus'}}}
             title={
               category === 'reservation' ? '할 일 추가하기' : '직접 추가하기'
@@ -71,8 +71,8 @@ export const ChecklistAddScreenBase = observer(
     )
 
     const handleNextPress = useCallback(async () => {
-      checklistStore.addFlaggedPreset()
-    }, [checklistStore])
+      tripStore.addFlaggedPreset()
+    }, [tripStore])
 
     return (
       <CheckListEditScreenBase
@@ -80,7 +80,7 @@ export const ChecklistAddScreenBase = observer(
         instruction={instruction}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        sections={checklistStore.checklistWithPreset}>
+        sections={tripStore.tripWithPreset}>
         <Fab.Container>
           <Fab.NextButton
             handlePressbeforeNavigate={handleNextPress}

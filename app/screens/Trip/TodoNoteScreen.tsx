@@ -2,7 +2,7 @@ import * as Fab from '@/components/Fab'
 import {Input} from '@/components/Input'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
-import {ChecklistItem, ChecklistItemSnapshotIn} from '@/models/ChecklistItem'
+import {Todo, TodoSnapshotIn} from '@/models/Todo'
 import {AppStackScreenProps, goBack} from '@/navigators'
 import {Trans} from '@lingui/react/macro'
 import {ListItem} from '@rneui/themed'
@@ -12,10 +12,10 @@ import {ViewStyle} from 'react-native'
 import {Avatar} from '../../components/Avatar'
 import {TransText} from '../../components/TransText'
 import {Title} from '@/components/Layout/Content'
-import {useChecklistItem} from '@/utils/useChecklistItem'
+import {useTodo} from '@/utils/useTodo'
 
-export const ChecklistItemNoteScreenBase: FC<{
-  item: ChecklistItem
+export const TodoNoteScreenBase: FC<{
+  item: Todo
   handleCompletePress: () => void
 }> = observer(({item, handleCompletePress}) => {
   const [value, setValue] = useState(item.note)
@@ -44,10 +44,10 @@ export const ChecklistItemNoteScreenBase: FC<{
   )
 })
 
-export const ChecklistItemNoteScreen: FC<
-  AppStackScreenProps<'ChecklistItemNote'>
+export const TodoNoteScreen: FC<
+  AppStackScreenProps<'TodoNote'>
 > = observer(({route}) => {
-  const item = useChecklistItem(route)
+  const item = useTodo(route)
   const [value, setValue] = useState(item.note)
 
   const handleCompletePress = useCallback(() => {

@@ -1,5 +1,5 @@
 {
-  "checklist": [
+  "trip": [
     {
       "title": "Vaundy 보러 가는 도쿠시마 여행 재미있겠다",
       "destinations": [
@@ -12,7 +12,7 @@
       ],
       "startDateISOString": "2025-02-20T00:00:00.001Z",
       "endDateISOString": "2025-02-25T00:00:00.001Z",
-      "checklistItem": [],
+      "todo": [],
       "id": 3,
       "accomodation": [],
       "preset": []
@@ -20,57 +20,57 @@
   ],
   "preset_To_": [
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "1"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "2"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "3"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "4"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "5"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "7"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "8"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "9"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "10"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "11"
     },
     {
-      "checklist_id": "1",
+      "trip_id": "1",
       "isFlaggedToAdd": true,
       "preset_id": "12"
     }
@@ -217,12 +217,12 @@
       "type_id": "goods"
     }
   ],
-  "checklistItem": [
+  "todo": [
     {
       "id": "1",
       "order_key": "1",
       "preset_id": "1",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "accomodation",
       "category": "reservation",
       "title": "숙소 예약",
@@ -233,7 +233,7 @@
       "id": "2",
       "order_key": "2",
       "preset_id": "2",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "passport",
       "category": "foreign",
       "title": "여권",
@@ -244,7 +244,7 @@
       "id": "3",
       "order_key": "3",
       "preset_id": "3",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "currency",
       "category": "foreign",
       "title": "환전",
@@ -255,7 +255,7 @@
       "id": "4",
       "order_key": "4",
       "preset_id": "4",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "roaming",
       "category": "foreign",
       "title": "로밍",
@@ -266,7 +266,7 @@
       "id": "5",
       "order_key": "5",
       "preset_id": "5",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "visit-japan",
       "category": "foreign",
       "title": "Visit Japan",
@@ -277,7 +277,7 @@
       "id": "7",
       "order_key": "7",
       "preset_id": "7",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "military-approvement",
       "category": "foreign",
       "title": "국외여행허가",
@@ -288,7 +288,7 @@
       "id": "8",
       "order_key": "8",
       "preset_id": "8",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "goods",
       "category": "goods",
       "title": "세면도구",
@@ -299,7 +299,7 @@
       "id": "9",
       "order_key": "9",
       "preset_id": "9",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "goods",
       "category": "goods",
       "title": "어댑터",
@@ -310,7 +310,7 @@
       "id": "10",
       "order_key": "10",
       "preset_id": "10",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "goods",
       "category": "goods",
       "title": "선글라스",
@@ -321,7 +321,7 @@
       "id": "11",
       "order_key": "11",
       "preset_id": "11",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "goods",
       "category": "goods",
       "title": "캐리어",
@@ -332,7 +332,7 @@
       "id": "12",
       "order_key": "12",
       "preset_id": "12",
-      "checklist_id": "1",
+      "trip_id": "1",
       "type": "goods",
       "category": "goods",
       "title": "우산",
@@ -343,7 +343,7 @@
   "accomodation": [
     {
       "id": "1",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Hostel PAQ Tokushima",
       "roomTitle": "혼성 도미토리 내 베드",
       "numberofClient": 2,
@@ -368,7 +368,7 @@
     },
     {
       "id": "3",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Tokushima Washington Hotel Plaza",
       "roomTitle": "1 X 스몰 더블베드",
       "numberofClient": 2,
@@ -393,7 +393,7 @@
     },
     {
       "id": "2",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Yoshiko 님의 숙소",
       "roomTitle": "",
       "numberofClient": 2,
@@ -418,7 +418,7 @@
     },
     {
       "id": "4",
-      "checklist_id": "4",
+      "trip_id": "4",
       "title": "Hostel PAQ Tokushima",
       "roomTitle": "혼성 도미토리 내 베드",
       "numberofClient": 2,

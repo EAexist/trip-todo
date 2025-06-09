@@ -1,10 +1,10 @@
 {
-  "name": "travel-checklist",
-  "displayName": "travel-checklist",
+  "name": "trip-todo",
+  "displayName": "trip-todo",
   "expo": {
-    "name": "travel-checklist",
-    "slug": "travel-checklist",
-    "scheme": "travel-checklist",
+    "name": "trip-todo",
+    "slug": "trip-todo",
+    "scheme": "trip-todo",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",

@@ -7,7 +7,7 @@ export const CATEGORY_TO_TITLE: {[key: string]: string} = {
   goods: '짐',
 }
 
-export const defaultChecklistItem = {
+export const defaultTodo = {
   type: '',
   category: '',
   title: '',
@@ -16,10 +16,10 @@ export const defaultChecklistItem = {
   isFlaggedToDelete: false,
 }
 /**
- * This represents a Checklist
+ * This represents a Trip
  */
-export const ChecklistItemModel = types
-  .model('ChecklistItem')
+export const TodoModel = types
+  .model('Todo')
   .props({
     id: types.identifier,
     type: types.string,
@@ -42,8 +42,8 @@ export const ChecklistItemModel = types
     toggleDeleteFlag() {
       item.setProp('isFlaggedToDelete', !item.isFlaggedToDelete)
     },
-    // removeFavorite(ChecklistItem: ChecklistItem) {
-    //   store.favorites.remove(checklistItem)
+    // removeFavorite(Todo: Todo) {
+    //   store.favorites.remove(todo)
     // },
   }))
   .views(item => ({
@@ -66,8 +66,8 @@ export const ChecklistItemModel = types
     },
   }))
 
-export interface ChecklistItem extends Instance<typeof ChecklistItemModel> {}
-export interface ChecklistItemSnapshotOut
-  extends SnapshotOut<typeof ChecklistItemModel> {}
-export interface ChecklistItemSnapshotIn
-  extends SnapshotIn<typeof ChecklistItemModel> {}
+export interface Todo extends Instance<typeof TodoModel> {}
+export interface TodoSnapshotOut
+  extends SnapshotOut<typeof TodoModel> {}
+export interface TodoSnapshotIn
+  extends SnapshotIn<typeof TodoModel> {}

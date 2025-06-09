@@ -8,9 +8,9 @@ import ContentTitle, {Title} from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {TextInfoListItem} from '@/components/TextInfoListItem'
 import {TransText} from '@/components/TransText'
-import {CATEGORY_TO_TITLE} from '@/models/ChecklistItem'
+import {CATEGORY_TO_TITLE} from '@/models/Todo'
 import {AppStackScreenProps, goBack, useNavigate} from '@/navigators'
-import {useChecklistItem} from '@/utils/useChecklistItem'
+import {useTodo} from '@/utils/useTodo'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {ListItem} from '@rneui/themed'
 import {observer} from 'mobx-react-lite'
@@ -22,39 +22,39 @@ import {
   ViewStyle,
 } from 'react-native'
 
-export const ChecklistItemCreateScreen: FC<
-  AppStackScreenProps<'ChecklistItemCreate'>
+export const TodoCreateScreen: FC<
+  AppStackScreenProps<'TodoCreate'>
 > = observer(({route}) => {
-  const checklistItem = useChecklistItem(route)
+  const todo = useTodo(route)
   const [note, setNote] = useState('')
   const [title, setTitle] = useState('')
-  const [category, setCategory] = useState(checklistItem.category)
+  const [category, setCategory] = useState(todo.category)
   const categoryBottomSheetModalRef = useRef<BottomSheet>(null)
   const iconBottomSheetModalRef = useRef<BottomSheet>(null)
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
 
   const handleCompletePress = useCallback(() => {
-    if (!checklistItem.isCompleted) checklistItem.complete()
-    else checklistItem.setIncomplete()
-  }, [checklistItem])
+    if (!todo.isCompleted) todo.complete()
+    else todo.setIncomplete()
+  }, [todo])
 
   const handleConfirmPress = useCallback(() => {
-    checklistItem.setProp('title', title)
-    checklistItem.setProp('note', note)
-    checklistItem.setProp('category', category)
+    todo.setProp('title', title)
+    todo.setProp('note', note)
+    todo.setProp('category', category)
     goBack()
-  }, [checklistItem, title, note, category])
+  }, [todo, title, note, category])
 
   const handleIconPress = useCallback(() => {
     iconBottomSheetModalRef.current?.expand()
   }, [iconBottomSheetModalRef])
 
   const handleNotePress = useCallback(() => {
-    console.log(`handleInputPress navigateWithChecklist to [ChecklistItemNote]`)
-    navigateWithChecklist('ChecklistItemNote', {
-      checklistItemId: checklistItem.id,
+    console.log(`handleInputPress navigateWithTrip to [TodoNote]`)
+    navigateWithTrip('TodoNote', {
+      todoId: todo.id,
     })
-  }, [navigateWithChecklist, checklistItem.id])
+  }, [navigateWithTrip, todo.id])
 
   const handleCategoryPress = useCallback(() => {
     categoryBottomSheetModalRef.current?.expand()
@@ -75,10 +75,10 @@ export const ChecklistItemCreateScreen: FC<
 
   const handlePress = useCallback(
     (iconId: string) => {
-      checklistItem.setProp('iconId', iconId)
+      todo.setProp('iconId', iconId)
       iconBottomSheetModalRef.current?.close()
     },
-    [iconBottomSheetModalRef, checklistItem],
+    [iconBottomSheetModalRef, todo],
   )
   const renderIconListItem: ListRenderItem<{iconId: string}> = useCallback(
     ({item}) => {
@@ -131,7 +131,7 @@ export const ChecklistItemCreateScreen: FC<
         <Title>
           <ListItem containerStyle={$listItemContainerStyle}>
             <TouchableOpacity onPress={handleIconPress}>
-              <Avatar iconId={checklistItem.iconId || '🧐'} size="xlarge" />
+              <Avatar iconId={todo.iconId || '🧐'} size="xlarge" />
             </TouchableOpacity>
             <ListItem.Content>
               <ListItem.Title>
@@ -150,14 +150,14 @@ export const ChecklistItemCreateScreen: FC<
           rightContent={
             <ListItem.CheckBox
               onPress={handleCompletePress}
-              checked={checklistItem.isCompleted}
+              checked={todo.isCompleted}
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               size={24}
             />
           }>
-          <TransText primary={checklistItem.isCompleted}>
-            {checklistItem.isCompleted ? '완료' : '미완료'}
+          <TransText primary={todo.isCompleted}>
+            {todo.isCompleted ? '완료' : '미완료'}
           </TransText>
         </TextInfoListItem>
         <TextInfoListItem
@@ -165,7 +165,7 @@ export const ChecklistItemCreateScreen: FC<
           rightContent={<ListItem.Chevron />}
           onPress={handleCategoryPress}>
           <TransText>
-            {checklistItem.categoryTitle || '카테고리 선택'}
+            {todo.categoryTitle || '카테고리 선택'}
           </TransText>
         </TextInfoListItem>
         <TextInfoListItem
@@ -174,7 +174,7 @@ export const ChecklistItemCreateScreen: FC<
           // onPress={handleInputPress}
           rightContent={<ListItem.Chevron />}>
           <TransText primary>
-            {checklistItem.note || '메모를 남겨보세요'}
+            {todo.note || '메모를 남겨보세요'}
           </TransText>
         </TextInfoListItem>
         <Fab.Container>

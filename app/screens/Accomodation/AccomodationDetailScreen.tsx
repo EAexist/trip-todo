@@ -84,13 +84,13 @@ export const AccomodationDetailScreen: FC<AccomodationDetailScreenProps> =
       return <ThirdpartyAvatar {...item} />
     }
 
-    const {navigateWithChecklist} = useNavigate()
+    const {navigateWithTrip} = useNavigate()
     const handleInputPress = useCallback(() => {
       console.log(
-        `handleInputPress navigateWithChecklist to [ChecklistItemNote]`,
+        `handleInputPress navigateWithTrip to [TodoNote]`,
       )
-      navigateWithChecklist('AccomodationNote', {accomodationId: item?.id})
-    }, [item, navigateWithChecklist])
+      navigateWithTrip('AccomodationNote', {accomodationId: item?.id})
+    }, [item, navigateWithTrip])
 
     return item ? (
       <Screen>

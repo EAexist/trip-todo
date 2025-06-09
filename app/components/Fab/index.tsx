@@ -91,7 +91,7 @@ export const NextButtonBase: FC<ButtonProps> = props => {
 export interface NextButtonBaseProps extends NavigateProps {
   buttonProps?: ButtonProps
   handlePressbeforeNavigate?: () => Promise<any>
-  doNavigateWithChecklist?: boolean
+  doNavigateWithTrip?: boolean
 }
 
 /**
@@ -104,11 +104,11 @@ export const NextButton: FC<NextButtonBaseProps> = ({
   params,
   buttonProps,
   handlePressbeforeNavigate,
-  doNavigateWithChecklist = true,
+  doNavigateWithTrip = true,
 }) => {
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
 
-  const _navigate = doNavigateWithChecklist ? navigateWithChecklist : navigate
+  const _navigate = doNavigateWithTrip ? navigateWithTrip : navigate
 
   const handlePress = useCallback(() => {
     if (handlePressbeforeNavigate)

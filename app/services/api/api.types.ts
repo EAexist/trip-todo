@@ -1,6 +1,6 @@
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
-import {ChecklistItemSnapshotIn} from '@/models/ChecklistItem'
-import {ChecklistStoreSnapshot, Preset} from '@/models/ChecklistStore'
+import {TodoSnapshotIn} from '@/models/Todo'
+import {TripStoreSnapshot, Preset} from '@/models/TripStore'
 
 /**
  * These types indicate the shape of the data you expect to receive from your
@@ -38,42 +38,42 @@ import {ChecklistStoreSnapshot, Preset} from '@/models/ChecklistStore'
 //   items: EpisodeItem[]
 // }
 
-export interface ApiChecklistResponse
-  extends Omit<ChecklistStoreSnapshot, 'id'> {
+export interface ApiTripResponse
+  extends Omit<TripStoreSnapshot, 'id'> {
   id: number
   status: string
 }
 
-export interface ApiCreateChecklistResponse
-  extends Omit<ChecklistStoreSnapshot, 'id'> {
+export interface ApiCreateTripResponse
+  extends Omit<TripStoreSnapshot, 'id'> {
   id: number
   status: string
 }
 
-export interface ApiChecklistItemResponse
-  extends Omit<ChecklistItemSnapshotIn, 'id'> {
+export interface ApiTodoResponse
+  extends Omit<TodoSnapshotIn, 'id'> {
   id: number
   status: string
 }
-// export interface ApiChecklistItemListResponse
-//   extends Omit<ChecklistItemSnapshotIn, 'id'> {
+// export interface ApiTodoListResponse
+//   extends Omit<TodoSnapshotIn, 'id'> {
 //   id: number
 //   status: string
 // }
 
-export interface _ApiCreateChecklistResponse
+export interface _ApiCreateTripResponse
   extends Omit<
-    ChecklistStoreSnapshot,
+    TripStoreSnapshot,
     | 'startDateISOString'
     | 'endDateISOString'
-    | 'checklistItems'
-    | 'checklistItemMap'
+    | 'todos'
+    | 'todoMap'
     // | 'presetMap'
   > {
   startDate: string
   endDate: string
-  checklistItems: ChecklistItemSnapshotIn[]
-  // preset: Map<string, ChecklistItemSnapshotIn>
+  todos: TodoSnapshotIn[]
+  // preset: Map<string, TodoSnapshotIn>
   status: string
 }
 
@@ -83,7 +83,7 @@ export interface ApiPresetResponse {
 }
 
 export interface ApiAccomodationResponse {
-  //  Omit<ChecklistStoreSnapshot, 'startDate' | 'endDate'> {
+  //  Omit<TripStoreSnapshot, 'startDate' | 'endDate'> {
   status: string
   items: (Omit<
     AccomodationItemSnapshotIn,

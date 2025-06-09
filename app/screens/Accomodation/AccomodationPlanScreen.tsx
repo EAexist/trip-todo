@@ -20,7 +20,7 @@ import {CalendarProvider, ExpandableCalendar} from 'react-native-calendars'
 import {Positions} from 'react-native-calendars/src/expandableCalendar'
 
 const AccomodationPlanCalendar: FC = () => {
-  const {checklistStore, accomodationStore} = useStores()
+  const {tripStore, accomodationStore} = useStores()
 
   const markedDates = Object.fromEntries(
     accomodationStore.calendarMarkedDateEntries.map(
@@ -34,8 +34,8 @@ const AccomodationPlanCalendar: FC = () => {
   return (
     <CalendarProvider
       date={
-        checklistStore.startDate
-          ? toCalendarString(checklistStore.startDate)
+        tripStore.startDate
+          ? toCalendarString(tripStore.startDate)
           : ''
       }>
       <ExpandableCalendar
@@ -44,9 +44,9 @@ const AccomodationPlanCalendar: FC = () => {
         horizontal={false}
         // ref={calendarRef}
         // onCalendarToggled={onCalendarToggled}
-        // initialDate={toCalendarString(checklistStore.startDate)}
-        // minDate={toCalendarString(checklistStore.startDate)}
-        // maxDate={toCalendarString(checklistStore.endDate)}
+        // initialDate={toCalendarString(tripStore.startDate)}
+        // minDate={toCalendarString(tripStore.startDate)}
+        // maxDate={toCalendarString(tripStore.endDate)}
       />
     </CalendarProvider>
   )
@@ -56,9 +56,9 @@ const AccomodationListItem: FC<{
   item: AccomodationItem
 }> = ({item}) => {
   const {accomodationStore} = useStores()
-  const {navigateWithChecklist} = useNavigate()
+  const {navigateWithTrip} = useNavigate()
   const handlePress = useCallback(() => {
-    navigateWithChecklist('Accomodation', {accomodationId: item.id})
+    navigateWithTrip('Accomodation', {accomodationId: item.id})
   }, [])
   useEffect(() => {
     console.log(item)

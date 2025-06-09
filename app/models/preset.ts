@@ -1,5 +1,5 @@
-import {ChecklistItemSnapshotIn} from './ChecklistItem'
-const presetList: ChecklistItemSnapshotIn[] = [
+import {TodoSnapshotIn} from './Todo'
+const presetList: TodoSnapshotIn[] = [
   /* 예약 */
   {
     id: '1',

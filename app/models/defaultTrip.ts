@@ -1,7 +1,7 @@
-import {ChecklistItemSnapshotIn} from './ChecklistItem'
-import {ChecklistStoreSnapshot} from './ChecklistStore'
+import {TodoSnapshotIn} from './Todo'
+import {TripStoreSnapshot} from './TripStore'
 
-const preset: {[id: string]: ChecklistItemSnapshotIn} = {
+const preset: {[id: string]: TodoSnapshotIn} = {
   '1': {
     id: '1',
     type: 'accomodation',
@@ -103,9 +103,9 @@ const preset: {[id: string]: ChecklistItemSnapshotIn} = {
   },
 }
 
-export const defaultChecklist = {
-  checklistItemMap: preset,
-  checklistItems: {
+export const defaultTrip = {
+  todoMap: preset,
+  todos: {
     reservation: [],
     foreign: [],
     goods: [],
@@ -114,4 +114,4 @@ export const defaultChecklist = {
     isFlaggedToAdd: true,
     item: id,
   })),
-} as ChecklistStoreSnapshot
+} as TripStoreSnapshot
