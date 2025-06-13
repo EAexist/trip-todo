@@ -1,15 +1,11 @@
-import {
-  AddTodo,
-  AddPresetTodo,
-  TodoBase,
-} from '@/components/Todo'
+import {AddTodo, AddPresetTodo, TodoBase} from '@/components/Todo'
 import * as Fab from '@/components/Fab'
 import ListSubheader from '@/components/ListSubheader'
 import {useStores} from '@/models'
 import {Preset} from '@/models/TripStore'
 import {useNavigate} from '@/navigators'
 import {observer} from 'mobx-react-lite'
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
 import {
   DefaultSectionT,
   SectionListRenderItem,
@@ -19,6 +15,7 @@ import {
 import CheckListEditScreenBase, {
   CheckListEditScreenBaseProps,
 } from './TodolistEditScreenBase'
+import {Todo} from '@/models/Todo'
 interface TodolistAddScreenBaseProps
   extends Pick<CheckListEditScreenBaseProps, 'title' | 'instruction'> {
   nextButtonProps: Fab.NextButtonBaseProps
@@ -29,9 +26,16 @@ export const TodolistAddScreenBase = observer(
     const {tripStore} = useStores()
     const {navigateWithTrip} = useNavigate()
 
+    useEffect(() => {
+      async function fetchPreset() {
+        await tripStore.fetchPreset()
+      }
+      fetchPreset()
+    }, [])
+
     const handlePressAddItem = useCallback(
-      (category: string) => {
-        tripStore.createTodo({category}).then(id => {
+      async (category: string) => {
+        await tripStore.createCustomTodo(category).then(id => {
           navigateWithTrip('TodoCreate', {
             todoId: id,
           })
@@ -41,13 +45,13 @@ export const TodolistAddScreenBase = observer(
     )
 
     const renderItem: SectionListRenderItem<
-      {isPreset: boolean; preset: Preset},
+      {todo?: Todo; preset?: Preset},
       DefaultSectionT
-    > = ({item}) =>
-      item.isPreset ? (
-        <AddPresetTodo preset={item.preset} />
+    > = ({item: {preset, todo}}) =>
+      preset ? (
+        <AddPresetTodo preset={preset} />
       ) : (
-        <AddTodo item={item.preset.item} />
+        <AddTodo item={todo as Todo} />
       )
 
     const renderSectionHeader = useCallback(
@@ -80,7 +84,7 @@ export const TodolistAddScreenBase = observer(
         instruction={instruction}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        sections={tripStore.tripWithPreset}>
+        sections={tripStore.todolistWithPreset}>
         <Fab.Container>
           <Fab.NextButton
             handlePressbeforeNavigate={handleNextPress}

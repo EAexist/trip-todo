@@ -44,9 +44,9 @@ export type AppStackParamList = {
   DestinationSearch: TripStackProps
   ScheduleSetting: TripStackProps
   TitleSetting: TripStackProps
-  TripSetting: TripStackProps
+  TodolistSetting: TripStackProps
   /* Edit Trip */
-  Trip: TripStackProps
+  Todolist: TripStackProps
   TodolistAdd: TripStackProps
   TodolistDelete: TripStackProps
   TodolistReorder: TripStackProps
@@ -117,13 +117,10 @@ const AppStack = observer(function AppStack() {
             component={Screens.New.TitleSetting}
           />
           <Stack.Screen
-            name="TripSetting"
-            component={Screens.New.TripSetting}
+            name="TodolistSetting"
+            component={Screens.New.TodolistSetting}
           />
-          <Stack.Screen
-            name="TodoCreate"
-            component={Screens.Trip.Create}
-          />
+          <Stack.Screen name="TodoCreate" component={Screens.Trip.Create} />
           {/* <Stack.Screen
               name="New"
               component={Screens.DestinationSettingScreen}
@@ -131,18 +128,15 @@ const AppStack = observer(function AppStack() {
           {/* </Stack.Group> */}
           {/* <Stack.Group> */}
           <Stack.Screen
-            name="Trip"
-            component={Screens.Trip.TripScreen}
+            name="Todolist"
+            component={Screens.Trip.TodolistScreen}
           />
           <Stack.Screen name="TodolistAdd" component={Screens.Trip.Add} />
           <Stack.Screen
             name="TodolistReorder"
             component={Screens.Trip.Reorder}
           />
-          <Stack.Screen
-            name="TodolistDelete"
-            component={Screens.Trip.Delete}
-          />
+          <Stack.Screen name="TodolistDelete" component={Screens.Trip.Delete} />
           <Stack.Screen
             name="ConfirmPassport"
             component={Screens.Confirm.Passport}
@@ -163,14 +157,8 @@ const AppStack = observer(function AppStack() {
             name="AccomodationNote"
             component={Screens.Accomodation.Note}
           />
-          <Stack.Screen
-            name="TodoNote"
-            component={Screens.Trip.Note}
-          />
-          <Stack.Screen
-            name="TodoTitle"
-            component={Screens.Trip.Title}
-          />
+          <Stack.Screen name="TodoNote" component={Screens.Trip.Note} />
+          <Stack.Screen name="TodoTitle" component={Screens.Trip.Title} />
         </>
       )}
 

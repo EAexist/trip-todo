@@ -73,9 +73,8 @@ export const DestinationSettingScreen: FC = () => {
   const handleSearchPress = useCallback(() => {
     navigateWithTrip('DestinationSearch')
   }, [])
-  const handleNextPress = useCallback(() => {
-    // Handle next button press
-    console.log('Next button pressed')
+  const handleNextPress = useCallback(async () => {
+    tripStore.patch()
   }, [])
 
   const {titleText, subtitlteText} = tripStore.isDestinationSet
@@ -95,10 +94,10 @@ export const DestinationSettingScreen: FC = () => {
         {tripStore.isDestinationSet && (
           <View>
             <ListSubheader
-              title={`선택한 여행지 (${tripStore.destinations.length})`}
+              title={`선택한 여행지 (${tripStore.destination.length})`}
             />
             <FlatList
-              data={tripStore.destinations}
+              data={tripStore.destination}
               renderItem={renderDestinationListItem}
               keyExtractor={item => item.id}
             />
@@ -109,7 +108,10 @@ export const DestinationSettingScreen: FC = () => {
         </TouchableOpacity>
       </View>
       <Fab.Container>
-        <Fab.NextButton name="ScheduleSetting" />
+        <Fab.NextButton
+          name="ScheduleSetting"
+          handlePressbeforeNavigate={handleNextPress}
+        />
       </Fab.Container>
     </Screen>
   )

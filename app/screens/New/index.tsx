@@ -3,4 +3,4 @@ export {DestinationSettingScreen as DestinationSetting} from './DestinationSetti
 export {DestinationSearchScreen as DestinationSearch} from './DestinationSearchScreen'
 export {ScheduleSettingScreen as ScheduleSetting} from './ScheduleSettingScreen'
 export {TripTitleSettingScreen as TitleSetting} from './TripTitleSettingScreen'
-export {TripSettingScreen as TripSetting} from './TripSettingScreen'
+export {TodolistSettingScreen as TodolistSetting} from './TodolistSettingScreen'

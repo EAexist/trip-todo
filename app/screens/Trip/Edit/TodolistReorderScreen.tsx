@@ -1,11 +1,11 @@
-import {Screen} from '@/components'
 import {ReorderTodo} from '@/components/Todo'
-import ContentTitle from '@/components/Layout/Content'
 import {useStores} from '@/models'
 import {Todo} from '@/models/Todo'
 import {useNavigate} from '@/navigators'
 import {useHeader} from '@/utils/useHeader'
+import {observer} from 'mobx-react-lite'
 import {useCallback, useEffect} from 'react'
+import {SectionListRenderItem} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import type {
   SortableGridDragEndParams,
@@ -13,8 +13,6 @@ import type {
 } from 'react-native-sortables'
 import Sortable from 'react-native-sortables'
 import CheckListEditScreenBase from './TodolistEditScreenBase'
-import {DefaultSectionT, SectionListRenderItem} from 'react-native'
-import {observer} from 'mobx-react-lite'
 
 export const ReorderTrip = observer(({category}: {category: string}) => {
   const scrollableRef = useAnimatedRef<Animated.ScrollView>()
@@ -32,9 +30,9 @@ export const ReorderTrip = observer(({category}: {category: string}) => {
   const handleDragEnd = useCallback<
     (props: SortableGridDragEndParams<any>) => void
   >(
-    ({indexToKey}) => {
+    ({indexToKey, keyToIndex}) => {
       'worklet'
-      tripStore.reorder(category, indexToKey)
+      tripStore.reorder(category, keyToIndex)
       // Your code here
     },
     [tripStore, category],
@@ -44,7 +42,7 @@ export const ReorderTrip = observer(({category}: {category: string}) => {
     <Animated.ScrollView ref={scrollableRef}>
       <Sortable.Grid
         columns={1}
-        data={tripStore.todos.get(category) as Todo[]}
+        data={tripStore.todolist.get(category) as Todo[]}
         renderItem={renderItem}
         scrollableRef={scrollableRef} // required for auto scroll
         overDrag="none"

@@ -1,5 +1,5 @@
 import {useStores} from '@/models'
-import {Todo} from '@/models/Todo'
+import {PresetTodoContent, Todo} from '@/models/Todo'
 import {Preset} from '@/models/TripStore'
 import {useNavigate} from '@/navigators'
 import {Trans} from '@lingui/react/macro'
@@ -16,9 +16,7 @@ import {
 import {Avatar, AvatarProps} from '../Avatar'
 import {ListItemCaption} from '../ListItemCaption'
 
-interface TodoBaseProps
-  extends Pick<AvatarProps, 'iconId'>,
-    ListItemProps {
+interface TodoBaseProps extends Pick<AvatarProps, 'iconId'>, ListItemProps {
   title: string
   subtitle?: string
   caption?: string
@@ -83,7 +81,7 @@ export type TodoProps = {id: string} & Pick<
 //   onPress?: () => void
 // }
 
-export const AddTodo: FC<{item: Todo}> = ({item}) => {
+export const AddTodo: FC<{item: PresetTodoContent}> = ({item}) => {
   const [isAdded, setIsAdded] = useState(true)
 
   const handlePress = useCallback(() => {
@@ -100,37 +98,35 @@ export const AddTodo: FC<{item: Todo}> = ({item}) => {
   )
 }
 
-export const AddPresetTodo: FC<{preset: Preset}> = observer(
-  ({preset}) => {
-    const handlePress = useCallback(() => {
-      preset.toggleAddFlag()
-    }, [preset])
+export const AddPresetTodo: FC<{preset: Preset}> = observer(({preset}) => {
+  const handlePress = useCallback(() => {
+    preset.toggleAddFlag()
+  }, [preset])
 
-    const {
-      theme: {colors},
-    } = useTheme()
-    return (
-      <TodoBase
-        rightContent={
-          <ListItem.CheckBox
-            onPress={handlePress}
-            checked={preset.isFlaggedToAdd}
-            checkedIcon={<Icon name="check-circle" />}
-            uncheckedIcon={
-              <Icon name="check-circle-outline" color={colors.grey1} />
-            }
-          />
-        }
-        onPress={handlePress}
-        {...(!preset.isFlaggedToAdd && {
-          avatarStyle: styles.disabled,
-          contentStyle: styles.disabled,
-        })}
-        {...preset.item}
-      />
-    )
-  },
-)
+  const {
+    theme: {colors},
+  } = useTheme()
+  return (
+    <TodoBase
+      rightContent={
+        <ListItem.CheckBox
+          onPress={handlePress}
+          checked={preset.isFlaggedToAdd}
+          checkedIcon={<Icon name="check-circle" />}
+          uncheckedIcon={
+            <Icon name="check-circle-outline" color={colors.grey1} />
+          }
+        />
+      }
+      onPress={handlePress}
+      {...(!preset.isFlaggedToAdd && {
+        avatarStyle: styles.disabled,
+        contentStyle: styles.disabled,
+      })}
+      {...preset.item}
+    />
+  )
+})
 
 const useDelayedEdit = ({
   initialState = false,
@@ -158,57 +154,55 @@ const styles = StyleSheet.create({
   disabled: {opacity: 0.5},
 })
 
-export const CompleteTodo: FC<{item: Todo}> = observer(
-  ({item}) => {
-    const displayDelay = 500
-    const {navigateWithTrip} = useNavigate()
-    const {tripStore} = useStores()
+export const CompleteTodo: FC<{item: Todo}> = observer(({item}) => {
+  const displayDelay = 500
+  const {navigateWithTrip} = useNavigate()
+  const {tripStore} = useStores()
 
-    const [displayComplete, setDisplayComplete] = useState(item.isCompleted)
+  const [displayComplete, setDisplayComplete] = useState(item.isCompleted)
 
-    useEffect(() => {
-      const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
-      sleep.then(() => {
-        if (displayComplete) item.complete()
-        else item.setIncomplete()
-      })
-    }, [item, displayComplete])
+  useEffect(() => {
+    const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
+    sleep.then(() => {
+      if (displayComplete) item.complete()
+      else item.setIncomplete()
+    })
+  }, [item, displayComplete])
 
-    const handleCompletePress = useCallback(() => {
+  const handleCompletePress = useCallback(() => {
+    console.log(item.title)
+    if (!item.isCompleted && item.type === 'passport')
+      navigateWithTrip('ConfirmPassport', {todoId: item.id})
+    else setDisplayComplete(prev => !prev)
+    // if (!item.isCompleted) item.complete()
+    // else item.setIncomplete()
+  }, [item, navigateWithTrip])
+
+  const handlePress = useCallback(
+    (e: GestureResponderEvent) => {
       console.log(item.title)
-      if (!item.isCompleted && item.type === 'passport')
-        navigateWithTrip('ConfirmPassport', {todoId: item.id})
-      else setDisplayComplete(prev => !prev)
-      // if (!item.isCompleted) item.complete()
-      // else item.setIncomplete()
-    }, [item, navigateWithTrip])
+      e.stopPropagation()
+      tripStore.setActiveItem(item)
+    },
+    [tripStore, item],
+  )
 
-    const handlePress = useCallback(
-      (e: GestureResponderEvent) => {
-        console.log(item.title)
-        e.stopPropagation()
-        tripStore.setActiveItem(item)
-      },
-      [tripStore, item],
-    )
-
-    return (
-      <TodoBase
-        rightContent={
-          <ListItem.CheckBox
-            onPress={handleCompletePress}
-            checked={displayComplete}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-          />
-        }
-        subtitle={item.note !== '' ? item.note : undefined}
-        onPress={handlePress}
-        {...item}
-      />
-    )
-  },
-)
+  return (
+    <TodoBase
+      rightContent={
+        <ListItem.CheckBox
+          onPress={handleCompletePress}
+          checked={displayComplete}
+          checkedIcon="dot-circle-o"
+          uncheckedIcon="circle-o"
+        />
+      }
+      subtitle={item.note !== '' ? item.note : undefined}
+      onPress={handlePress}
+      {...item}
+    />
+  )
+})
 
 // export const PassportTodo: FC<{item: Todo}> = ({item}) => {
 //   const {tripStore} = useStores()
@@ -241,9 +235,7 @@ export const CompleteTodo: FC<{item: Todo}> = observer(
 //   )
 // }
 
-export const AccomodationTodo: FC<{item: Todo}> = ({
-  item,
-}) => {
+export const AccomodationTodo: FC<{item: Todo}> = ({item}) => {
   const {navigateWithTrip} = useNavigate()
   const handlePress = useCallback(() => {
     navigateWithTrip('AccomodationPlan')
@@ -267,47 +259,45 @@ export const ReorderTodo: FC<{item: Todo}> = ({item}) => {
   )
 }
 
-export const DeleteTodo: FC<{item: Todo}> = observer(
-  ({item}) => {
-    const setComplete = useCallback(
-      (isCompleted: boolean) => {
-        item.setProp('isFlaggedToDelete', isCompleted)
-      },
-      [item],
-    )
+export const DeleteTodo: FC<{item: Todo}> = observer(({item}) => {
+  const setComplete = useCallback(
+    (isCompleted: boolean) => {
+      item.setProp('isFlaggedToDelete', isCompleted)
+    },
+    [item],
+  )
 
-    const {displayComplete, setDisplayComplete} = useDelayedEdit({
-      setComplete,
-    })
-    const {
-      theme: {colors},
-    } = useTheme()
-    const handlePress = useCallback(() => {
-      setDisplayComplete(prev => !prev)
-    }, [setDisplayComplete])
+  const {displayComplete, setDisplayComplete} = useDelayedEdit({
+    setComplete,
+  })
+  const {
+    theme: {colors},
+  } = useTheme()
+  const handlePress = useCallback(() => {
+    setDisplayComplete(prev => !prev)
+  }, [setDisplayComplete])
 
-    return (
-      <TodoBase
-        rightContent={
-          <ListItem.CheckBox
-            onPress={handlePress}
-            checked={displayComplete}
-            checkedIcon={
-              <Icon name="undo" type="material" color={colors.text.secondary} />
-            }
-            uncheckedIcon={
-              <Icon name="delete" type="material" color={colors.error} />
-            }
-          />
-        }
-        onPress={handlePress}
-        caption={item.isFlaggedToDelete ? '삭제함' : undefined}
-        {...(item.isFlaggedToDelete && {
-          avatarStyle: styles.disabled,
-          contentStyle: styles.disabled,
-        })}
-        {...item}
-      />
-    )
-  },
-)
+  return (
+    <TodoBase
+      rightContent={
+        <ListItem.CheckBox
+          onPress={handlePress}
+          checked={displayComplete}
+          checkedIcon={
+            <Icon name="undo" type="material" color={colors.text.secondary} />
+          }
+          uncheckedIcon={
+            <Icon name="delete" type="material" color={colors.error} />
+          }
+        />
+      }
+      onPress={handlePress}
+      caption={item.isFlaggedToDelete ? '삭제함' : undefined}
+      {...(item.isFlaggedToDelete && {
+        avatarStyle: styles.disabled,
+        contentStyle: styles.disabled,
+      })}
+      {...item}
+    />
+  )
+})

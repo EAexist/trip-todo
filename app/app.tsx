@@ -61,25 +61,24 @@ const config = {
     DestinationSearch: 'new/:tripId/destination/search',
     ScheduleSetting: 'new/:tripId/schedule',
     TitleSetting: 'new/:tripId/title',
-    TripSetting: 'new/:tripId/trip',
+    TodolistSetting: 'new/:tripId/trip',
     /*  */
-    Trip: 'trip/:tripId?',
+    Todolist: 'trip/:tripId?',
     TripMeta: 'trip/:tripId?/meta',
     TodolistAdd: 'trip/:tripId?/add',
     TodolistDelete: 'trip/:tripId?/delete',
     TodolistReorder: 'trip/:tripId?/reorder',
     /*  */
-    TodoCreate: 'trip/:tripId?/:todoId?/create',
-    TodoTitle: 'trip/:tripId?/:todoId?/title',
-    TodoNote: 'trip/:tripId?/:todoId?/note',
+    TodoCreate: 'trip/:tripId?/todo/:todoId?/create',
+    TodoTitle: 'trip/:tripId?/todo/:todoId?/title',
+    TodoNote: 'trip/:tripId?/todo/:todoId?/note',
     /*  */
     ConfirmPassport: 'confirm/passport/id',
     ConfirmFlight: 'confirm/flight/id',
     /*  */
     AccomodationPlan: 'trip/:tripId?/accomodationPlan',
     Accomodation: 'trip/:tripId?/accomodation/:accomodationId?',
-    AccomodationNote:
-      'trip/:tripId?/accomodation/:accomodationId?/note',
+    AccomodationNote: 'trip/:tripId?/accomodation/:accomodationId?/note',
   },
 }
 

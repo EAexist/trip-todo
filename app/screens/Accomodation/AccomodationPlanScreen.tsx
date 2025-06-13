@@ -20,12 +20,13 @@ import {CalendarProvider, ExpandableCalendar} from 'react-native-calendars'
 import {Positions} from 'react-native-calendars/src/expandableCalendar'
 
 const AccomodationPlanCalendar: FC = () => {
-  const {tripStore, accomodationStore} = useStores()
+  const {tripStore} = useStores()
 
   const markedDates = Object.fromEntries(
-    accomodationStore.calendarMarkedDateEntries.map(
-      ([k, {colorIndex, ...v}]) => [k, {color: $palette[colorIndex], ...v}],
-    ),
+    tripStore.calendarMarkedDateEntries.map(([k, {colorIndex, ...v}]) => [
+      k,
+      {color: $palette[colorIndex], ...v},
+    ]),
   )
   useEffect(() => {
     console.log(markedDates)
@@ -33,11 +34,7 @@ const AccomodationPlanCalendar: FC = () => {
 
   return (
     <CalendarProvider
-      date={
-        tripStore.startDate
-          ? toCalendarString(tripStore.startDate)
-          : ''
-      }>
+      date={tripStore.startDate ? toCalendarString(tripStore.startDate) : ''}>
       <ExpandableCalendar
         // markedDates={markedDates}
         initialPosition={Positions.CLOSED}
@@ -55,7 +52,7 @@ const AccomodationPlanCalendar: FC = () => {
 const AccomodationListItem: FC<{
   item: AccomodationItem
 }> = ({item}) => {
-  const {accomodationStore} = useStores()
+  const {tripStore} = useStores()
   const {navigateWithTrip} = useNavigate()
   const handlePress = useCallback(() => {
     navigateWithTrip('Accomodation', {accomodationId: item.id})
@@ -84,7 +81,7 @@ const AccomodationListItem: FC<{
         }}
         containerStyle={{
           backgroundColor:
-            $palette[accomodationStore.indexedUniqueTitles.indexOf(item.title)],
+            $palette[tripStore.indexedUniqueTitles.indexOf(item.title)],
         }}>
         {/* <RNEAvatar.Accessory
           size={16}
@@ -106,11 +103,7 @@ const AccomodationListItem: FC<{
   )
 }
 export const AccomodationPlanScreen: FC = observer(({}) => {
-  const {accomodationStore} = useStores()
-
-  useEffect(() => {
-    accomodationStore.fetchAccomodation().then(() => {})
-  }, [])
+  const {tripStore} = useStores()
 
   const renderListItem: ListRenderItem<{
     item: AccomodationItem
@@ -129,7 +122,7 @@ export const AccomodationPlanScreen: FC = observer(({}) => {
         <AccomodationPlanCalendar />
       </View>
       <FlatList
-        data={accomodationStore.orderedItems.map((item, index) => ({
+        data={tripStore.orderedItems.map((item, index) => ({
           index,
           item,
         }))}

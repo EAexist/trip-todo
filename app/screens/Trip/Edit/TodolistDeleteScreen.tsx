@@ -13,7 +13,7 @@ export const TodolistDeleteScreen = observer(
     const {tripStore} = useStores()
 
     const handleCompletePress = useCallback(() => {
-      tripStore.deleteItems()
+      tripStore.deleteTodos()
       goBack()
     }, [tripStore])
 

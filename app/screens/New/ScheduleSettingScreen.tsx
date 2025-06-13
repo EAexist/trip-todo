@@ -183,10 +183,8 @@ export const ScheduleSettingScreen: FC = () => {
       'startDateISOString',
       dateInterval.start?.toISOString() || '',
     )
-    tripStore.setProp(
-      'endDateISOString',
-      dateInterval.end?.toISOString() || '',
-    )
+    tripStore.setProp('endDateISOString', dateInterval.end?.toISOString() || '')
+    tripStore.patch()
   }, [tripStore, dateInterval.start, dateInterval.end])
 
   return (

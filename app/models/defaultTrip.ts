@@ -105,7 +105,7 @@ const preset: {[id: string]: TodoSnapshotIn} = {
 
 export const defaultTrip = {
   todoMap: preset,
-  todos: {
+  todolist: {
     reservation: [],
     foreign: [],
     goods: [],

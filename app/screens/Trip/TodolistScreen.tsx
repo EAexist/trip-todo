@@ -17,10 +17,7 @@ import {
   BottomSheetModal,
   GestureHandlerRootViewWrapper,
 } from '@/components/BottomSheetModal'
-import {
-  AccomodationTodo,
-  CompleteTodo,
-} from '@/components/Todo'
+import {AccomodationTodo, CompleteTodo} from '@/components/Todo'
 import {TodoBottomSheet} from '@/components/Todo/TodoModal'
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
@@ -58,7 +55,7 @@ import {observer} from 'mobx-react-lite'
 //   )
 // }
 
-export const TripScreen: FC<AppStackScreenProps<'Trip'>> = observer(
+export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
   ({route}) => {
     const {tripStore} = useStores()
     const {tripId} = route.params

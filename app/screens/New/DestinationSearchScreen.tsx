@@ -59,7 +59,7 @@ export const DestinationSearchScreen: FC = () => {
     console.log('Search input changed:', text)
   }, [])
 
-  // const KeywordMatchedDestinations = db.destinations
+  // const KeywordMatchedDestinations = db.destination
   // const renderDestinationSearchResultItem: ListRenderItem<Destination> =
   //   useCallback(
   //     ({ item }) => <DestinationSearchResultItem {...item} />,

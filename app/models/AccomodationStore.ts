@@ -3,13 +3,16 @@ import {eachDayOfInterval} from 'date-fns'
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
 import {MarkedDates} from 'react-native-calendars/src/types'
 import {api} from '../services/api'
-import {AccomodationItemModel} from './AccomodationItem'
+import {
+  AccomodationItemModel,
+  AccomodationItemSnapshotIn,
+} from './AccomodationItem'
 import {withSetPropAction} from './helpers/withSetPropAction'
 
 export const AccomodationStoreModel = types
   .model('AccomodationStore')
   .props({
-    accomodationItems: types.map(AccomodationItemModel),
+    accomodation: types.map(AccomodationItemModel),
   })
   .actions(withSetPropAction)
   .actions(store => ({
@@ -20,7 +23,7 @@ export const AccomodationStoreModel = types
         // console.log(
         //   response.items.map((item) => [item.checkinDate, item.checkoutDate]),
         // )
-        const accomodationItems = Object.fromEntries(
+        const accomodation = Object.fromEntries(
           response.items.map(
             ({
               // checkinDate,
@@ -46,9 +49,9 @@ export const AccomodationStoreModel = types
             ],
           ),
         )
-        store.setProp('accomodationItems', accomodationItems)
+        store.setProp('accomodation', accomodation)
         // console.log(
-        //   Object.values(accomodationItems).map((item) => [
+        //   Object.values(accomodation).map((item) => [
         //     item.checkinDate,
         //     item.checkoutDate,
         //   ]),
@@ -60,16 +63,16 @@ export const AccomodationStoreModel = types
       }
     },
     // add(item: AccomodationItem) {
-    //   store.accomodationItems.push(item)
+    //   store.accomodation.push(item)
     // },
     // remove(item: AccomodationItem) {
-    //   store.accomodationItems.remove(item)
+    //   store.accomodation.remove(item)
     // },
   }))
   .views(store => ({
     get orderedItems() {
-      console.log(store.accomodationItems.values())
-      return [...store.accomodationItems.values()].sort(
+      console.log(store.accomodation.values())
+      return [...store.accomodation.values()].sort(
         (a, b) => a.checkinDate.getDate() - b.checkinDate.getDate(),
       )
     },
@@ -115,7 +118,7 @@ export const AccomodationStoreModel = types
     //   ).map(({ category, title }) => ({
     //     category,
     //     title,
-    //     data: store.accomodationItems.filter(
+    //     data: store.accomodation.filter(
     //       (item) => item.category === category,
     //     ),
     //   }))

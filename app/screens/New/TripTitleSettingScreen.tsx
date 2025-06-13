@@ -10,6 +10,7 @@ export const TripTitleSettingScreen: FC = () => {
   const handleNextPress = useCallback(
     async (value: string) => {
       tripStore.setProp('title', value)
+      tripStore.patch()
     },
     [tripStore],
   )
@@ -21,7 +22,7 @@ export const TripTitleSettingScreen: FC = () => {
         placeholder: `여행 이름`,
       }}
       title={`여행의 이름을 정해주세요`}
-      name="TripSetting"
+      name="TodolistSetting"
       onConfirm={handleNextPress}
     />
   )

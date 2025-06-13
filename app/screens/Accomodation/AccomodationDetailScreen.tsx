@@ -18,15 +18,15 @@ interface AccomodationDetailScreenProps
 
 export const AccomodationDetailScreen: FC<AccomodationDetailScreenProps> =
   observer(({route}) => {
-    const {accomodationStore} = useStores()
-    useEffect(() => {
-      accomodationStore.fetchAccomodation().then(() => {
-        console.log(accomodationStore)
-      })
-    }, [])
+    const {tripStore} = useStores()
+    // useEffect(() => {
+    //   tripStore.fetchAccomodation().then(() => {
+    //     console.log(tripStore)
+    //   })
+    // }, [])
     const {accomodationId} = route.params
 
-    const item = accomodationStore.accomodationItems.get(accomodationId)
+    const item = tripStore.accomodation.get(accomodationId)
 
     const handleConfirmPress = useCallback(() => {
       // Handle next button press
@@ -86,9 +86,7 @@ export const AccomodationDetailScreen: FC<AccomodationDetailScreenProps> =
 
     const {navigateWithTrip} = useNavigate()
     const handleInputPress = useCallback(() => {
-      console.log(
-        `handleInputPress navigateWithTrip to [TodoNote]`,
-      )
+      console.log(`handleInputPress navigateWithTrip to [TodoNote]`)
       navigateWithTrip('AccomodationNote', {accomodationId: item?.id})
     }, [item, navigateWithTrip])
 

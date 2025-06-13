@@ -1,10 +1,7 @@
 {
     "trip": [
         {
-            "id": 1,
             "title": "Vaundy 보러 가는 도쿠시마 여행 재미있겠다",
-            "startDateISOString": "2025-02-20T00:00:00.001Z",
-            "endDateISOString": "2025-02-25T00:00:00.001Z",
             "destination": [
                 {
                     "id": "1",
@@ -13,136 +10,98 @@
                     "region": "시코쿠"
                 }
             ],
-            "todolist": [
-                {
-                    "id": 1,
-                    "order_key": 1,
+            "startDateISOString": "2025-02-20T00:00:00.001Z",
+            "endDateISOString": "2025-02-25T00:00:00.001Z",
+            "todo": {
+                "1": {
+                    "id": "1",
                     "type": "accomodation",
                     "category": "reservation",
                     "title": "숙소 예약",
                     "iconId": "🛌",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 2,
-                    "order_key": 2,
+                "2": {
+                    "id": "2",
                     "type": "passport",
                     "category": "foreign",
                     "title": "여권",
                     "iconId": "여권",
-                    "note": "미리미리 할 것",
-                    "isPreset": true
+                    "note": "미리미리 할 것"
                 },
-                {
-                    "id": 3,
-                    "order_key": 3,
+                "3": {
+                    "id": "3",
                     "type": "currency",
                     "category": "foreign",
                     "title": "환전",
                     "iconId": "💱",
-                    "note": "미리미리 할 것",
-                    "isPreset": true
+                    "note": "미리미리 할 것"
                 },
-                {
-                    "id": 4,
-                    "order_key": 4,
+                "4": {
+                    "id": "4",
                     "type": "roaming",
                     "category": "foreign",
                     "title": "로밍",
                     "iconId": "📶",
-                    "note": "미리미리 할 것",
-                    "isPreset": true
+                    "note": "미리미리 할 것"
                 },
-                {
-                    "id": 5,
-                    "order_key": 5,
+                "5": {
+                    "id": "5",
                     "type": "visit-japan",
                     "category": "foreign",
                     "title": "Visit Japan",
                     "iconId": "📝",
-                    "note": "미리미리 할 것",
-                    "isPreset": true
+                    "note": "미리미리 할 것"
                 },
-                {
-                    "id": 7,
-                    "order_key": 7,
+                "7": {
+                    "id": "7",
                     "type": "military-approvement",
                     "category": "foreign",
                     "title": "국외여행허가",
                     "iconId": "🛌",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 8,
-                    "order_key": 8,
+                "8": {
+                    "id": "8",
                     "type": "goods",
                     "category": "goods",
                     "title": "세면도구",
                     "iconId": "🧴",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 9,
-                    "order_key": 9,
+                "9": {
+                    "id": "9",
                     "type": "goods",
                     "category": "goods",
                     "title": "어댑터",
                     "iconId": "🔌",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 10,
-                    "order_key": 10,
+                "10": {
+                    "id": "10",
                     "type": "goods",
                     "category": "goods",
                     "title": "선글라스",
                     "iconId": "🕶",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 11,
-                    "order_key": 11,
+                "11": {
+                    "id": "11",
                     "type": "goods",
                     "category": "goods",
                     "title": "캐리어",
                     "iconId": "🧳",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 },
-                {
-                    "id": 12,
-                    "order_key": 12,
+                "12": {
+                    "id": "12",
                     "type": "goods",
                     "category": "goods",
                     "title": "우산",
                     "iconId": "☂️",
-                    "note": "",
-                    "isPreset": true
+                    "note": ""
                 }
-            ],
-            "accomodation": [
-                {
-                    "id": "1",
-                    "title": "Hostel PAQ Tokushima",
-                    "roomTitle": "혼성 도미토리 내 베드",
-                    "numberofClient": 2,
-                    "clientName": "PYO HYEON",
-                    "checkinDate": "2025-07-01T00:00:00.001Z",
-                    "checkoutDate": "2025-07-03T00:00:00.001Z",
-                    "checkinStartTime": "2025-07-01T15:00.000Z",
-                    "checkinEndTime": "2025-07-01T21:00.000Z",
-                    "checkoutTime": "2025-07-01T10:00.000Z",
-                    "links": [
-                        "googlemap",
-                        "airbnb"
-                    ]
-                }
-            ],
+            },
             "todoIds": [],
             "preset": [
                 {
@@ -189,10 +148,26 @@
                     "isFlaggedToAdd": true,
                     "todo_id": "12"
                 }
+            ],
+            "id": 3,
+            "accomodation": [
+                {
+                    "id": "1",
+                    "title": "Hostel PAQ Tokushima",
+                    "roomTitle": "혼성 도미토리 내 베드",
+                    "numberofClient": 2,
+                    "clientName": "PYO HYEON",
+                    "checkinDate": "2025-07-01T00:00:00.001Z",
+                    "checkoutDate": "2025-07-03T00:00:00.001Z",
+                    "checkinStartTime": "2025-07-01T15:00.000Z",
+                    "checkinEndTime": "2025-07-01T21:00.000Z",
+                    "checkoutTime": "2025-07-01T10:00.000Z",
+                    "links": [
+                        "googlemap",
+                        "airbnb"
+                    ]
+                }
             ]
-        },
-        {
-            "id": 2
         }
     ],
     "destination": [
@@ -261,33 +236,6 @@
             "isFlaggedToDelete": false,
             "tripId": "17",
             "id": 3
-        },
-        {
-            "type": "",
-            "category": "foreign",
-            "title": "",
-            "iconId": "",
-            "note": "",
-            "isFlaggedToDelete": false,
-            "id": 4
-        },
-        {
-            "type": "",
-            "category": "foreign",
-            "title": "",
-            "iconId": "",
-            "note": "",
-            "isFlaggedToDelete": false,
-            "id": 5
-        },
-        {
-            "type": "",
-            "category": "foreign",
-            "title": "",
-            "iconId": "",
-            "note": "",
-            "isFlaggedToDelete": false,
-            "id": 6
         }
     ],
     "todoType": [

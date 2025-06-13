@@ -12,6 +12,7 @@
 import {applySnapshot, IDisposer, onAction, onSnapshot} from 'mobx-state-tree'
 import {RootStore, RootStoreSnapshot} from '../RootStore'
 import * as storage from '../../utils/storage'
+import {reaction} from 'mobx'
 
 /**
  * The key we'll be saving our state as within async storage.
@@ -50,6 +51,18 @@ export async function setupRootStore(rootStore: RootStore) {
     _disposer?.()
     _disposer = undefined
   }
+
+  // reaction(
+  //   () => [
+  //     rootStore.tripStore.title,
+  //     rootStore.tripStore.destination,
+  //     rootStore.tripStore.startDateISOString,
+  //     rootStore.tripStore.endDateISOString,
+  //   ],
+  //   title => {
+  //     console.log(title)
+  //   },
+  // )
 
   return {rootStore, restoredState, unsubscribe}
 }

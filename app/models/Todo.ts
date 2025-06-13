@@ -1,5 +1,6 @@
 import {Instance, SnapshotIn, SnapshotOut, types} from 'mobx-state-tree'
 import {withSetPropAction} from './helpers/withSetPropAction'
+import {api} from '@/services/api'
 
 export const CATEGORY_TO_TITLE: {[key: string]: string} = {
   reservation: '예약',
@@ -15,6 +16,21 @@ export const defaultTodo = {
   note: '',
   isFlaggedToDelete: false,
 }
+export const PresetTodoContentModel = types.model('PresetTodoContent').props({
+  id: types.identifier,
+  type: types.string,
+  category: types.string,
+  title: types.string,
+  iconId: types.string,
+})
+
+export interface PresetTodoContent
+  extends Instance<typeof PresetTodoContentModel> {}
+export interface PresetTodoContentSnapshotOut
+  extends SnapshotOut<typeof PresetTodoContentModel> {}
+export interface PresetTodoContentSnapshotIn
+  extends SnapshotIn<typeof PresetTodoContentModel> {}
+
 /**
  * This represents a Trip
  */
@@ -29,6 +45,7 @@ export const TodoModel = types
     note: types.string,
     completeDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
     isFlaggedToDelete: false,
+    orderKey: types.number,
     // isFlaggedToAdd: false,
   })
   .actions(withSetPropAction)
@@ -42,9 +59,6 @@ export const TodoModel = types
     toggleDeleteFlag() {
       item.setProp('isFlaggedToDelete', !item.isFlaggedToDelete)
     },
-    // removeFavorite(Todo: Todo) {
-    //   store.favorites.remove(todo)
-    // },
   }))
   .views(item => ({
     get categoryTitle() {
@@ -67,7 +81,5 @@ export const TodoModel = types
   }))
 
 export interface Todo extends Instance<typeof TodoModel> {}
-export interface TodoSnapshotOut
-  extends SnapshotOut<typeof TodoModel> {}
-export interface TodoSnapshotIn
-  extends SnapshotIn<typeof TodoModel> {}
+export interface TodoSnapshotOut extends SnapshotOut<typeof TodoModel> {}
+export interface TodoSnapshotIn extends SnapshotIn<typeof TodoModel> {}
