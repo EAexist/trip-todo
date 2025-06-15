@@ -220,7 +220,7 @@
     "todo": [
         {
             "id": "1",
-            "order_key": "1",
+            "orderKey": "1",
             "preset_id": "1",
             "trip_id": "1",
             "type": "accomodation",
@@ -231,7 +231,7 @@
         },
         {
             "id": "2",
-            "order_key": "2",
+            "orderKey": "2",
             "preset_id": "2",
             "trip_id": "1",
             "type": "passport",
@@ -242,7 +242,7 @@
         },
         {
             "id": "3",
-            "order_key": "3",
+            "orderKey": "3",
             "preset_id": "3",
             "trip_id": "1",
             "type": "currency",
@@ -253,7 +253,7 @@
         },
         {
             "id": "4",
-            "order_key": "4",
+            "orderKey": "4",
             "preset_id": "4",
             "trip_id": "1",
             "type": "roaming",
@@ -264,7 +264,7 @@
         },
         {
             "id": "5",
-            "order_key": "5",
+            "orderKey": "5",
             "preset_id": "5",
             "trip_id": "1",
             "type": "visit-japan",
@@ -275,7 +275,7 @@
         },
         {
             "id": "7",
-            "order_key": "7",
+            "orderKey": "7",
             "preset_id": "7",
             "trip_id": "1",
             "type": "military-approvement",
@@ -286,7 +286,7 @@
         },
         {
             "id": "8",
-            "order_key": "8",
+            "orderKey": "8",
             "preset_id": "8",
             "trip_id": "1",
             "type": "goods",
@@ -297,7 +297,7 @@
         },
         {
             "id": "9",
-            "order_key": "9",
+            "orderKey": "9",
             "preset_id": "9",
             "trip_id": "1",
             "type": "goods",
@@ -308,7 +308,7 @@
         },
         {
             "id": "10",
-            "order_key": "10",
+            "orderKey": "10",
             "preset_id": "10",
             "trip_id": "1",
             "type": "goods",
@@ -319,7 +319,7 @@
         },
         {
             "id": "11",
-            "order_key": "11",
+            "orderKey": "11",
             "preset_id": "11",
             "trip_id": "1",
             "type": "goods",
@@ -330,7 +330,7 @@
         },
         {
             "id": "12",
-            "order_key": "12",
+            "orderKey": "12",
             "preset_id": "12",
             "trip_id": "1",
             "type": "goods",

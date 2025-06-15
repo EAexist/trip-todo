@@ -9,6 +9,7 @@ interface HeaderProps {
   hideBackButton?: boolean
   rightActionTitle?: string
   onRightPress?: () => void
+  onBackPressBeforeNavigate?: () => Promise<any>
 }
 
 /**
@@ -23,6 +24,7 @@ export function useHeader(
     hideBackButton = false,
     rightActionTitle,
     onRightPress,
+    onBackPressBeforeNavigate,
   }: HeaderProps,
   deps: Parameters<typeof useLayoutEffect>[1] = [],
 ) {
@@ -43,7 +45,13 @@ export function useHeader(
       headerShown,
       header: () => (
         <Header
-          leftComponent={hideBackButton ? undefined : <BackButton />}
+          leftComponent={
+            hideBackButton ? undefined : (
+              <BackButton
+                onBackPressBeforeNavigate={onBackPressBeforeNavigate}
+              />
+            )
+          }
           rightComponent={
             <RightActionButton
               onPress={onRightPress}

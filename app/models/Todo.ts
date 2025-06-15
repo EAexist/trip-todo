@@ -1,6 +1,5 @@
 import {Instance, SnapshotIn, SnapshotOut, types} from 'mobx-state-tree'
 import {withSetPropAction} from './helpers/withSetPropAction'
-import {api} from '@/services/api'
 
 export const CATEGORY_TO_TITLE: {[key: string]: string} = {
   reservation: '예약',
@@ -8,14 +7,19 @@ export const CATEGORY_TO_TITLE: {[key: string]: string} = {
   goods: '짐',
 }
 
-export const defaultTodo = {
-  type: '',
-  category: '',
-  title: '',
-  iconId: '',
-  note: '',
-  isFlaggedToDelete: false,
-}
+// export const defaultTodo : TodoModel = {
+//   id: '',
+//   type: '',
+//   category: '',
+//   title: '',
+//   iconId: '',
+//   note: '',
+//   completeDateISOString: null, // Ex: 2022-08-12 21:05:36
+//   isFlaggedToDelete: false,
+//   orderKey: -1,
+//   presetId: -1,
+// }
+
 export const PresetTodoContentModel = types.model('PresetTodoContent').props({
   id: types.identifier,
   type: types.string,
@@ -43,9 +47,10 @@ export const TodoModel = types
     title: types.string,
     iconId: types.string,
     note: types.string,
-    completeDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
+    completeDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
     isFlaggedToDelete: false,
     orderKey: types.number,
+    presetId: types.maybeNull(types.number),
     // isFlaggedToAdd: false,
   })
   .actions(withSetPropAction)
@@ -54,7 +59,7 @@ export const TodoModel = types
       item.setProp('completeDateISOString', new Date().toISOString())
     },
     setIncomplete() {
-      item.setProp('completeDateISOString', undefined)
+      item.setProp('completeDateISOString', null)
     },
     toggleDeleteFlag() {
       item.setProp('isFlaggedToDelete', !item.isFlaggedToDelete)
@@ -65,7 +70,7 @@ export const TodoModel = types
       return CATEGORY_TO_TITLE[item.category]
     },
     get isCompleted() {
-      return item.completeDateISOString !== undefined
+      return item.completeDateISOString !== null
     },
     get parsedTitleAndSubtitle() {
       const defaultValue = {title: item.title?.trim(), subtitle: ''}

@@ -27,7 +27,7 @@ import {AppStackScreenProps, useNavigate} from '@/navigators'
 // import BottomSheet from '@gorhom/bottom-sheet'
 import {useHeader} from '@/utils/useHeader'
 import BottomSheet from '@gorhom/bottom-sheet'
-import {observer} from 'mobx-react-lite'
+import {Observer, observer} from 'mobx-react-lite'
 
 // const SettingsDialog: FC = ({ visible6: boolean }) => {
 //   return (
@@ -71,17 +71,22 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
 
     const renderItem: SectionListRenderItem<Todo, DefaultSectionT> =
       useCallback(
-        ({item}) =>
-          item.type === 'accomodation' ? (
-            <AccomodationTodo item={item} />
-          ) : item.type === 'passport' ? (
-            <CompleteTodo item={item} />
-          ) : (
-            <CompleteTodo
-              item={item}
-              // onPress={() => handleTodoPress(item)}
-            />
-          ),
+        ({item}) => (
+          <Observer
+            render={() =>
+              item.type === 'accomodation' ? (
+                <AccomodationTodo item={item} />
+              ) : item.type === 'passport' ? (
+                <CompleteTodo item={item} />
+              ) : (
+                <CompleteTodo
+                  item={item}
+                  // onPress={() => handleTodoPress(item)}
+                />
+              )
+            }
+          />
+        ),
         [],
       )
 
@@ -169,7 +174,7 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
           <ScrollView>
             <SectionList
               sections={tripStore.incompleteTrip}
-              keyExtractor={item => item.title}
+              keyExtractor={item => item.id}
               renderItem={renderItem}
               renderSectionHeader={renderSectionHeader}
             />

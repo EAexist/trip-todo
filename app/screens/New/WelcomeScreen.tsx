@@ -8,6 +8,7 @@ import {observer} from 'mobx-react-lite'
 import * as airport from 'assets/images/airport.gif'
 import {Image} from '@rneui/themed'
 import {View} from 'react-native'
+import {api} from '@/services/api'
 
 export const WelcomeScreen: FC<AppStackScreenProps<'Welcome'>> = observer(
   () => {

@@ -1,13 +1,23 @@
-import {ButtonProps, Icon, useTheme} from '@rneui/themed'
-import {FC, useCallback} from 'react'
+import {ButtonProps, Dialog, Icon, useTheme} from '@rneui/themed'
+import {FC, useCallback, useState} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 import {Button} from '../Button'
 import {goBack} from '@/navigators'
+import {DialogProps} from '@rneui/base'
 
-export const BackButton: FC<TouchableOpacityProps> = () => {
+export const BackButton: FC<
+  TouchableOpacityProps & {onBackPressBeforeNavigate?: () => Promise<any>}
+> = ({onBackPressBeforeNavigate}) => {
   const handlePress = useCallback(() => {
-    goBack()
-  }, [])
+    if (onBackPressBeforeNavigate) {
+      console.log(
+        `[BackButton] calling onBackPressBeforeNavigate=${onBackPressBeforeNavigate}`,
+      )
+      onBackPressBeforeNavigate().then(() => {
+        goBack()
+      })
+    } else goBack()
+  }, [onBackPressBeforeNavigate])
 
   return (
     <TouchableOpacity style={styles.BackButton} onPress={handlePress}>
@@ -33,6 +43,28 @@ export const RightActionButton: FC<ButtonProps> = props => {
         color: theme.colors.text.primary,
       }}
     />
+  )
+}
+
+export const ConfirmBackDialog: FC<DialogProps> = props => {
+  const [visible, setVisible] = useState(false)
+  const toggleDialog = () => {
+    setVisible(!visible)
+  }
+  return (
+    <Dialog isVisible={visible} onBackdropPress={toggleDialog}>
+      <Dialog.Title title="Confirm?1" />
+      <Dialog.Actions>
+        {/* <Dialog.Button
+          title="CONFIRM"
+          onPress={() => {
+            console.log(`Option ${checked} was selected!`)
+            toggleDialog5()
+          }}
+        />
+        <Dialog.Button title="CANCEL" onPress={toggleDialog5} /> */}
+      </Dialog.Actions>
+    </Dialog>
   )
 }
 

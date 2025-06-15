@@ -15,24 +15,24 @@ import {Title} from '@/components/Layout/Content'
 import {useTodo} from '@/utils/useTodo'
 
 export const TodoNoteScreenBase: FC<{
-  item: Todo
+  todo: Todo
   handleCompletePress: () => void
-}> = observer(({item, handleCompletePress}) => {
-  const [value, setValue] = useState(item.note)
+}> = observer(({todo, handleCompletePress}) => {
+  const [value, setValue] = useState(todo.note)
 
   // useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
   return (
     <Screen>
       <ListItem containerStyle={$listItemContainerStyle}>
-        <Avatar iconId={item.iconId || '🧐'} size="xlarge" />
+        <Avatar iconId={todo.iconId} size="xlarge" />
         <ListItem.Content>
           {true && (
             <ListItem.Subtitle>
-              <Trans>{item.categoryTitle}</Trans>
+              <Trans>{todo.categoryTitle}</Trans>
             </ListItem.Subtitle>
           )}
           <ListItem.Title>
-            <TransText h2>{item.title}</TransText>
+            <TransText h2>{todo.title}</TransText>
           </ListItem.Title>
         </ListItem.Content>
       </ListItem>
@@ -44,31 +44,35 @@ export const TodoNoteScreenBase: FC<{
   )
 })
 
-export const TodoNoteScreen: FC<
-  AppStackScreenProps<'TodoNote'>
-> = observer(({route}) => {
-  const item = useTodo(route)
-  const [value, setValue] = useState(item.note)
+export const TodoNoteScreen: FC<AppStackScreenProps<'TodoNote'>> = observer(
+  props => {
+    const todo = useTodo(props.route)
+    return !!todo ? <_TodoNoteScreen todo={todo} /> : <></>
+  },
+)
+
+export const _TodoNoteScreen: FC<{todo: Todo}> = observer(({todo}) => {
+  const [value, setValue] = useState(todo.note)
 
   const handleCompletePress = useCallback(() => {
-    item.setProp('note', value)
+    todo.setProp('note', value)
     goBack()
-  }, [item, value])
+  }, [todo, value])
 
   // useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
   return (
     <Screen>
       <Title>
         <ListItem containerStyle={$listItemContainerStyle}>
-          <Avatar iconId={item.iconId} size="xlarge" />
+          <Avatar iconId={todo.iconId} size="xlarge" />
           <ListItem.Content>
             {true && (
               <ListItem.Subtitle>
-                <Trans>{item.categoryTitle}</Trans>
+                <Trans>{todo.categoryTitle}</Trans>
               </ListItem.Subtitle>
             )}
             <ListItem.Title>
-              <TransText h2>{item.title}</TransText>
+              <TransText h2>{todo.title}</TransText>
             </ListItem.Title>
           </ListItem.Content>
         </ListItem>

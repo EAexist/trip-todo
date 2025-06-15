@@ -35,6 +35,7 @@ import {FabProvider} from '@/components/Fab'
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 type TripStackProps = {tripId: string}
+type TodoStackProps = {tripId: string; todoId: string}
 
 export type AppStackParamList = {
   // 🔥 Your screens go here
@@ -51,12 +52,13 @@ export type AppStackParamList = {
   TodolistDelete: TripStackProps
   TodolistReorder: TripStackProps
   /* Confirm */
-  ConfirmPassport: TripStackProps & {todoId: string}
-  ConfirmFlight: TripStackProps & {todoId: string}
+  ConfirmPassport: TodoStackProps
+  ConfirmFlight: TodoStackProps
   /* Edit Todo */
-  TodoTitle: TripStackProps & {todoId: string}
-  TodoNote: TripStackProps & {todoId: string}
-  TodoCreate: TripStackProps & {todoId: string}
+  TodoTitle: TodoStackProps
+  TodoNote: TodoStackProps
+  TodoCreate: TodoStackProps
+  TodoEdit: TodoStackProps
   /* Accomodation */
   AccomodationPlan: TripStackProps & {accomodationId: string}
   Accomodation: TripStackProps & {accomodationId: string}
@@ -120,7 +122,6 @@ const AppStack = observer(function AppStack() {
             name="TodolistSetting"
             component={Screens.New.TodolistSetting}
           />
-          <Stack.Screen name="TodoCreate" component={Screens.Trip.Create} />
           {/* <Stack.Screen
               name="New"
               component={Screens.DestinationSettingScreen}
@@ -157,6 +158,8 @@ const AppStack = observer(function AppStack() {
             name="AccomodationNote"
             component={Screens.Accomodation.Note}
           />
+          <Stack.Screen name="TodoCreate" component={Screens.Trip.Create} />
+          <Stack.Screen name="TodoEdit" component={Screens.Trip.Edit} />
           <Stack.Screen name="TodoNote" component={Screens.Trip.Note} />
           <Stack.Screen name="TodoTitle" component={Screens.Trip.Title} />
         </>

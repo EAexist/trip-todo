@@ -182,7 +182,8 @@ export const CompleteTodo: FC<{item: Todo}> = observer(({item}) => {
     (e: GestureResponderEvent) => {
       console.log(item.title)
       e.stopPropagation()
-      tripStore.setActiveItem(item)
+      navigateWithTrip('TodoEdit', {todoId: item.id})
+      //   tripStore.setActiveItem(item)
     },
     [tripStore, item],
   )

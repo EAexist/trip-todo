@@ -1,6 +1,7 @@
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
 import {PresetTodoContentSnapshotIn, Todo, TodoSnapshotIn} from '@/models/Todo'
 import {TripStoreSnapshot, Preset, TripStore} from '@/models/TripStore'
+import {ApisauceConfig} from 'apisauce'
 import {getSnapshot} from 'mobx-state-tree'
 
 /**
@@ -42,8 +43,6 @@ import {getSnapshot} from 'mobx-state-tree'
 export interface TodoDTO
   extends Omit<TodoSnapshotIn, 'id' | 'isFlaggedToDelete'> {
   id: number
-  isPreset: boolean
-  order_key?: number
 }
 
 export interface CreateTodoDTO extends Omit<TodoDTO, 'id'> {
@@ -52,26 +51,33 @@ export interface CreateTodoDTO extends Omit<TodoDTO, 'id'> {
 
 export const mapToTodoDTO: (
   todo: TodoSnapshotIn,
-  order_key?: number,
-  trip_id?: number,
-) => TodoDTO = (todo, order_key, trip_id) => ({
+  //   orderKey?: number,
+  //   trip_id?: number,
+) => TodoDTO = todo => ({
   ...todo,
   id: Number(todo.id),
-  isPreset: false,
-  order_key: order_key,
-  trip_id: trip_id,
+  //   isPreset: false,
+  //   orderKey: orderKey,
+  //   trip_id: trip_id,
 })
 
 export const mapToTodo: (todo: TodoDTO) => TodoSnapshotIn = todo => ({
   ...todo,
   id: todo.id.toString(),
+  title: todo.title || '',
+  note: todo.note || '',
+  iconId: todo.iconId || '',
   isFlaggedToDelete: false,
 })
 
 export interface TripDTO
-  extends Omit<TripStoreSnapshot, 'id' | 'todoMap' | 'todolist'> {
+  extends Omit<
+    TripStoreSnapshot,
+    'id' | 'todoMap' | 'todolist' | 'accomodation'
+  > {
   id: number
   todolist: TodoDTO[]
+  accomodation: AccomodationItemSnapshotIn[]
 }
 
 export const mapToTripDTO: (trip: TripStore) => TripDTO = trip => ({
@@ -80,10 +86,11 @@ export const mapToTripDTO: (trip: TripStore) => TripDTO = trip => ({
   todolist: Array.from(trip.todolist.values())
     .map(todolist => {
       return todolist.map((todo, index) =>
-        mapToTodoDTO(trip.todoMap.get(todo.id) as TodoSnapshotIn, index),
+        mapToTodoDTO(trip.todoMap.get(todo.id) as TodoSnapshotIn),
       )
     })
     .flat(),
+  accomodation: Array.from(trip.accomodation.values()),
 })
 
 export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
@@ -98,23 +105,37 @@ export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
     todolist: categories.reduce((acc: {[key: string]: any}, category) => {
       acc[category] = tripDTO.todolist
         .filter(todo => todo.category === category)
-        .toSorted((a, b) => (a.order_key as number) - (b.order_key as number))
+        .toSorted((a, b) => (a.orderKey as number) - (b.orderKey as number))
         .map(todo => todo.id.toString())
       return acc
     }, {}),
+    accomodation: tripDTO.accomodation.reduce(
+      (acc: {[key: string]: any}, accomodation) => {
+        acc[accomodation.id.toString()] = accomodation
+        return acc
+      },
+      {},
+    ),
   }
 }
+
+export const mapToPresetTodo: (
+  preset: TodoPresetDTO,
+) => PresetTodoContentSnapshotIn = preset => ({
+  ...preset,
+  id: preset.id.toString(),
+})
 
 export type WithStatus<T> = T & {
   status: string
 }
 
-export interface PresetDTO extends Omit<PresetTodoContentSnapshotIn, 'id'> {
+export interface TodoPresetDTO extends Omit<PresetTodoContentSnapshotIn, 'id'> {
   id: number
 }
 
 export interface ApiPresetResponse {
-  preset: PresetDTO[]
+  preset: TodoPresetDTO[]
   status: string
 }
 
@@ -141,14 +162,13 @@ export interface ApiAccomodationResponse {
 /**
  * The options used to configure apisauce.
  */
-export interface ApiConfig {
-  /**
-   * The URL of the api.
-   */
-  url: string
-
-  /**
-   * Milliseconds before we timeout the request.
-   */
-  timeout: number
+export interface ApiConfig extends ApisauceConfig {
+  //   /**
+  //    * The URL of the api.
+  //    */
+  //   url: string
+  //   /**
+  //    * Milliseconds before we timeout the request.
+  //    */
+  //   timeout: number
 }

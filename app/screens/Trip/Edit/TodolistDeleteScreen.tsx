@@ -13,8 +13,9 @@ export const TodolistDeleteScreen = observer(
     const {tripStore} = useStores()
 
     const handleCompletePress = useCallback(() => {
-      tripStore.deleteTodos()
-      goBack()
+      tripStore.deleteTodos().then(() => {
+        goBack()
+      })
     }, [tripStore])
 
     useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})

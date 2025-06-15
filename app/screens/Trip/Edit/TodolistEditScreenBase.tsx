@@ -4,6 +4,7 @@ import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
 import {Todo} from '@/models/Todo'
 import {Divider} from '@rneui/themed'
+import {observer} from 'mobx-react-lite'
 import {
   ComponentType,
   PropsWithChildren,
@@ -21,14 +22,16 @@ import {
 export interface CheckListEditScreenBaseProps<SectionT = DefaultSectionT>
   extends Pick<
     SectionListProps<any, SectionT>,
-    'renderItem' | 'renderSectionHeader' | 'sections'
+    'renderItem' | 'renderSectionHeader' | 'sections' | 'keyExtractor'
   > {
   title: string
   instruction?: string
   Todo?: ComponentType<{item: Todo}>
 }
 
-const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
+const CheckListEditScreenBase = observer(function <
+  SectionT extends DefaultSectionT,
+>({
   // headerRightComponent,
   title,
   instruction,
@@ -37,6 +40,7 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
   Todo,
   sections,
   children,
+  keyExtractor,
 }: PropsWithChildren<CheckListEditScreenBaseProps<SectionT>>) {
   // const {tripStore} = useStores()
   // useEffect(() => {
@@ -55,10 +59,7 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
   )
 
   const renderItemInner: SectionListRenderItem<Todo, DefaultSectionT> =
-    useCallback(
-      ({item}) => (Todo ? <Todo item={item} /> : <></>),
-      [Todo],
-    )
+    useCallback(({item}) => (Todo ? <Todo item={item} /> : <></>), [Todo])
 
   const renderSectionHeaderInner = useCallback(
     ({section: {title}}: {section: DefaultSectionT}) => (
@@ -72,6 +73,8 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
       isLast ? <></> : <Divider />,
     [],
   )
+
+  const keyExtractorInner = useCallback((item: any) => item.id, [])
 
   return (
     <Screen>
@@ -94,7 +97,7 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
           ...section,
           isLast: index === sections.length - 1,
         }))}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor || keyExtractorInner}
         renderItem={renderItem || renderItemInner}
         renderSectionHeader={renderSectionHeader || renderSectionHeaderInner}
         renderSectionFooter={renderSectionFooter}
@@ -102,7 +105,7 @@ const CheckListEditScreenBase = function <SectionT extends DefaultSectionT>({
       {children}
     </Screen>
   )
-}
+})
 
 export default CheckListEditScreenBase
 

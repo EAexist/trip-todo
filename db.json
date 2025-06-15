@@ -16,7 +16,7 @@
             "todolist": [
                 {
                     "id": 1,
-                    "order_key": 1,
+                    "orderKey": 1,
                     "type": "accomodation",
                     "category": "reservation",
                     "title": "숙소 예약",
@@ -26,7 +26,7 @@
                 },
                 {
                     "id": 2,
-                    "order_key": 2,
+                    "orderKey": 2,
                     "type": "passport",
                     "category": "foreign",
                     "title": "여권",
@@ -36,7 +36,7 @@
                 },
                 {
                     "id": 3,
-                    "order_key": 3,
+                    "orderKey": 3,
                     "type": "currency",
                     "category": "foreign",
                     "title": "환전",
@@ -46,7 +46,7 @@
                 },
                 {
                     "id": 4,
-                    "order_key": 4,
+                    "orderKey": 4,
                     "type": "roaming",
                     "category": "foreign",
                     "title": "로밍",
@@ -56,7 +56,7 @@
                 },
                 {
                     "id": 5,
-                    "order_key": 5,
+                    "orderKey": 5,
                     "type": "visit-japan",
                     "category": "foreign",
                     "title": "Visit Japan",
@@ -66,7 +66,7 @@
                 },
                 {
                     "id": 7,
-                    "order_key": 7,
+                    "orderKey": 7,
                     "type": "military-approvement",
                     "category": "foreign",
                     "title": "국외여행허가",
@@ -76,7 +76,7 @@
                 },
                 {
                     "id": 8,
-                    "order_key": 8,
+                    "orderKey": 8,
                     "type": "goods",
                     "category": "goods",
                     "title": "세면도구",
@@ -86,7 +86,7 @@
                 },
                 {
                     "id": 9,
-                    "order_key": 9,
+                    "orderKey": 9,
                     "type": "goods",
                     "category": "goods",
                     "title": "어댑터",
@@ -96,7 +96,7 @@
                 },
                 {
                     "id": 10,
-                    "order_key": 10,
+                    "orderKey": 10,
                     "type": "goods",
                     "category": "goods",
                     "title": "선글라스",
@@ -106,7 +106,7 @@
                 },
                 {
                     "id": 11,
-                    "order_key": 11,
+                    "orderKey": 11,
                     "type": "goods",
                     "category": "goods",
                     "title": "캐리어",
@@ -116,7 +116,7 @@
                 },
                 {
                     "id": 12,
-                    "order_key": 12,
+                    "orderKey": 12,
                     "type": "goods",
                     "category": "goods",
                     "title": "우산",

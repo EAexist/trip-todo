@@ -12,7 +12,7 @@
 import {applySnapshot, IDisposer, onAction, onSnapshot} from 'mobx-state-tree'
 import {RootStore, RootStoreSnapshot} from '../RootStore'
 import * as storage from '../../utils/storage'
-import {reaction} from 'mobx'
+import {autorun, reaction} from 'mobx'
 
 /**
  * The key we'll be saving our state as within async storage.
@@ -52,6 +52,13 @@ export async function setupRootStore(rootStore: RootStore) {
     _disposer = undefined
   }
 
+  autorun(() => {
+    console.log('TripStore changed:', JSON.stringify(rootStore.tripStore))
+    console.log(
+      'TripStore changed todolistWithPreset =\n:',
+      JSON.stringify(rootStore.tripStore.todolistWithPreset),
+    )
+  })
   // reaction(
   //   () => [
   //     rootStore.tripStore.title,

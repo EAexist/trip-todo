@@ -19,7 +19,9 @@ interface FabHeightContextType {
   setHeight: Dispatch<SetStateAction<number>>
 }
 
-const FabHeightContext = createContext<FabHeightContextType>({})
+const FabHeightContext = createContext<FabHeightContextType>(
+  {} as FabHeightContextType,
+)
 export const FabProvider = ({children}: PropsWithChildren) => {
   const [height, setHeight] = useState(0)
   useEffect(() => {

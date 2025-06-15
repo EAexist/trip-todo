@@ -1,5 +1,11 @@
+import {toCalendarString} from '@/utils/date'
+import {eachDayOfInterval} from 'date-fns'
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
 import {api} from '../services/api'
+import {
+  AccomodationItemModel,
+  AccomodationItemSnapshotIn,
+} from './AccomodationItem'
 import {Destination, DestinationModel} from './Destination'
 import {withSetPropAction} from './helpers/withSetPropAction'
 import {
@@ -9,12 +15,7 @@ import {
   TodoModel,
   TodoSnapshotIn,
 } from './Todo'
-import {
-  AccomodationItemModel,
-  AccomodationItemSnapshotIn,
-} from './AccomodationItem'
-import {eachDayOfInterval} from 'date-fns'
-import {toCalendarString} from '@/utils/date'
+import {ka} from 'date-fns/locale'
 
 export const PresetItemModel = types
   .model('Preset')
@@ -30,42 +31,28 @@ export const PresetItemModel = types
   }))
 
 export interface Preset extends Instance<typeof PresetItemModel> {}
+export interface PresetSnapshotIn extends SnapshotOut<typeof PresetItemModel> {}
 
 export const TripStoreModel = types
   .model('TripStore')
   .props({
     id: '',
     title: '',
-    startDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
-    endDateISOString: types.maybe(types.string), // Ex: 2022-08-12 21:05:36
+    startDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
+    endDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
     destination: types.array(DestinationModel),
     todoMap: types.map(TodoModel),
     todolist: types.map(types.array(types.reference(TodoModel))),
-    preset: types.array(PresetItemModel),
-    activeItem: types.maybe(types.reference(TodoModel)),
+    activeItem: types.maybeNull(types.reference(TodoModel)),
     accomodation: types.map(AccomodationItemModel),
-    // _presets: types.model({
-    //   reservation: types.array(TodoModel),
-    //   foreign: types.array(TodoModel),
-    //   goods: types.array(TodoModel),
-    // }),
-    // doSync: types.maybe(types.boolean),
+    preset: types.map(types.array(PresetItemModel)),
   })
   .actions(withSetPropAction)
   .actions(store => ({
-    // createCustomTodo(todo: TodoSnapshotIn) {
-    //   store.todoMap.put(todo)
-    //   store.todolist.get(todo.category)?.push(todo.id)
-    // },
     addTodo(todo: TodoSnapshotIn) {
+      store.todoMap.put(todo)
       store.todolist.get(todo.category)?.push(todo.id)
     },
-    // addPreset(preset: Preset) {
-    //   store.preset.push({
-    //     isFlaggedToAdd: preset.isFlaggedToAdd,
-    //     item: preset.item.id,
-    //   })
-    // },
     set(trip: TripStoreSnapshot) {
       store.setProp('id', trip.id)
       store.setProp('title', trip.title)
@@ -94,12 +81,33 @@ export const TripStoreModel = types
     removeActiveItem() {
       store.setProp('activeItem', undefined)
     },
+    _deleteTodo(todo: Todo) {
+      store.todolist.get(todo.category)?.remove(todo)
+      store.todoMap.delete(todo.id)
+    },
     updatePreset() {
-      const todoIds = Array.from(store.todoMap.keys())
+      const usedPresetIds = [
+        ...new Set(
+          Array.from(store.todoMap.values()).map(todo => todo.presetId),
+        ),
+      ]
+        .filter(presetId => presetId != null)
+        .map(presetId => presetId.toString())
       store.setProp(
         'preset',
-        store.preset.filter(preset => !todoIds.includes(preset.item.id)),
+        Object.fromEntries(
+          Array.from(store.preset.entries())
+            .map(([category, presets]) => [
+              category,
+              presets.filter(preset => !usedPresetIds.includes(preset.item.id)),
+            ])
+            .filter(([category, presets]) => presets.length > 0),
+        ),
       )
+      console.log('updatePreset')
+    },
+    syncOrderInCategory(category: string) {
+      store.todolist.get(category)?.sort((a, b) => a.orderKey - b.orderKey)
     },
   }))
   .actions(store => ({
@@ -110,16 +118,26 @@ export const TripStoreModel = types
     async fetchPreset() {
       api.getTodoPreset(store.id).then(response => {
         if (response.kind == 'ok') {
-          store.setProp(
-            'preset',
-            response.data.map(preset => ({
+          const map = new Map<string, PresetSnapshotIn[]>()
+          response.data.forEach(preset => {
+            if (!map.has(preset.category)) {
+              map.set(preset.category, [])
+            }
+            map.get(preset.category)?.push({
               isFlaggedToAdd: false,
               item: preset,
-            })),
-          )
+            })
+          })
+
+          store.setProp('preset', Object.fromEntries(map.entries()))
+          store.updatePreset()
         }
       })
-      store.updatePreset()
+    },
+    syncOrder() {
+      store.todolist.forEach((v, k) => {
+        store.syncOrderInCategory(k.toString())
+      })
     },
   }))
   .actions(store => ({
@@ -132,7 +150,7 @@ export const TripStoreModel = types
     async create() {
       const response = await api.createTrip()
       if (response.kind === 'ok') {
-        store.setProp('id', response.id)
+        store.setProp('id', response.data.id)
       }
     },
     /**
@@ -153,7 +171,7 @@ export const TripStoreModel = types
     async patch() {
       const response = await api.patchTrip(store as TripStore)
       if (response.kind == 'ok') {
-        store.set(response.data)
+        store.set(response.data as TripStoreSnapshot)
       }
     },
 
@@ -167,36 +185,35 @@ export const TripStoreModel = types
       const response = await api.createTodo({tripId: store.id, category})
       if (response.kind === 'ok') {
         const todo = response.data
-        store.todoMap.put(todo)
-        store.todolist.get(todo.category)?.push(todo.id)
+        store.addTodo(todo)
+        return todo
       }
     },
     /**
      * Create an empty todo and fetch it with backend-generated id.
      */
-    async createPresetTodo(presetId: string) {
-      const response = await api.createTodo({tripId: store.id, presetId})
-      if (response.kind === 'ok') {
-        const todo = response.data
-        store.todoMap.put(todo)
-        store.todolist.get(todo.category)?.push(todo.id)
-      }
-    },
+    // async createPresetTodo(presetId: string) {
+    //   const response = await api.createTodo({tripId: store.id, presetId})
+    //   if (response.kind === 'ok') {
+    //     const todo = response.data
+    //     store.addTodo(todo)
+    //   }
+    // },
     /**
      * Patch(update) a trip.
      */
     async patchTodo(todo: Todo) {
       const response = await api.patchTodo(store.id, todo)
-      if (response.kind === 'ok') store.todoMap.set(todo.id, todo)
+      if (response.kind === 'ok') store.setTodo(todo)
     },
     /**
      * Delete a trip.
      */
-    async deleteTodo(item: Todo) {
-      api.deleteTodo(store.id, item.id).then(({kind}) => {
+    async deleteTodo(todo: Todo) {
+      await api.deleteTodo(store.id, todo.id).then(({kind}) => {
         if (kind == 'ok') {
-          store.todolist.get(item.category)?.remove(item)
-          store.todoMap.delete(item.id)
+          store._deleteTodo(todo)
+          console.log('[deleteTodo]', todo)
         }
       })
     },
@@ -318,9 +335,12 @@ export const TripStoreModel = types
     },
     get sections() {
       return [
-        ...new Set(
-          Array.from(store.todoMap.values()).map(item => item.category),
-        ),
+        ...new Set([
+          ...Array.from(store.todoMap.values()).map(item => item.category),
+          ...(Array.from(store.preset.values()).flat() as Preset[]).map(
+            preset => preset.item.category,
+          ),
+        ]),
       ]
     },
     get sectionedTrip() {
@@ -372,21 +392,18 @@ export const TripStoreModel = types
     get todolistWithPreset() {
       return this.sections.map(category => {
         const addedItems = store.todolist.get(category)
-        const addedItemIds = addedItems?.map(item => item.id) as string[]
+        // const addedItemIds = addedItems?.map(item => item.id) as string[]
         return {
           category,
           title: CATEGORY_TO_TITLE[category],
-          data: (
-            addedItems?.map(item => ({
+          data: [
+            ...((addedItems?.map(item => ({
               todo: item,
-            })) as {todo?: Todo; preset?: Preset}[]
-          ).concat(
-            store.preset
-              .filter(({item}) => item.category === category)
-              .map(preset => ({
-                preset,
-              })),
-          ),
+            })) as {todo?: Todo; preset?: Preset}[]) || []),
+            ...(store.preset.get(category)?.map(preset => ({
+              preset,
+            })) || []),
+          ],
         }
       })
     },
@@ -434,27 +451,39 @@ export const TripStoreModel = types
   }))
   .actions(store => ({
     async deleteTodos() {
-      Array.from(store.todoMap.values())
-        .filter(item => item.isFlaggedToDelete)
-        .forEach(item => {
-          store.deleteTodo(item)
-        })
+      await Promise.all(
+        Array.from(store.todoMap.values())
+          .filter(item => item.isFlaggedToDelete)
+          .map(store.deleteTodo),
+      )
     },
     async addFlaggedPreset() {
-      store.preset
-        .filter(preset => preset.isFlaggedToAdd)
-        .forEach(preset => {
-          store.createPresetTodo(preset.item.id)
-          preset.setProp('isFlaggedToAdd', false)
-        })
+      await Promise.all(
+        (Array.from(store.preset.values()).flat() as Preset[])
+          .filter(preset => preset.isFlaggedToAdd)
+          .map(async preset => {
+            const response = await api.createTodo({
+              tripId: store.id,
+              presetId: preset.item.id,
+            })
+            if (response.kind === 'ok') {
+              const todo = response.data
+              store.addTodo(todo)
+            }
+            preset.setProp('isFlaggedToAdd', false)
+          }),
+      )
+      store.syncOrder()
     },
     async reorder(category: string, keyToIndex: Record<string, number>) {
-      Object.entries(keyToIndex).forEach(([todoId, index]) => {
-        const todo = store.todoMap.get(todoId) as Todo
-        todo.setProp('orderKey', index)
-        store.patchTodo(todo)
-      })
-      //   @TODO reorder here
+      await Promise.all(
+        Object.entries(keyToIndex).map(([todoId, index]) => {
+          const todo = store.todoMap.get(todoId) as Todo
+          todo.setProp('orderKey', index)
+          store.patchTodo(todo)
+        }),
+      )
+      store.syncOrder()
     },
     // setPreset() {
     //   store.setProp('_presets', [])
@@ -467,6 +496,5 @@ export const TripStoreModel = types
     //   }
     // },
   }))
-
 export interface TripStore extends Instance<typeof TripStoreModel> {}
 export interface TripStoreSnapshot extends SnapshotOut<typeof TripStoreModel> {}

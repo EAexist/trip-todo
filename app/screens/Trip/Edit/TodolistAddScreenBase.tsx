@@ -4,7 +4,7 @@ import ListSubheader from '@/components/ListSubheader'
 import {useStores} from '@/models'
 import {Preset} from '@/models/TripStore'
 import {useNavigate} from '@/navigators'
-import {observer} from 'mobx-react-lite'
+import {Observer, observer} from 'mobx-react-lite'
 import {useCallback, useEffect} from 'react'
 import {
   DefaultSectionT,
@@ -30,15 +30,17 @@ export const TodolistAddScreenBase = observer(
       async function fetchPreset() {
         await tripStore.fetchPreset()
       }
+      console.log('[TodolistAddScreenBase] fetchPreset()')
       fetchPreset()
     }, [])
 
     const handlePressAddItem = useCallback(
       async (category: string) => {
-        await tripStore.createCustomTodo(category).then(id => {
-          navigateWithTrip('TodoCreate', {
-            todoId: id,
-          })
+        await tripStore.createCustomTodo(category).then(todo => {
+          if (todo)
+            navigateWithTrip('TodoCreate', {
+              todoId: todo.id,
+            })
         })
       },
       [tripStore, navigateWithTrip],
@@ -47,12 +49,17 @@ export const TodolistAddScreenBase = observer(
     const renderItem: SectionListRenderItem<
       {todo?: Todo; preset?: Preset},
       DefaultSectionT
-    > = ({item: {preset, todo}}) =>
-      preset ? (
-        <AddPresetTodo preset={preset} />
-      ) : (
-        <AddTodo item={todo as Todo} />
-      )
+    > = ({item: {preset, todo}}) => (
+      <Observer
+        render={() =>
+          preset ? (
+            <AddPresetTodo preset={preset} />
+          ) : (
+            <AddTodo item={todo as Todo} />
+          )
+        }
+      />
+    )
 
     const renderSectionHeader = useCallback(
       ({section: {category, title}}: {section: DefaultSectionT}) => (
@@ -74,8 +81,14 @@ export const TodolistAddScreenBase = observer(
       [handlePressAddItem],
     )
 
+    const keyExtractor = useCallback(
+      (item: any) =>
+        item.todo ? `todo-${item.todo.id}` : `preset-${item.preset.item.id}`,
+      [],
+    )
+
     const handleNextPress = useCallback(async () => {
-      tripStore.addFlaggedPreset()
+      await tripStore.addFlaggedPreset()
     }, [tripStore])
 
     return (
@@ -84,7 +97,8 @@ export const TodolistAddScreenBase = observer(
         instruction={instruction}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        sections={tripStore.todolistWithPreset}>
+        sections={tripStore.todolistWithPreset}
+        keyExtractor={keyExtractor}>
         <Fab.Container>
           <Fab.NextButton
             handlePressbeforeNavigate={handleNextPress}
