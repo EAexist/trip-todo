@@ -151,7 +151,7 @@ const theme = createTheme({
         paddingHorizontal: 8,
       },
       leftContainerStyle: {
-        justifyContent: 'center',
+        // justifyContent: 'center',
         paddingLeft: 4,
       },
       centerContainerStyle: {

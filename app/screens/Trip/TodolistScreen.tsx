@@ -135,7 +135,7 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
       bottomSheetModalRef.current?.expand()
     }, [bottomSheetModalRef])
 
-    useHeader({headerShown: false})
+    // useHeader({headerShown: false})
 
     const handleBottomSheetModalChange = useCallback(
       (index: number) => {

@@ -25,7 +25,7 @@ export const BackButton: FC<
         name="arrow-back-ios"
         type="material"
         color="rgba(0, 0, 0, 0.56)"
-        size={24}
+        size={20}
       />
     </TouchableOpacity>
   )
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   BackButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    paddingLeft: 8,
     // borderRadius: 100,
   },
   // CompleteButtonText: {

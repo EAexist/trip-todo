@@ -90,7 +90,12 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        header: () => <Header leftComponent={<BackButton />} />,
+        header: () => (
+          <Header
+            leftComponent={<BackButton />}
+            containerStyle={{backgroundColor: 'red'}}
+          />
+        ),
         contentStyle: {
           backgroundColor: colors.background,
         },
@@ -197,7 +202,7 @@ export const AppNavigator = observer(function AppNavigator(
             ...navigationTheme,
             colors: {
               ...navigationTheme.colors,
-              background: 'transparent',
+              //   background: 'transparent',
             },
           }}
           {...props}>
