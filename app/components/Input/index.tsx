@@ -6,7 +6,7 @@ import {
   useTheme,
 } from '@rneui/themed'
 import {createRef, forwardRef, useCallback, useEffect, useState} from 'react'
-import {TextInput} from 'react-native'
+import {TextInput, ViewStyle} from 'react-native'
 import {TextStyle} from 'react-native'
 import {GooglePlacesAutocompleteRef} from 'react-native-google-places-autocomplete'
 
@@ -105,6 +105,12 @@ export const GooglePlacesSearchBarInput = forwardRef<
 >((props, ref) => {
   return <RNEInput ref={ref} {...props} />
 })
+const $searchBaseContainerStyle: ViewStyle = {
+  backgroundColor: 'cadetblue',
+  padding: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+}
 
 GooglePlacesSearchBarInput.displayName = 'GooglePlacesSearchBarInput'
 
@@ -146,7 +152,7 @@ export const Search = ({
 }
 
 const $inputStyle: TextStyle = {
-  fontFamily: 'Pretendard-Variable',
+  fontFamily: 'Pretendard',
   fontWeight: 400,
   fontSize: 21,
   lineHeight: 1.6 * 21,

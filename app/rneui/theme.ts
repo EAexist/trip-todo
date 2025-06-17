@@ -100,7 +100,7 @@ const theme = createTheme({
       style: {
         color: props.primary ? colors.primary : colors.text.primary,
         fontSize: 17,
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         fontWeight: 400,
         fontStyle: 'normal',
         lineHeight: 1.5 * 17,
@@ -127,7 +127,7 @@ const theme = createTheme({
     }),
     Button: ({color}, {colors}) => ({
       titleStyle: {
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         fontSize: 17,
         fontWeight: 600,
         lineHeight: 1.41 * 17,
@@ -233,7 +233,7 @@ const theme = createTheme({
       },
       // inputContainerStyle: {},
       inputStyle: {
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         fontWeight: 600,
         fontSize: 21,
         lineHeight: 1.6 * 22,
@@ -244,7 +244,7 @@ const theme = createTheme({
         // lineHeight: 1.6 * 15,
       },
       labelStyle: {
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         fontWeight: 500,
         fontSize: 12,
         lineHeight: 1 * 12,
@@ -276,7 +276,7 @@ const theme = createTheme({
     ListItemTitle: (props, {colors}) => ({
       style: {
         display: 'flex',
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         fontWeight: 500,
         fontSize: 17,
         lineHeight: 1.43 * 17,
@@ -288,7 +288,7 @@ const theme = createTheme({
     }),
     ListItemSubtitle: (_, {colors}) => ({
       style: {
-        fontFamily: 'Pretendard-Variable',
+        fontFamily: 'Pretendard',
         color: colors.text.secondary,
         fontWeight: 400,
         fontSize: 12,

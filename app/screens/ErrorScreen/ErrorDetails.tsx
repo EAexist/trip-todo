@@ -1,5 +1,5 @@
 import {Screen} from '@/components'
-import type {ThemedStyle} from '@/theme'
+import type {ThemedStyle} from 'theme'
 import {useAppTheme} from '@/utils/useAppTheme'
 import {ErrorInfo} from 'react'
 import {ScrollView, TextStyle, View, ViewStyle} from 'react-native'

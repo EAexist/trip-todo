@@ -310,13 +310,14 @@ export class Api {
    * Gets a list of recent React Native Radio episodes.
    */
   async createDestination(
-    id: string,
-  ): Promise<ApiResult<Partial<DestinationSnapshotIn>>> {
+    tripId: string,
+    destination: Partial<DestinationSnapshotIn>,
+  ): Promise<ApiResult<DestinationSnapshotIn>> {
     // make the api call
-    const response: ApiResponse<Partial<DestinationSnapshotIn>> =
-      await this.apisauce.get(`trip/${id}/destination`)
+    const response: ApiResponse<DestinationSnapshotIn> =
+      await this.apisauce.post(`trip/${tripId}/destination`, destination)
 
-    return this.handleResponse<Partial<DestinationSnapshotIn>>(response)
+    return this.handleResponse<DestinationSnapshotIn>(response)
   }
 
   /**

@@ -9,9 +9,9 @@ export const DestinationModel = types
   .model('Destination')
   .props({
     id: types.identifier,
-    nation: '',
-    title: '',
-    state: '',
+    nation: types.string,
+    title: types.string,
+    state: types.string,
     isFlaggedToDelete: false,
     isFlaggedToAdd: false,
   })
@@ -49,3 +49,4 @@ export interface DestinationSnapshotOut
   extends SnapshotOut<typeof DestinationModel> {}
 export interface DestinationSnapshotIn
   extends SnapshotIn<typeof DestinationModel> {}
+export interface DestinationContent extends Omit<DestinationSnapshotIn, 'id'> {}

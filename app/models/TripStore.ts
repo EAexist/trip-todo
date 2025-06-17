@@ -6,7 +6,12 @@ import {
   AccomodationItemModel,
   AccomodationItemSnapshotIn,
 } from './AccomodationItem'
-import {Destination, DestinationModel} from './Destination'
+import {
+  Destination,
+  DestinationContent,
+  DestinationModel,
+  DestinationSnapshotIn,
+} from './Destination'
 import {withSetPropAction} from './helpers/withSetPropAction'
 import {
   CATEGORY_TO_TITLE,
@@ -240,10 +245,10 @@ export const TripStoreModel = types
     /**
      * Create an empty destination and fetch it with backend-generated id.
      */
-    async createDestination() {
-      const {kind, ...destination} = await api.createDestination(store.id)
-      if (kind === 'ok') {
-        store.destination.push(destination as Destination)
+    async createDestination(destination: DestinationContent) {
+      const response = await api.createDestination(store.id, destination)
+      if (response.kind === 'ok') {
+        store.destination.push(response.data)
       }
     },
     /**

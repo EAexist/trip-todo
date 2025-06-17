@@ -16,24 +16,22 @@ if (__DEV__) {
   // If you turn it off in metro.config.js, you'll have to manually import it.
   require('./devtools/ReactotronConfig.ts')
 }
-import './utils/gestureHandler'
-import {initI18n} from './i18n'
-import {useFonts} from 'expo-font'
+import {i18n} from '@lingui/core'
+import {I18nProvider} from '@lingui/react'
+import * as Linking from 'expo-linking'
+import * as SplashScreen from 'expo-splash-screen'
 import {useEffect, useState} from 'react'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
-import * as Linking from 'expo-linking'
-import * as SplashScreen from 'expo-splash-screen'
+import {initI18n} from './i18n'
 import {useInitialRootStore} from './models'
 import {AppNavigator, useNavigationPersistence} from './navigators'
-import * as storage from './utils/storage'
-import {customFontsToLoad} from './theme'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {loadDateFnsLocale} from './utils/formatDate'
-import {I18nProvider} from '@lingui/react'
-import {i18n} from '@lingui/core'
+import './utils/gestureHandler'
+import * as storage from './utils/storage'
 
 export const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 
@@ -95,7 +93,7 @@ export function App() {
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
-  const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad)
+  //   const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad)
   const [isI18nInitialized, setIsI18nInitialized] = useState(false)
 
   useEffect(() => {
@@ -121,8 +119,8 @@ export function App() {
   if (
     !rehydrated ||
     !isNavigationStateRestored ||
-    !isI18nInitialized ||
-    (!areFontsLoaded && !fontLoadError)
+    !isI18nInitialized
+    // (!areFontsLoaded && !fontLoadError)
   ) {
     return null
   }
