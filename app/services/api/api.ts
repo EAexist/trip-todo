@@ -24,6 +24,9 @@ import {
   mapToPresetTodo,
 } from './api.types'
 import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
+import {KakaoProfile} from '@react-native-seoul/kakao-login'
+import {User} from '@react-native-google-signin/google-signin'
+import {UserStoreSnapshot} from '@/models/UserStore'
 
 export interface CreateTodoRequest {
   category?: string
@@ -120,6 +123,37 @@ export class Api {
     }
   }
 
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async kakaoLogin(
+    idToken: string,
+    profile: KakaoProfile,
+  ): Promise<ApiResult<UserStoreSnapshot>> {
+    const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
+      `auth/kakao`,
+      profile,
+    )
+    return this.handleResponse<UserStoreSnapshot>(response)
+  }
+
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async googleLogin(
+    idToken: string,
+    data: User,
+  ): Promise<ApiResult<UserStoreSnapshot>> {
+    const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
+      `auth/google`,
+      data,
+    )
+    return this.handleResponse<UserStoreSnapshot>(response)
+  }
   /**
    * Gets a Trip data with given id.
    * @returns {kind} - Response Status.

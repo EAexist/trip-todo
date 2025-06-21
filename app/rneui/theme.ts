@@ -145,13 +145,14 @@ const theme = createTheme({
     Header: (props, {colors}) => ({
       elevated: false,
       containerStyle: {
-        backgroundColor: colors.white,
+        // backgroundColor: colors.white,
+        backgroundColor: 'bisque',
         borderBottomWidth: 0,
         height: 48,
         paddingHorizontal: 8,
       },
       leftContainerStyle: {
-        // justifyContent: 'center',
+        justifyContent: 'center',
         paddingLeft: 4,
       },
       centerContainerStyle: {

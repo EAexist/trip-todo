@@ -98,15 +98,18 @@ const ScheduleSettingCalendar = ({
   const [markedDates, setMarkedDates] = useState<MarkedDates>()
 
   useEffect(() => {
-    console.log(`start: ${start}`)
-    console.log(`end: ${end}`)
+    // console.log(`start: ${start}`)
+    // console.log(`end: ${end}`)
     // console.log(`markedDates: ${Object.entries(markedDates)}`)
     setMarkedDates(() => {
       const intervalDays =
         start && end && eachDayOfInterval({start, end}).slice(1, -1)
       const o: MarkedDates = {}
       if (start) {
-        o[toCalendarString(start)] = {startingDay: true}
+        o[toCalendarString(start)] = {
+          startingDay: true,
+          endingDay: end ? undefined : true,
+        }
       }
       if (end) {
         o[toCalendarString(end)] = {endingDay: true}
@@ -169,6 +172,7 @@ export const ScheduleSettingScreen: FC = () => {
           {toLocaleDateMonthString(dateInterval.end) || '돌아오는 날'}
         </TransText>
       }
+      {'  '}
       <TransText
         style={{...$nightsTextStyle, color: colors.text.secondary}}
         disabled={!dateInterval.end}>
@@ -243,18 +247,18 @@ const $calendarContainerStyle: ViewStyle = {
 }
 
 const $dateContainerStyle: TextStyle = {
-  padding: 24,
+  paddingHorizontal: 24,
 }
 
 const $dateTextStyle: TextStyle = {
   fontWeight: 600,
-  fontSize: 21,
+  fontSize: 17,
   width: '100%',
 }
 
 const $nightsTextStyle: TextStyle = {
   fontWeight: 500,
-  fontSize: 16,
+  fontSize: 14,
   width: '100%',
   paddingLeft: 20,
 }

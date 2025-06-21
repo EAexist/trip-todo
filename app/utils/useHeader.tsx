@@ -1,12 +1,12 @@
 import {useEffect, useLayoutEffect} from 'react'
 import {useNavigation} from '@react-navigation/native'
 import {Platform} from 'react-native'
-import {Header} from '@rneui/themed'
+import {Header, HeaderProps as RNEHeaderProps} from '@rneui/themed'
 import {BackButton, RightActionButton} from '@/components/Header'
 
-interface HeaderProps {
+interface HeaderProps extends RNEHeaderProps {
   headerShown?: boolean
-  hideBackButton?: boolean
+  backButtonShown?: boolean
   rightActionTitle?: string
   onRightPress?: () => void
   onBackPressBeforeNavigate?: () => Promise<any>
@@ -21,10 +21,12 @@ interface HeaderProps {
 export function useHeader(
   {
     headerShown = true,
-    hideBackButton = false,
+    backButtonShown = true,
     rightActionTitle,
     onRightPress,
     onBackPressBeforeNavigate,
+    leftComponent,
+    ...props
   }: HeaderProps,
   deps: Parameters<typeof useLayoutEffect>[1] = [],
 ) {
@@ -46,10 +48,12 @@ export function useHeader(
       header: () => (
         <Header
           leftComponent={
-            hideBackButton ? undefined : (
+            backButtonShown ? (
               <BackButton
                 onBackPressBeforeNavigate={onBackPressBeforeNavigate}
               />
+            ) : (
+              leftComponent
             )
           }
           rightComponent={
@@ -58,6 +62,7 @@ export function useHeader(
               title={rightActionTitle}
             />
           }
+          {...props}
         />
       ),
     })

@@ -115,6 +115,7 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
             )
             bottomSheetModalRef.current?.forceClose()
             setPathToOpen(item.path)
+            navigateWithTrip(item.path)
           }
 
           return (
@@ -135,8 +136,6 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
       bottomSheetModalRef.current?.expand()
     }, [bottomSheetModalRef])
 
-    // useHeader({headerShown: false})
-
     const handleBottomSheetModalChange = useCallback(
       (index: number) => {
         console.log(`[onChange] ${index} ${pathToOpen}`)
@@ -149,28 +148,34 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
       [tripId, pathToOpen, setPathToOpen],
     )
 
-    // useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
+    useHeader({
+      backButtonShown: false,
+      leftComponent: (
+        <TouchableOpacity style={{flexDirection: 'row'}}>
+          <Text ellipsizeMode="tail" numberOfLines={1} h2>
+            {tripStore.title}
+          </Text>
+          <TouchableOpacity
+            onPress={handleSettingsButtonPress}
+            style={styles.headerRightButton}>
+            <Icon name="arrow-drop-down" color="#333d4b" size={24} />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      ),
+      rightComponent: (
+        <TouchableOpacity
+          onPress={handleSettingsButtonPress}
+          style={styles.headerRightButton}>
+          <Icon name="settings" color="#333d4b" size={24} />
+        </TouchableOpacity>
+      ),
+      leftContainerStyle: styles.headerLeftContainer,
+      rightContainerStyle: styles.headerRightContainer,
+    })
     return (
       <GestureHandlerRootViewWrapper>
         {/* <BottomSheetModalProvider> */}
         <Screen>
-          <Header
-            leftComponent={
-              <Text ellipsizeMode="tail" numberOfLines={1} h2>
-                {tripStore.title}
-              </Text>
-            }
-            // centerComponent={<Text h2>{tripStore.title}</Text>}
-            rightComponent={
-              <TouchableOpacity
-                onPress={handleSettingsButtonPress}
-                style={styles.headerRightButton}>
-                <Icon name="settings" color="#333d4b" size={24} />
-              </TouchableOpacity>
-            }
-            leftContainerStyle={styles.headerLeftContainer}
-            rightContainerStyle={styles.headerRightContainer}
-          />
           <ScrollView>
             <SectionList
               sections={tripStore.incompleteTrip}
@@ -191,6 +196,11 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
               renderSectionHeader={renderSectionHeader}
             />
           </ScrollView>
+          <FlatList
+            data={settingsMenu}
+            renderItem={renderSettingsListItem}
+            keyExtractor={item => item.title}
+          />
           <BottomSheetModal
             ref={bottomSheetModalRef}
             onChange={handleBottomSheetModalChange}>

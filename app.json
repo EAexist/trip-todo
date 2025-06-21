@@ -1,6 +1,4 @@
 {
-    "name": "trip-todo",
-    "displayName": "trip-todo",
     "expo": {
         "name": "trip-todo",
         "slug": "trip-todo",
@@ -38,52 +36,78 @@
         "plugins": [
             "expo-localization",
             [
+                "@react-native-seoul/kakao-login",
+                {
+                    "kakaoAppKey": "db8e6a3ae272a123c55d4e1a2705c2e1",
+                    "kotlinVersion": "2.0.21"
+                }
+            ],
+            [
+                "expo-build-properties",
+                {
+                    "android": {
+                        "kotlinVersion": "2.0.21",
+                        "extraMavenRepos": [
+                            "https://devrepo.kakao.com/nexus/content/groups/public/"
+                        ]
+                    }
+                }
+            ],
+            [
+                "@react-native-google-signin/google-signin",
+                {
+                    "iosUrlScheme": "com.googleusercontent.apps.trip-todo"
+                }
+            ],
+            [
                 "expo-font",
                 {
+                    "fonts": [
+                        "./assets/fonts/tossface/tossface.ttf"
+                    ],
                     "android": {
                         "fonts": [
                             {
                                 "fontFamily": "Pretendard",
                                 "fontDefinitions": [
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Thin.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_thin.otf",
                                         "weight": 100
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-ExtraLight.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_extralight.otf",
                                         "weight": 200
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Light.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_light.otf",
                                         "weight": 300
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Regular.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_regular.otf",
                                         "weight": 400
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Medium.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_medium.otf",
                                         "weight": 500
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-SemiBold.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_semibold.otf",
                                         "weight": 600
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Bold.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_bold.otf",
                                         "weight": 700
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-ExtraBold.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_extrabold.otf",
                                         "weight": 800
                                     },
                                     {
-                                        "path": "./assets/fonts/pretendard/Pretendard-Black.otf",
+                                        "path": "./assets/fonts/pretendard/pretendard_black.otf",
                                         "weight": 900
                                     }
                                 ]
-                            },
-                            "./assets/fonts/tossface/TossFaceFontMac.ttf"
+                            }
                         ]
                     },
                     "ios": {

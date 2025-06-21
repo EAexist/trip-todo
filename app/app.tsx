@@ -54,6 +54,7 @@ const config = {
     //   },
     // },
     /*  */
+    Login: 'login',
     Welcome: 'welcome',
     DestinationSetting: 'new/:tripId/destination',
     DestinationSearch: 'new/:tripId/destination/search',

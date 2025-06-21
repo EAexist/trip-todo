@@ -20,6 +20,7 @@ import Config from '../config'
 import {useStores} from '../models'
 import {navigationRef, useBackButtonHandler} from './navigationUtilities'
 import {FabProvider} from '@/components/Fab'
+import {LoginScreen} from '@/screens/Login/LoginScreen'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -39,6 +40,10 @@ type TodoStackProps = {tripId: string; todoId: string}
 
 export type AppStackParamList = {
   // 🔥 Your screens go here
+
+  /* Login */
+  Login: undefined
+
   /* Create Trip */
   Welcome: undefined
   DestinationSetting: TripStackProps
@@ -80,7 +85,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: {isAuthenticated},
+    userStore: {isAuthenticated},
   } = useStores()
 
   const {
@@ -93,17 +98,15 @@ const AppStack = observer(function AppStack() {
         header: () => (
           <Header
             leftComponent={<BackButton />}
-            containerStyle={{backgroundColor: 'red'}}
+            // containerStyle={{backgroundColor: 'red'}}
           />
         ),
         contentStyle: {
           backgroundColor: colors.background,
         },
       }}
-      initialRouteName={isAuthenticated ? 'Welcome' : 'Welcome'}>
+      initialRouteName={isAuthenticated ? 'Welcome' : 'Login'}>
       {isAuthenticated ? (
-        <></>
-      ) : (
         <>
           {/* <Stack.Group> */}
           <Stack.Screen name="Welcome" component={Screens.New.Welcome} />
@@ -167,6 +170,10 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="TodoEdit" component={Screens.Trip.Edit} />
           <Stack.Screen name="TodoNote" component={Screens.Trip.Note} />
           <Stack.Screen name="TodoTitle" component={Screens.Trip.Title} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
         </>
       )}
 
