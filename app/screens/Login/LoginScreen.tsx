@@ -12,7 +12,7 @@ import {
 } from '@react-native-google-signin/google-signin'
 import {getProfile, login} from '@react-native-seoul/kakao-login'
 import {Button, ButtonProps, Image, Text} from '@rneui/themed'
-import * as airbnbLogo from 'assets/images/third-party/airbnb-logo.png'
+import * as appIcon from 'assets/images/app/app-icon.png'
 import * as g from 'assets/images/third-party/g.png'
 import * as kakaoSymbol from 'assets/images/third-party/kakao-symbol.svg'
 import {observer} from 'mobx-react-lite'
@@ -47,7 +47,10 @@ const $loginButtonStyle = StyleSheet.create(
           paddingHorizontal: 10,
           paddingRight: 12,
         },
-        titleStyle: {flexGrow: 1, fontSize: 14},
+        titleStyle: {
+          flexGrow: 1,
+          fontSize: 14,
+        },
         symbolContainerStyle: {
           width: 20,
           height: 20,
@@ -206,10 +209,7 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
   return (
     <Screen>
       <View style={{alignItems: 'center', padding: 64}}>
-        <Image
-          source={airbnbLogo}
-          style={{width: 64, height: 64, borderRadius: 12}}
-        />
+        <Image source={appIcon} containerStyle={{}} style={{}} />
         <Text style={{fontSize: 32, padding: 24}}>TRIP TODO</Text>
       </View>
       <Container fixed={false}>
