@@ -16,21 +16,16 @@
             "**/*"
         ],
         "android": {
-            "icon": "./assets/images/third-party/airbnb-logo.png",
+            "icon": "./assets/images/app-icon-android-legacy.png",
             "package": "com.trip_todo",
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/images/third-party/airbnb-logo.png",
-                "backgroundImage": "./assets/images/third-party/airbnb-logo.png"
-            },
             "allowBackup": false
         },
         "ios": {
-            "icon": "./assets/images/third-party/airbnb-logo.png",
+            "icon": "./assets/images/app-icon-ios.png",
             "supportsTablet": true,
             "bundleIdentifier": "com.trip_todo"
         },
         "web": {
-            "favicon": "./assets/images/third-party/airbnb-logo.png",
             "bundler": "metro"
         },
         "plugins": [
