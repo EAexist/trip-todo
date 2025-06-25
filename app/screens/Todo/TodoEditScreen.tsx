@@ -10,40 +10,107 @@ import {TextInfoListItem} from '@/components/TextInfoListItem'
 import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {CATEGORY_TO_TITLE, Todo} from '@/models/Todo'
-import {AppStackScreenProps, goBack, useNavigate} from '@/navigators'
+import {
+  AppStackParamList,
+  AppStackScreenProps,
+  goBack,
+  useNavigate,
+} from '@/navigators'
 import {useHeader} from '@/utils/useHeader'
 import {useTodo} from '@/utils/useTodo'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useFocusEffect} from '@react-navigation/native'
 import {ListItem} from '@rneui/themed'
 import {observer} from 'mobx-react-lite'
-import {FC, useCallback, useRef, useState} from 'react'
+import {FC, useCallback, useEffect, useRef, useState} from 'react'
 import {
   FlatList,
   ListRenderItem,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
+import {FlightTodoEditScreen} from './Flight/FlightTodoEditScreen'
 
-export const TodoCreateScreen: FC<AppStackScreenProps<'TodoCreate'>> = observer(
+export const TodoCreateScreen: FC<
+  AppStackScreenProps<'TodoCreate'>
+> = props => {
+  const todo = useTodo(props.route)
+  const {navigateWithTrip} = useNavigate()
+
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('[TodoCreateScreen] useEffect')
+      if (todo?.type === 'flight') {
+        if (todo?.departure === null) {
+          console.log('[TodoCreateScreen] todo?.departure === null')
+          navigateWithTrip('FlightDepartureSetting', props.route.params)
+        } else if (todo?.arrival === null) {
+          console.log('[TodoCreateScreen] todo?.arrival === null')
+          navigateWithTrip('FlightArrivalSetting', props.route.params)
+        } else {
+          setIsInitialized(true)
+        }
+      }
+    }, [todo?.departure, todo?.arrival]),
+  )
+
+  return !!todo ? (
+    todo.type === 'custom' ? (
+      <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
+    ) : todo.type === 'flight' ? (
+      isInitialized ? (
+        <FlightTodoEditScreen todo={todo} isBeforeInitialization={true} />
+      ) : (
+        <>Hello</>
+      )
+    ) : (
+      <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
+    )
+  ) : (
+    <></>
+  )
+}
+
+export const TodoEditScreen: FC<AppStackScreenProps<'TodoEdit'>> = observer(
   props => {
     const todo = useTodo(props.route)
     return !!todo ? (
-      <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
+      todo.type === 'custom' ? (
+        <TodoEditScreenBase todo={todo} />
+      ) : todo.type === 'flight' ? (
+        todo?.departure !== null && todo?.arrival !== null ? (
+          <FlightTodoEditScreen todo={todo} />
+        ) : (
+          <></>
+        )
+      ) : (
+        <TodoEditScreenBase todo={todo} />
+      )
     ) : (
       <></>
     )
   },
 )
 
-export const TodoEditScreen: FC<AppStackScreenProps<'TodoEdit'>> = observer(
-  props => {
-    const todo = useTodo(props.route)
-    return !!todo ? <TodoEditScreenBase todo={todo} /> : <></>
-  },
-)
+interface TodoEditScreenProps {
+  todo: Todo
+  isBeforeInitialization?: boolean
+}
 
-export const TodoEditScreenBase: FC<{
+export const TodoEditScreenBase: FC<TodoEditScreenProps> = props => {
+  switch (props.todo.type) {
+    case 'flight':
+      return <FlightTodoEditScreen {...props} />
+    // case 'train':
+    //   return <FlightTodoEditScreen {...props} />
+    default:
+      return <CustomTodoEditScreen {...props} />
+  }
+}
+
+export const CustomTodoEditScreen: FC<{
   todo: Todo
   isBeforeInitialization?: boolean
 }> = observer(({todo, isBeforeInitialization}) => {
@@ -178,7 +245,6 @@ export const TodoEditScreenBase: FC<{
           </ListItem>
         </Title>
         <TextInfoListItem
-          onPress={handleNotePress}
           title={'상태'}
           rightContent={
             <ListItem.CheckBox
@@ -210,9 +276,11 @@ export const TodoEditScreenBase: FC<{
           <Fab.Button
             onPress={handleConfirmPress}
             title={'확인'}
-            disabled={title === todo.title}
+            // disabled={title === todo.title}
           />
         </Fab.Container>
+        <IconDropdownBottomSheet />
+        <CategoryDropdownBottomSheet />
         <BottomSheetModal
           ref={iconBottomSheetModalRef}
           // onChange={handleBottomSheetModalChange}
@@ -245,6 +313,14 @@ export const TodoEditScreenBase: FC<{
     </GestureHandlerRootViewWrapper>
   )
 })
+
+const IconDropdownBottomSheet = () => {
+  return <></>
+}
+
+const CategoryDropdownBottomSheet = () => {
+  return <></>
+}
 
 const $listItemContainerStyle: ViewStyle = {
   height: 60,

@@ -15,6 +15,7 @@ import {
 } from 'react-native'
 import {Avatar, AvatarProps} from '../Avatar'
 import {ListItemCaption} from '../ListItemCaption'
+import {useFocusEffect} from '@react-navigation/native'
 
 interface TodoBaseProps extends Pick<AvatarProps, 'iconId'>, ListItemProps {
   title: string
@@ -55,9 +56,9 @@ export const TodoBase: FC<TodoBaseProps> = ({
         }}>
         <ListItem.Title style={titleStyle || {}}>
           <Trans>{title}</Trans>
-          {caption && <ListItemCaption>{caption}</ListItemCaption>}
+          {!!caption && <ListItemCaption>{caption}</ListItemCaption>}
         </ListItem.Title>
-        {subtitle && (
+        {!!subtitle && (
           <ListItem.Subtitle>
             <Trans>{subtitle}</Trans>
           </ListItem.Subtitle>
@@ -81,7 +82,7 @@ export type TodoProps = {id: string} & Pick<
 //   onPress?: () => void
 // }
 
-export const AddTodo: FC<{item: PresetTodoContent}> = ({item}) => {
+export const AddTodo: FC<{todo: PresetTodoContent}> = ({todo}) => {
   const [isAdded, setIsAdded] = useState(true)
 
   const handlePress = useCallback(() => {
@@ -93,7 +94,7 @@ export const AddTodo: FC<{item: PresetTodoContent}> = ({item}) => {
       caption={'추가함'}
       onPress={handlePress}
       // useDisabledStyle
-      {...item}
+      {...todo}
     />
   )
 }
@@ -120,7 +121,7 @@ export const AddPresetTodo: FC<{preset: Preset}> = observer(({preset}) => {
       }
       onPress={handlePress}
       {...(!preset.isFlaggedToAdd && {
-        avatarStyle: styles.disabled,
+        avatarProps: {avatarStyle: styles.disabled},
         contentStyle: styles.disabled,
       })}
       {...preset.item}
@@ -131,21 +132,25 @@ export const AddPresetTodo: FC<{preset: Preset}> = observer(({preset}) => {
 const useDelayedEdit = ({
   initialState = false,
   displayDelay = 500,
+  //   isComplete,
   setComplete,
 }: {
   initialState?: boolean
   displayDelay?: number
+  //   isComplete: boolean
   setComplete: (isComplete: boolean) => void
 }) => {
   const [displayComplete, setDisplayComplete] = useState(initialState)
 
   useEffect(() => {
-    const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
-    sleep.then(() => {
-      if (displayComplete) setComplete(true)
-      else setComplete(false)
-    })
-  }, [displayComplete, displayDelay, setComplete])
+    {
+      const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
+      sleep.then(() => {
+        if (displayComplete) setComplete(true)
+        else setComplete(false)
+      })
+    }
+  }, [displayComplete, displayDelay])
 
   return {displayComplete, setDisplayComplete}
 }
@@ -154,38 +159,66 @@ const styles = StyleSheet.create({
   disabled: {opacity: 0.5},
 })
 
-export const CompleteTodo: FC<{item: Todo}> = observer(({item}) => {
+export const CompleteTodo: FC<{todo: Todo}> = observer(({todo}) => {
   const displayDelay = 500
   const {navigateWithTrip} = useNavigate()
   const {tripStore} = useStores()
 
-  const [displayComplete, setDisplayComplete] = useState(item.isCompleted)
+  const [displayComplete, setDisplayComplete] = useState(todo.isCompleted)
 
-  useEffect(() => {
-    const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
-    sleep.then(() => {
-      if (displayComplete) item.complete()
-      else item.setIncomplete()
-    })
-  }, [item, displayComplete])
+  useFocusEffect(
+    useCallback(() => {
+      //   console.log('HELLO')
+      if (displayComplete !== todo.isCompleted) {
+        const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
+        sleep.then(() => {
+          if (displayComplete) todo.complete()
+          else todo.setIncomplete()
+          tripStore.patchTodo(todo)
+        })
+      }
+    }, [displayComplete]),
+  )
+
+  //   useEffect(() => {
+  //     if (displayComplete != todo.isCompleted)
+  //       setDisplayComplete(todo.isCompleted)
+  //   }, [displayComplete, todo.isCompleted])
 
   const handleCompletePress = useCallback(() => {
-    console.log(item.title)
-    if (!item.isCompleted && item.type === 'passport')
-      navigateWithTrip('ConfirmPassport', {todoId: item.id})
+    if (!todo.isCompleted) {
+      switch (todo.type) {
+        case 'passport':
+          todo.complete()
+          tripStore.patchTodo(todo).then(() => {
+            navigateWithTrip('ConfirmPassport', {todoId: todo.id})
+          })
+          break
+        case 'flight':
+          todo.complete()
+          tripStore.patchTodo(todo).then(() => {
+            navigateWithTrip('ConfirmFlight', {todoId: todo.id})
+          })
+          break
+        default:
+          setDisplayComplete(prev => !prev)
+          break
+      }
+    }
+    // setDisplayComplete(prev => !prev)
     else setDisplayComplete(prev => !prev)
-    // if (!item.isCompleted) item.complete()
-    // else item.setIncomplete()
-  }, [item, navigateWithTrip])
+    // if (!todo.isCompleted) todo.complete()
+    // else todo.setIncomplete()
+  }, [todo, navigateWithTrip])
 
   const handlePress = useCallback(
     (e: GestureResponderEvent) => {
-      console.log(item.title)
+      console.log(todo.title)
       e.stopPropagation()
-      navigateWithTrip('TodoEdit', {todoId: item.id})
-      //   tripStore.setActiveItem(item)
+      navigateWithTrip('TodoEdit', {todoId: todo.id})
+      //   tripStore.setActiveItem(todo)
     },
-    [tripStore, item],
+    [tripStore, todo],
   )
 
   return (
@@ -198,45 +231,45 @@ export const CompleteTodo: FC<{item: Todo}> = observer(({item}) => {
           uncheckedIcon="circle-o"
         />
       }
-      subtitle={item.note !== '' ? item.note : undefined}
+      subtitle={todo.note !== '' ? todo.note : undefined}
       onPress={handlePress}
-      {...item}
+      {...todo}
     />
   )
 })
 
-// export const PassportTodo: FC<{item: Todo}> = ({item}) => {
+// export const PassportTodo: FC<{todo: Todo}> = ({todo}) => {
 //   const {tripStore} = useStores()
 
 //   const handleCompletePress = useCallback(() => {
-//     if(item.isCompleted)
+//     if(todo.isCompleted)
 
 //       else
-//     navigateWithTrip('ConfirmPassport', {todoId: item.id})
-//   }, [item.id])
+//     navigateWithTrip('ConfirmPassport', {todoId: todo.id})
+//   }, [todo.id])
 
 //   const handlePress = useCallback(() => {
-//     console.log(item.title)
-//     tripStore.setActiveItem(item)
-//   }, [tripStore, item])
+//     console.log(todo.title)
+//     tripStore.setActiveItem(todo)
+//   }, [tripStore, todo])
 
 //   return (
 //     <TodoBase
 //       rightContent={
 //         <ListItem.CheckBox
 //           onPress={handleCompletePress}
-//           checked={item.isCompleted}
+//           checked={todo.isCompleted}
 //           checkedIcon="dot-circle-o"
 //           uncheckedIcon="circle-o"
 //         />
 //       }
 //       onPressContent={handlePress}
-//       {...item}
+//       {...todo}
 //     />
 //   )
 // }
 
-export const AccomodationTodo: FC<{item: Todo}> = ({item}) => {
+export const AccomodationTodo: FC<{todo: Todo}> = ({todo}) => {
   const {navigateWithTrip} = useNavigate()
   const handlePress = useCallback(() => {
     navigateWithTrip('AccomodationPlan')
@@ -246,26 +279,26 @@ export const AccomodationTodo: FC<{item: Todo}> = ({item}) => {
     <TodoBase
       rightContent={<ListItem.Chevron size={32} onPress={handlePress} />}
       onPress={handlePress}
-      {...item}
+      {...todo}
     />
   )
 }
 
-export const ReorderTodo: FC<{item: Todo}> = ({item}) => {
+export const ReorderTodo: FC<{todo: Todo}> = ({todo}) => {
   return (
     <TodoBase
       rightContent={<ListItem.Chevron name="drag-handle" type="material" />}
-      {...item}
+      {...todo}
     />
   )
 }
 
-export const DeleteTodo: FC<{item: Todo}> = observer(({item}) => {
+export const DeleteTodo: FC<{todo: Todo}> = observer(({todo}) => {
   const setComplete = useCallback(
     (isCompleted: boolean) => {
-      item.setProp('isFlaggedToDelete', isCompleted)
+      todo.setProp('isFlaggedToDelete', isCompleted)
     },
-    [item],
+    [todo],
   )
 
   const {displayComplete, setDisplayComplete} = useDelayedEdit({
@@ -293,12 +326,12 @@ export const DeleteTodo: FC<{item: Todo}> = observer(({item}) => {
         />
       }
       onPress={handlePress}
-      caption={item.isFlaggedToDelete ? '삭제함' : undefined}
-      {...(item.isFlaggedToDelete && {
+      caption={todo.isFlaggedToDelete ? '삭제함' : undefined}
+      {...(todo.isFlaggedToDelete && {
         avatarStyle: styles.disabled,
         contentStyle: styles.disabled,
       })}
-      {...item}
+      {...todo}
     />
   )
 })

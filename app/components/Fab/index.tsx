@@ -1,4 +1,4 @@
-import {AppStackParamList, navigate, useNavigate} from '@/navigators'
+import {AppStackParamList, goBack, navigate, useNavigate} from '@/navigators'
 import {ButtonProps} from '@rneui/themed'
 import {
   createContext,
@@ -82,18 +82,28 @@ type NavigateProps = {
   params?: unknown
 }
 /**
- * Fab.NextButtonBase
+ * Fab.NavigateButtonBase
  * @param {ButtonProps}
  * @returns {ReactElement}
  */
-export const NextButtonBase: FC<ButtonProps> = props => {
-  return <Button uppercase title={props.title || '다음'} {...props} />
+export interface NavigateButtonBaseProps extends Omit<ButtonProps, 'onPress'> {
+  navigate: () => void
+  promiseBeforeNavigate?: () => Promise<any>
 }
+export const NavigateButtonBase: FC<NavigateButtonBaseProps> = ({
+  navigate,
+  promiseBeforeNavigate,
+  ...props
+}) => {
+  const handlePress = useCallback(() => {
+    if (promiseBeforeNavigate)
+      promiseBeforeNavigate().then(() => {
+        navigate()
+      })
+    else navigate()
+  }, [navigate, promiseBeforeNavigate])
 
-export interface NextButtonBaseProps extends NavigateProps {
-  buttonProps?: ButtonProps
-  handlePressbeforeNavigate?: () => Promise<any>
-  doNavigateWithTrip?: boolean
+  return <Button onPress={handlePress} uppercase {...props} />
 }
 
 /**
@@ -101,30 +111,48 @@ export interface NextButtonBaseProps extends NavigateProps {
  * @param {ButtonProps}
  * @returns {ReactElement}
  */
-export const NextButton: FC<NextButtonBaseProps> = ({
-  name,
-  params,
-  buttonProps,
-  handlePressbeforeNavigate,
+export const GoBackButton: FC<
+  Omit<NavigateButtonBaseProps, 'navigate'>
+> = props => {
+  const navigate = () => {
+    goBack()
+  }
+
+  return (
+    <NavigateButtonBase
+      title={props?.title || '확인'}
+      uppercase
+      navigate={navigate}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Fab.NextButton
+ * @param {ButtonProps}
+ * @returns {ReactElement}
+ */
+export interface NextButtonProps
+  extends Omit<NavigateButtonBaseProps, 'navigate'> {
+  doNavigateWithTrip?: boolean
+  navigateProps: NavigateProps
+}
+
+export const NextButton: FC<NextButtonProps> = ({
+  navigateProps,
   doNavigateWithTrip = true,
+  ...props
 }) => {
   const {navigateWithTrip} = useNavigate()
 
   const _navigate = doNavigateWithTrip ? navigateWithTrip : navigate
 
-  const handlePress = useCallback(() => {
-    if (handlePressbeforeNavigate)
-      handlePressbeforeNavigate().then(() => {
-        _navigate(name, params)
-      })
-    else _navigate(name, params)
-  }, [_navigate, handlePressbeforeNavigate, name, params])
-
   return (
-    <NextButtonBase
-      title={buttonProps?.title || '다음'}
-      onPress={handlePress}
-      {...buttonProps}
+    <NavigateButtonBase
+      title={props?.title || '다음'}
+      navigate={() => _navigate(navigateProps.name, navigateProps.params)}
+      {...props}
     />
   )
 }

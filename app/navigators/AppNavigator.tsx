@@ -35,8 +35,8 @@ import {LoginScreen} from '@/screens/Login/LoginScreen'
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
-type TripStackProps = {tripId: string}
-type TodoStackProps = {tripId: string; todoId: string}
+export type TripStackProps = {tripId: string}
+export type TodoStackProps = {tripId: string; todoId: string}
 
 export type AppStackParamList = {
   // 🔥 Your screens go here
@@ -57,6 +57,7 @@ export type AppStackParamList = {
   TodolistDelete: TripStackProps
   TodolistReorder: TripStackProps
   /* Confirm */
+  //   ConfirmReservationTodo: TodoStackProps
   ConfirmPassport: TodoStackProps
   ConfirmFlight: TodoStackProps
   /* Edit Todo */
@@ -64,10 +65,17 @@ export type AppStackParamList = {
   TodoNote: TodoStackProps
   TodoCreate: TodoStackProps
   TodoEdit: TodoStackProps
+
+  /* Flight */
+  FlightDepartureSetting: TodoStackProps
+  FlightArrivalSetting: TodoStackProps
+  RoundTripSetting: TodoStackProps
+
   /* Accomodation */
   AccomodationPlan: TripStackProps & {accomodationId: string}
   Accomodation: TripStackProps & {accomodationId: string}
   AccomodationNote: TripStackProps & {accomodationId: string}
+  CreateAccomodation: TripStackProps
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -138,14 +146,17 @@ const AppStack = observer(function AppStack() {
           {/* <Stack.Group> */}
           <Stack.Screen
             name="Todolist"
-            component={Screens.Trip.TodolistScreen}
+            component={Screens.Todolist.TodolistScreen}
           />
-          <Stack.Screen name="TodolistAdd" component={Screens.Trip.Add} />
+          <Stack.Screen name="TodolistAdd" component={Screens.Todolist.Add} />
           <Stack.Screen
             name="TodolistReorder"
-            component={Screens.Trip.Reorder}
+            component={Screens.Todolist.Reorder}
           />
-          <Stack.Screen name="TodolistDelete" component={Screens.Trip.Delete} />
+          <Stack.Screen
+            name="TodolistDelete"
+            component={Screens.Todolist.Delete}
+          />
           <Stack.Screen
             name="ConfirmPassport"
             component={Screens.Confirm.Passport}
@@ -166,10 +177,26 @@ const AppStack = observer(function AppStack() {
             name="AccomodationNote"
             component={Screens.Accomodation.Note}
           />
-          <Stack.Screen name="TodoCreate" component={Screens.Trip.Create} />
-          <Stack.Screen name="TodoEdit" component={Screens.Trip.Edit} />
-          <Stack.Screen name="TodoNote" component={Screens.Trip.Note} />
-          <Stack.Screen name="TodoTitle" component={Screens.Trip.Title} />
+          <Stack.Screen
+            name="CreateAccomodation"
+            component={Screens.Accomodation.Create}
+          />
+          <Stack.Screen name="TodoCreate" component={Screens.Todo.Create} />
+          <Stack.Screen name="TodoEdit" component={Screens.Todo.Edit} />
+          <Stack.Screen name="TodoNote" component={Screens.Todo.Note} />
+          <Stack.Screen name="TodoTitle" component={Screens.Todo.Title} />
+          <Stack.Screen
+            name="FlightDepartureSetting"
+            component={Screens.Todo.Flight.DepartureSetting}
+          />
+          <Stack.Screen
+            name="FlightArrivalSetting"
+            component={Screens.Todo.Flight.ArrivalSetting}
+          />
+          <Stack.Screen
+            name="RoundTripSetting"
+            component={Screens.Todo.Flight.RoundTripSetting}
+          />
         </>
       ) : (
         <>

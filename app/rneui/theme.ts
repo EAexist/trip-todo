@@ -36,8 +36,8 @@ const theme = createTheme({
             }),
         ...(props.size === 'medium'
           ? {
-              width: 32,
-              height: 32,
+              width: 40,
+              height: 40,
             }
           : props.size === 'large'
             ? {
@@ -56,9 +56,13 @@ const theme = createTheme({
         // min-width: 32,
         // min-height: 32,
       },
-      icon: {
-        color: colors.primary,
-      },
+      ...(props.icon
+        ? {
+            icon: {
+              color: colors.primary,
+            },
+          }
+        : {}),
       iconStyle: {
         borderRadius: 10,
         ...(props.size === 'medium'
@@ -142,6 +146,26 @@ const theme = createTheme({
         height: 56,
       },
     }),
+    Chip: (props, {colors}) => ({
+      titleStyle: {
+        fontFamily: 'Pretendard',
+        color: colors.contrastText.secondary,
+        fontSize: 14,
+        fontWeight: 600,
+        letterSpacing: 0.16,
+        lineHeight: 18,
+      },
+      containerStyle: {
+        borderRadius: 0,
+      },
+      buttonStyle: {
+        backgroundColor: colors.secondary,
+        height: 36,
+        padding: 4,
+        borderRadius: 8,
+        // height: 56,
+      },
+    }),
     Header: (props, {colors}) => ({
       elevated: false,
       containerStyle: {
@@ -192,8 +216,8 @@ const theme = createTheme({
     }),
     ListSubheader: (props, {colors}) => ({
       style: {
-        height: props.lg ? 64 : 40,
-        paddingTop: 12,
+        height: props.lg ? 64 : 44,
+        paddingVertical: 8,
         paddingHorizontal: 20,
       },
       titleStyle: props.lg
@@ -205,8 +229,8 @@ const theme = createTheme({
           }
         : {
             fontWeight: 500,
-            fontSize: 12,
-            letterSpacing: 0.01,
+            fontSize: 13,
+            letterSpacing: 0.1,
             color: colors.text?.secondary,
           },
     }),
@@ -239,7 +263,7 @@ const theme = createTheme({
         fontSize: 21,
         lineHeight: 1.6 * 22,
         color: colors.text.primary,
-        outlineStyle: 'none',
+        outlineStyle: undefined,
         // fontWeight: 400,
         // fontSize: 15,
         // lineHeight: 1.6 * 15,

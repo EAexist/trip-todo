@@ -30,7 +30,6 @@ export const Input = ({
 
   return (
     <RNEInput
-      autoFocus
       onChangeText={handleChangeText}
       // label={label}
       // placeholder={placeholder || label}
@@ -45,6 +44,7 @@ export const Input = ({
       onBlur={() => setIsFocused(false)}
       onFocus={() => setIsFocused(true)}
       primary={isFocused}
+      autoFocus={props.autoFocus || true}
       {...props}
     />
   )

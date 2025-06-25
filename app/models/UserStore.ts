@@ -15,8 +15,8 @@ export const UserStoreModel = types
   .actions(withSetPropAction)
   .views(store => ({
     get isAuthenticated() {
-      //   return true
-      return !!store.authToken
+      return true
+      //   return !!store.authToken
     },
   }))
   .actions(store => ({

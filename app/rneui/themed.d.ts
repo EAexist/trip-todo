@@ -32,7 +32,7 @@ declare module '@rneui/themed' {
   //   size?: ('small' | 'medium' | 'large' | 'xlarge' | '2xlarge') | number
   // }
   export interface ListItemTitleProps extends Partial<TextProps> {
-    // primary?: boolean
+    primary?: boolean
   }
   export interface ComponentTheme {
     ListSubheader: Partial<ListSubheaderProps>
@@ -41,7 +41,7 @@ declare module '@rneui/themed' {
     Text: Partial<TextProps>
     Input: Partial<InputProps>
     Icon: Partial<IconProps>
-    // Avatar: Partial<AvatarProps>
+    ListItemTitle: Partial<TextProps>
   }
   // export interface ListItem {
   //   Caption: Component

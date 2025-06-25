@@ -22,6 +22,7 @@ export const Avatar = ({
       {...(type === 'tossface' && !icon
         ? {title: iconId, titleStyle: styles.titleStyle}
         : {icon})}
+      //   {...{title: iconId, titleStyle: styles.titleStyle}}
       {...props}
       // icon={props.icon}
     >

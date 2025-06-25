@@ -22,7 +22,7 @@ export const ReorderTrip = observer(({category}: {category: string}) => {
   const renderItem = useCallback<SortableGridRenderItem<Todo>>(
     ({item}) =>
       // <Sortable.Handle mode={item.isCompleted ? 'draggable' : 'draggable'}>
-      item.isCompleted ? <></> : <ReorderTodo item={item} />,
+      item.isCompleted ? <></> : <ReorderTodo todo={item} />,
     // </Sortable.Handle>
     [],
   )

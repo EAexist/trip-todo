@@ -6,16 +6,15 @@ import {InputProps} from '@rneui/base'
 import {FC, useCallback, useState} from 'react'
 import {View} from 'react-native'
 
-export const TripTitleSettingScreenBase: FC<
-  {
-    title: string
-    instruction?: string
-    inputProps?: Partial<InputProps>
-    onConfirm: (value: string) => Promise<any>
-  } & Omit<Fab.NextButtonBaseProps, 'Fab.NextButtonBaseProps'>
-> = ({title, inputProps, onConfirm, ...props}) => {
+export const TripTitleSettingScreenBase: FC<{
+  title: string
+  instruction?: string
+  inputProps?: Partial<InputProps>
+  onConfirm: (value: string) => Promise<any>
+  nextButtonProps: Fab.NextButtonProps
+}> = ({title, inputProps, onConfirm, nextButtonProps}) => {
   const [value, setValue] = useState('')
-  const handlePressbeforeNavigate = useCallback(async () => {
+  const promiseBeforeNavigate = useCallback(async () => {
     onConfirm(value)
   }, [value, onConfirm])
   return (
@@ -26,8 +25,8 @@ export const TripTitleSettingScreenBase: FC<
       </View>
       <Fab.Container>
         <Fab.NextButton
-          handlePressbeforeNavigate={handlePressbeforeNavigate}
-          {...props}
+          promiseBeforeNavigate={promiseBeforeNavigate}
+          {...nextButtonProps}
         />
       </Fab.Container>
     </Screen>

@@ -54,10 +54,10 @@ export async function setupRootStore(rootStore: RootStore) {
 
   autorun(() => {
     console.log('TripStore changed:', JSON.stringify(rootStore.tripStore))
-    console.log(
-      'TripStore changed todolistWithPreset =\n:',
-      JSON.stringify(rootStore.tripStore.todolistWithPreset),
-    )
+    // console.log(
+    //   'TripStore changed todolistWithPreset =\n:',
+    //   JSON.stringify(rootStore.tripStore.todolistWithPreset),
+    // )
   })
   // reaction(
   //   () => [

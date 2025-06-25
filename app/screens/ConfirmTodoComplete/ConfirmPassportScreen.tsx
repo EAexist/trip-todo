@@ -3,7 +3,8 @@ import ContentTitle from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
-import {AppStackScreenProps, goBack} from '@/navigators'
+import {Todo} from '@/models/Todo'
+import {AppStackScreenProps} from '@/navigators'
 import {useTodo} from '@/utils/useTodo'
 import {observer} from 'mobx-react-lite'
 import {FC, useCallback} from 'react'
@@ -11,19 +12,15 @@ import {FC, useCallback} from 'react'
 interface ConfirmPassportScreenProps
   extends AppStackScreenProps<'ConfirmPassport'> {}
 
-export const ConfirmPassportScreen: FC<AppStackScreenProps<'ConfirmPassport'>> =
-  observer(({route}) => {
+export const ConfirmPassportScreen: FC<ConfirmPassportScreenProps> = observer(
+  ({route}) => {
     const {tripStore} = useStores()
 
-    const item = useTodo(route)
-    const handleConfirmPress = useCallback(() => {
-      item?.complete()
-      goBack()
-    }, [item])
-
-    const handleCancelPress = useCallback(() => {
-      goBack()
-    }, [])
+    const todo = useTodo(route)
+    const cancelConfirmBeforeNavigate = useCallback(async () => {
+      todo?.setIncomplete()
+      await tripStore.patchTodo(todo as Todo)
+    }, [todo])
 
     const instruction =
       '만료일이 해당 날짜 이전이라면\n여권을 재발급 받아야 해요.'
@@ -44,16 +41,17 @@ export const ConfirmPassportScreen: FC<AppStackScreenProps<'ConfirmPassport'>> =
         />
 
         <Fab.Container>
-          <Fab.NextButtonBase
+          <Fab.GoBackButton
             title={'확인했어요'}
-            onPress={handleConfirmPress}
+            // promiseBeforeNavigate={confirmTodoBeforeNavigate}
           />
-          <Fab.Button
+          <Fab.GoBackButton
             color={'secondary'}
-            onPress={handleCancelPress}
             title={'재발급하고 올게요'}
+            promiseBeforeNavigate={cancelConfirmBeforeNavigate}
           />
         </Fab.Container>
       </Screen>
     )
-  })
+  },
+)

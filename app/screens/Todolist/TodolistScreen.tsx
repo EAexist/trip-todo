@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react/macro'
 import {Divider, Header, Icon, ListItem, Text} from '@rneui/themed'
-import {FC, useCallback, useEffect, useRef, useState} from 'react'
+import {FC, RefObject, useCallback, useEffect, useRef, useState} from 'react'
 import {
   DefaultSectionT,
   FlatList,
@@ -16,6 +16,7 @@ import {
 import {
   BottomSheetModal,
   GestureHandlerRootViewWrapper,
+  useNavigationBottomSheet,
 } from '@/components/BottomSheetModal'
 import {AccomodationTodo, CompleteTodo} from '@/components/Todo'
 import {TodoBottomSheet} from '@/components/Todo/TodoModal'
@@ -26,7 +27,7 @@ import {Todo} from '@/models/Todo'
 import {AppStackScreenProps, useNavigate} from '@/navigators'
 // import BottomSheet from '@gorhom/bottom-sheet'
 import {useHeader} from '@/utils/useHeader'
-import BottomSheet from '@gorhom/bottom-sheet'
+import BottomSheet, {BottomSheetModalProvider} from '@gorhom/bottom-sheet'
 import {Observer, observer} from 'mobx-react-lite'
 
 // const SettingsDialog: FC = ({ visible6: boolean }) => {
@@ -59,9 +60,6 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
   ({route}) => {
     const {tripStore} = useStores()
     const {tripId} = route.params
-    const bottomSheetModalRef = useRef<BottomSheet>(null)
-    const [pathToOpen, setPathToOpen] = useState<string | undefined>(undefined)
-    const {navigateWithTrip} = useNavigate()
 
     useEffect(() => {
       tripStore.fetch(tripId).then(() => {
@@ -69,26 +67,22 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
       })
     }, [])
 
-    const renderItem: SectionListRenderItem<Todo, DefaultSectionT> =
-      useCallback(
-        ({item}) => (
-          <Observer
-            render={() =>
-              item.type === 'accomodation' ? (
-                <AccomodationTodo item={item} />
-              ) : item.type === 'passport' ? (
-                <CompleteTodo item={item} />
-              ) : (
-                <CompleteTodo
-                  item={item}
-                  // onPress={() => handleTodoPress(item)}
-                />
-              )
-            }
-          />
-        ),
-        [],
-      )
+    const renderItem: SectionListRenderItem<Todo, DefaultSectionT> = ({
+      item,
+    }) => (
+      <Observer
+        render={() => {
+          switch (item.type) {
+            case 'accomodation':
+              return <AccomodationTodo todo={item} />
+            case 'passport':
+              return <CompleteTodo todo={item} />
+            default:
+              return <CompleteTodo todo={item} />
+          }
+        }}
+      />
+    )
 
     const renderSectionHeader = useCallback(
       ({section: {title}}: {section: DefaultSectionT}) => (
@@ -98,55 +92,12 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
     )
 
     /* SettingList */
-    type SettingsListItemData = {title: string; path: string; primary?: boolean}
 
-    const settingsMenu: SettingsListItemData[] = [
-      {title: '할 일 추가', path: 'TodolistAdd', primary: true},
-      {title: '목록 순서 변경', path: 'TodolistReorder'},
-      {title: '목록에서 할 일 삭제', path: 'TodolistDelete'},
-    ]
-
-    const renderSettingsListItem: ListRenderItem<SettingsListItemData> =
-      useCallback(
-        ({item}) => {
-          const handlePress = () => {
-            console.log(
-              `[bottomSheetModalRef.current] ${bottomSheetModalRef.current}`,
-            )
-            bottomSheetModalRef.current?.forceClose()
-            setPathToOpen(item.path)
-            navigateWithTrip(item.path)
-          }
-
-          return (
-            <ListItem onPress={handlePress}>
-              <ListItem.Content>
-                <ListItem.Title primary={item.primary}>
-                  {item.title}
-                </ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron onPress={handlePress} />
-            </ListItem>
-          )
-        },
-        [bottomSheetModalRef],
-      )
+    const settingsDropDownBottomSheetRef = useRef<BottomSheet>(null)
 
     const handleSettingsButtonPress = useCallback(() => {
-      bottomSheetModalRef.current?.expand()
-    }, [bottomSheetModalRef])
-
-    const handleBottomSheetModalChange = useCallback(
-      (index: number) => {
-        console.log(`[onChange] ${index} ${pathToOpen}`)
-        if (pathToOpen && index < 0) {
-          navigateWithTrip(pathToOpen, {tripId})
-        } else {
-          setPathToOpen(undefined)
-        }
-      },
-      [tripId, pathToOpen, setPathToOpen],
-    )
+      settingsDropDownBottomSheetRef.current?.expand()
+    }, [settingsDropDownBottomSheetRef])
 
     useHeader({
       backButtonShown: false,
@@ -174,49 +125,87 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
     })
     return (
       <GestureHandlerRootViewWrapper>
-        {/* <BottomSheetModalProvider> */}
         <Screen>
           <ScrollView>
-            <SectionList
-              sections={tripStore.incompleteTrip}
-              keyExtractor={item => item.id}
-              renderItem={renderItem}
-              renderSectionHeader={renderSectionHeader}
-            />
-            <Divider />
-            <View style={styles.sectionHeaderContainer}>
-              <Text h3 style={styles.sectionHeaderText}>
-                <Trans id="completedTasksTitle">완료했어요</Trans>
-              </Text>
+            <View>
+              <SectionList
+                sections={tripStore.incompleteTrip}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                renderSectionHeader={renderSectionHeader}
+              />
             </View>
-            <SectionList
-              sections={tripStore.completedTrip}
-              keyExtractor={item => item.title}
-              renderItem={renderItem}
-              renderSectionHeader={renderSectionHeader}
-            />
+            <Divider />
+            {tripStore.completedTrip.length > 0 && (
+              <View>
+                <View style={styles.sectionHeaderContainer}>
+                  <Text h3 style={styles.sectionHeaderText}>
+                    <Trans id="completedTasksTitle">완료했어요</Trans>
+                  </Text>
+                </View>
+                <SectionList
+                  sections={tripStore.completedTrip}
+                  keyExtractor={item => item.title}
+                  renderItem={renderItem}
+                  renderSectionHeader={renderSectionHeader}
+                />
+              </View>
+            )}
           </ScrollView>
-          <FlatList
-            data={settingsMenu}
-            renderItem={renderSettingsListItem}
-            keyExtractor={item => item.title}
-          />
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            onChange={handleBottomSheetModalChange}>
-            <FlatList
-              data={settingsMenu}
-              renderItem={renderSettingsListItem}
-              keyExtractor={item => item.title}
-            />
-          </BottomSheetModal>
+          <SettingsDropDownBottomSheet ref={settingsDropDownBottomSheetRef} />
           <TodoBottomSheet />
         </Screen>
-        {/* </BottomSheetModalProvider> */}
       </GestureHandlerRootViewWrapper>
     )
   },
 )
+
+const SettingsDropDownBottomSheet = ({
+  ref,
+}: {
+  ref: RefObject<BottomSheet | null>
+}) => {
+  const {useActiveKey, handleBottomSheetModalChange, activate} =
+    useNavigationBottomSheet(ref)
+  const {navigateWithTrip} = useNavigate()
+  useActiveKey(activeKey => navigateWithTrip(activeKey))
+  type SettingsListItemData = {title: string; path: string; primary?: boolean}
+
+  const settingsMenu: SettingsListItemData[] = [
+    {title: '할 일 추가', path: 'TodolistAdd', primary: true},
+    {title: '목록 순서 변경', path: 'TodolistReorder'},
+    {title: '목록에서 할 일 삭제', path: 'TodolistDelete'},
+  ]
+
+  const renderSettingsListItem: ListRenderItem<SettingsListItemData> =
+    useCallback(
+      ({item}) => {
+        const handlePress = () => activate(item.path)
+
+        return (
+          <ListItem onPress={handlePress}>
+            <ListItem.Content>
+              <ListItem.Title primary={item.primary}>
+                {item.title}
+              </ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron onPress={handlePress} />
+          </ListItem>
+        )
+      },
+      [activate],
+    )
+
+  return (
+    <BottomSheetModal ref={ref} onChange={handleBottomSheetModalChange}>
+      <FlatList
+        data={settingsMenu}
+        renderItem={renderSettingsListItem}
+        keyExtractor={item => item.title}
+      />
+    </BottomSheetModal>
+  )
+}
 
 const styles = StyleSheet.create({
   headerLeftContainer: {

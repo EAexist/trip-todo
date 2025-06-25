@@ -89,11 +89,13 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     }
 
     // Subscribe when we come to life
-    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    )
 
     // Unsubscribe when we're done
-    return () =>
-      BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    return () => subscription.remove()
   }, [])
 }
 
@@ -131,7 +133,7 @@ export function useNavigationPersistence(
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation)
   const [isRestored, setIsRestored] = useState(initNavState)
 
-  const routeNameRef = useRef<keyof AppStackParamList | undefined>()
+  const routeNameRef = useRef<keyof AppStackParamList | undefined>(undefined)
 
   const onNavigationStateChange = (state: NavigationState | undefined) => {
     const previousRouteName = routeNameRef.current
@@ -191,6 +193,7 @@ export function useNavigationPersistence(
  * @param {unknown} params - The params to pass to the route.
  */
 export function navigate(name: unknown, params?: unknown) {
+  console.log(`[navigate] ${name} ${JSON.stringify(params)}`)
   if (navigationRef.isReady()) {
     // @ts-expect-error
     navigationRef.navigate(name as never, params as never)
@@ -204,20 +207,31 @@ export function navigate(name: unknown, params?: unknown) {
  * @param {unknown} name - The name of the route to navigate to.
  * @param {object} unknown - The params to pass to the route.
  */
-export function useNavigate() {
+export function useNavigate(todoId?: string) {
   const {
     tripStore,
     // : {id: tripId},
   } = useStores()
 
   const navigateWithTrip = useCallback(
-    (name: unknown, params?: unknown) => {
-      console.log(`[useNavigate] ${tripStore.id}`)
-
-      navigate(name, {tripId: tripStore.id, ...(params as object)})
+    (
+      name: unknown,
+      params?: unknown,
+      promiseBeforeNavigate?: () => Promise<any>,
+    ) => {
+      console.log(
+        `[navigateWithTrip] ${name} ${tripStore.id} ${JSON.stringify(params)}`,
+      )
+      if (promiseBeforeNavigate)
+        promiseBeforeNavigate().then(() => {
+          navigate(name, {tripId: tripStore.id, todoId, ...(params as object)})
+        })
+      else navigate(name, {tripId: tripStore.id, todoId, ...(params as object)})
     },
     [tripStore.id],
   )
+
+  //   const navigateWithTrip = () => navigateWithTodo()
 
   return {
     navigateWithTrip,
@@ -231,6 +245,7 @@ export function useNavigate() {
  * The navigationRef variable is set in the App component.
  */
 export function goBack() {
+  console.log(`[goBack]`)
   if (navigationRef.isReady() && navigationRef.canGoBack()) {
     navigationRef.goBack()
   }

@@ -22,8 +22,12 @@ export const TripTitleSettingScreen: FC = () => {
         placeholder: `여행 이름`,
       }}
       title={`여행의 이름을 정해주세요`}
-      name="TodolistSetting"
       onConfirm={handleNextPress}
+      nextButtonProps={{
+        navigateProps: {
+          name: 'TodolistSetting',
+        },
+      }}
     />
   )
 }

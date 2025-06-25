@@ -230,10 +230,10 @@ export const ScheduleSettingScreen: FC = () => {
       </View>
       <Fab.Container>
         <Fab.NextButton
-          name="TitleSetting"
-          handlePressbeforeNavigate={handleNextPress}
-          buttonProps={{
-            title: isScheduleSet ? '다음' : '건너뛰기',
+          promiseBeforeNavigate={handleNextPress}
+          title={isScheduleSet ? '다음' : '건너뛰기'}
+          navigateProps={{
+            name: 'TitleSetting',
           }}
         />
       </Fab.Container>

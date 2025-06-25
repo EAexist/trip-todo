@@ -58,51 +58,18 @@
             [
                 "expo-font",
                 {
-                    "android": {
-                        "fonts": [
-                            {
-                                "fontFamily": "Pretendard",
-                                "fontDefinitions": [
-                                    {
-                                        "path": "./assets/fonts/pretendard_thin.otf",
-                                        "weight": 100
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_extralight.otf",
-                                        "weight": 200
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_light.otf",
-                                        "weight": 300
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_regular.otf",
-                                        "weight": 400
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_medium.otf",
-                                        "weight": 500
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_semibold.otf",
-                                        "weight": 600
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_bold.otf",
-                                        "weight": 700
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_extrabold.otf",
-                                        "weight": 800
-                                    },
-                                    {
-                                        "path": "./assets/fonts/pretendard_black.otf",
-                                        "weight": 900
-                                    }
-                                ]
-                            }
-                        ]
-                    },
+                    "fonts": [
+                        "./assets/fonts/tossface/tossface.ttf",
+                        "./assets/fonts/pretendard/pretendard_thin.otf",
+                        "./assets/fonts/pretendard/pretendard_extralight.otf",
+                        "./assets/fonts/pretendard/pretendard_light.otf",
+                        "./assets/fonts/pretendard/pretendard_regular.otf",
+                        "./assets/fonts/pretendard/pretendard_medium.otf",
+                        "./assets/fonts/pretendard/pretendard_semibold.otf",
+                        "./assets/fonts/pretendard/pretendard_bold.otf",
+                        "./assets/fonts/pretendard/pretendard_extrabold.otf",
+                        "./assets/fonts/pretendard/pretendard_black.otf"
+                    ],
                     "ios": {
                         "fonts": [
                             "./assets/fonts/pretendard/Pretendard-Thin.otf",
@@ -117,6 +84,53 @@
                         ]
                     }
                 }
+            ],
+            [
+                "expo-xml-font",
+                [
+                    {
+                        "name": "Pretendard",
+                        "folder": "assets/fonts/pretendard",
+                        "variants": [
+                            {
+                                "fontFile": "pretendard_thin.otf",
+                                "fontWeight": 100
+                            },
+                            {
+                                "fontFile": "pretendard_extralight.otf",
+                                "fontWeight": 200
+                            },
+                            {
+                                "fontFile": "pretendard_light.otf",
+                                "fontWeight": 300
+                            },
+                            {
+                                "fontFile": "pretendard_regular.otf",
+                                "fontWeight": 400
+                            },
+                            {
+                                "fontFile": "pretendard_medium.otf",
+                                "fontWeight": 500
+                            },
+                            {
+                                "fontFile": "pretendard_semibold.otf",
+                                "fontWeight": 600
+                            },
+                            {
+                                "fontFile": "pretendard_bold.otf",
+                                "fontWeight": 700
+                            },
+                            {
+                                "fontFile": "pretendard_extrabold.otf",
+                                "fontWeight": 800
+                            },
+                            {
+                                "fontFile": "pretendard_black.otf",
+                                "fontWeight": 900
+                            }
+                        ]
+                    }
+                ]
             ],
             [
                 "expo-splash-screen",

@@ -4,7 +4,9 @@ import {goBack} from '@/navigators'
 import {useHeader} from '@/utils/useHeader'
 import {useCallback, useEffect} from 'react'
 import CheckListEditScreenBase from './TodolistEditScreenBase'
-import {observer} from 'mobx-react-lite'
+import {Observer, observer} from 'mobx-react-lite'
+import {DefaultSectionT, SectionListRenderItem} from 'react-native'
+import {Todo} from '@/models/Todo'
 
 interface TodolistDeleteScreenProps {}
 
@@ -18,13 +20,18 @@ export const TodolistDeleteScreen = observer(
       })
     }, [tripStore])
 
+    const renderItem: SectionListRenderItem<Todo, DefaultSectionT> = ({
+      item,
+    }) => <Observer render={() => <DeleteTodo todo={item} key={item?.id} />} />
+
     useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
     return (
       <CheckListEditScreenBase
         title={'할 일 삭제하기'}
         instruction={'관리하지 않아도 되늗 할 일을 지울 수 있어요'}
         sections={tripStore.deleteFlaggedTrip}
-        Todo={DeleteTodo}
+        renderItem={renderItem}
+        // Todo={DeleteTodo}
       />
     )
   },

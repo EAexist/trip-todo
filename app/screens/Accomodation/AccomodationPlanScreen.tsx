@@ -1,5 +1,6 @@
 import {Avatar} from '@/components/Avatar'
 import * as Fab from '@/components/Fab'
+import {ListItemBase} from '@/components/ListItem'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
 import {AccomodationItem} from '@/models/AccomodationItem'
@@ -34,7 +35,9 @@ const AccomodationPlanCalendar: FC = () => {
 
   return (
     <CalendarProvider
-      date={tripStore.startDate ? toCalendarString(tripStore.startDate) : ''}>
+      date={toCalendarString(
+        tripStore.startDate ? tripStore.startDate : new Date(),
+      )}>
       <ExpandableCalendar
         // markedDates={markedDates}
         initialPosition={Positions.CLOSED}
@@ -64,12 +67,11 @@ const AccomodationListItem: FC<{
     theme: {colors},
   } = useTheme()
   return (
-    <ListItem onPress={handlePress} containerStyle={{height: 64}}>
-      <Avatar
-        // rounded
-        // size="medium"
-        // type="icon"
-        icon={{
+    <ListItemBase
+      title={item.title}
+      subtitle={item.nightsParsed}
+      avatarProps={{
+        icon: {
           color: colors.white,
           ...(item.type === 'hotel'
             ? {type: 'font-awesome-5', name: 'hotel'}
@@ -78,28 +80,15 @@ const AccomodationListItem: FC<{
               : item.type === 'dorm'
                 ? {type: 'material-community', name: 'bunk-bed-outline'}
                 : {type: 'material-community', name: 'bunk-bed-outline'}),
-        }}
-        containerStyle={{
+        },
+        containerStyle: {
           backgroundColor:
             $palette[tripStore.indexedUniqueTitles.indexOf(item.title)],
-        }}>
-        {/* <RNEAvatar.Accessory
-          size={16}
-          color={color}
-          containerStyle={{ backgroundColor: color }}
-          iconStyle={{ backgroundColor: color }}
-        /> */}
-      </Avatar>
-      <ListItem.Content>
-        <ListItem.Title>
-          <Trans>{item.title}</Trans>
-        </ListItem.Title>
-        <ListItem.Subtitle>
-          <Trans>{item.nightsParsed}</Trans>
-        </ListItem.Subtitle>
-      </ListItem.Content>
-      <ListItem.Chevron />
-    </ListItem>
+        },
+      }}
+      onPress={handlePress}
+      containerStyle={{height: 64}}
+    />
   )
 }
 export const AccomodationPlanScreen: FC = observer(({}) => {
@@ -112,8 +101,9 @@ export const AccomodationPlanScreen: FC = observer(({}) => {
     return <AccomodationListItem item={item.item} />
   }
 
+  const {navigateWithTrip} = useNavigate()
   const handleAddItemPress = useCallback(() => {
-    console.log(`handleAddItemPress`)
+    navigateWithTrip('CreateAccomodation')
   }, [])
 
   return (

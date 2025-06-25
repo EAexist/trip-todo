@@ -1,8 +1,4 @@
 export * from './TodolistScreen'
-export {TodoTitleScreen as Title} from './TodoTitleScreen'
-export {TodoNoteScreen as Note} from './TodoNoteScreen'
-export {TodoCreateScreen as Create} from './TodoEditScreen'
-export {TodoEditScreen as Edit} from './TodoEditScreen'
 export {TodolistAddScreen as Add} from './Edit/TodolistAddScreen'
 export {TodolistDeleteScreen as Delete} from './Edit/TodolistDeleteScreen'
 export {TodolistReorderScreen as Reorder} from './Edit/TodolistReorderScreen'

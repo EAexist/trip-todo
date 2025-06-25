@@ -97,6 +97,7 @@ const GooglePlacesSearchBar = () => {
       renderRow={renderRow}
       styles={$googlePlaceSearchBarStyle}
       listEmptyComponent={<></>}
+      predefinedPlaces={[]}
     />
   )
 }
@@ -111,8 +112,6 @@ const $googlePlaceSearchBarStyle: Partial<Styles> = {
 
 export const DestinationSearchScreen: FC = () => {
   const {tripStore} = useStores()
-
-  const {t} = useLingui()
 
   const titleText = tripStore.isDestinationSet ? (
     <TransText h2>

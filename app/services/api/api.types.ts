@@ -42,7 +42,7 @@ import {getSnapshot} from 'mobx-state-tree'
 
 export interface TodoDTO
   extends Omit<TodoSnapshotIn, 'id' | 'isFlaggedToDelete'> {
-  id: number
+  id?: number
 }
 
 export interface CreateTodoDTO extends Omit<TodoDTO, 'id'> {
@@ -55,15 +55,15 @@ export const mapToTodoDTO: (
   //   trip_id?: number,
 ) => TodoDTO = todo => ({
   ...todo,
-  id: Number(todo.id),
+  id: todo.id ? Number(todo.id) : undefined,
   //   isPreset: false,
   //   orderKey: orderKey,
   //   trip_id: trip_id,
 })
 
-export const mapToTodo: (todo: TodoDTO) => TodoSnapshotIn = todo => ({
+export const mapToTodo: (todo: TodoDTO) => Partial<TodoSnapshotIn> = todo => ({
   ...todo,
-  id: todo.id.toString(),
+  id: todo.id?.toString(),
   title: todo.title || '',
   note: todo.note || '',
   iconId: todo.iconId || '',
@@ -99,14 +99,14 @@ export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
     ...tripDTO,
     id: tripDTO.id.toString(),
     todoMap: tripDTO.todolist.reduce((acc: {[key: string]: any}, todoDTO) => {
-      acc[todoDTO.id.toString()] = mapToTodo(todoDTO)
+      if (todoDTO.id) acc[todoDTO.id?.toString()] = mapToTodo(todoDTO)
       return acc
     }, {}),
     todolist: categories.reduce((acc: {[key: string]: any}, category) => {
       acc[category] = tripDTO.todolist
         .filter(todo => todo.category === category)
         .toSorted((a, b) => (a.orderKey as number) - (b.orderKey as number))
-        .map(todo => todo.id.toString())
+        .map(todo => todo.id?.toString())
       return acc
     }, {}),
     accomodation: tripDTO.accomodation.reduce(

@@ -1,11 +1,19 @@
+import {useNavigate} from '@/navigators'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetModalProps,
   BottomSheetView,
   BottomSheetBackdrop as GorhomBottomSheetBackdrop,
-  BottomSheetModal as GorhomBottomSheetModal,
 } from '@gorhom/bottom-sheet'
-import {forwardRef, PropsWithChildren} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import {
+  PropsWithChildren,
+  Ref,
+  RefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import {StyleSheet} from 'react-native'
 import {GestureHandlerRootView as RNGestureHandlerRootView} from 'react-native-gesture-handler'
 import {GestureHandlerRootViewProps} from 'react-native-gesture-handler/lib/typescript/components/GestureHandlerRootView'
@@ -16,6 +24,56 @@ export const GestureHandlerRootViewWrapper = (
   <RNGestureHandlerRootView style={styles.gestureHandlerRootView} {...props} />
 )
 
+export const useNavigationBottomSheet = (
+  ref: RefObject<BottomSheet | null>,
+  promiseBeforeNavigate?: () => Promise<any>,
+) => {
+  //   const ref = useRef<BottomSheetMethods>(null)
+  const [activeCandidateKey, setActiveCandidateKey] = useState<
+    string | undefined
+  >(undefined)
+  const [activeKey, setActiveKey] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    setActiveKey(undefined)
+  }, [])
+
+  const handleBottomSheetModalChange = useCallback(
+    (index: number) => {
+      console.log(`[onChange] ${index} ${activeCandidateKey}`)
+      if (index < 0 && activeCandidateKey) {
+        console.log(`[onChange] setActiveKey`)
+        setActiveKey(activeCandidateKey)
+      } else {
+        setActiveCandidateKey(undefined)
+      }
+    },
+    [activeCandidateKey, setActiveCandidateKey],
+  )
+  const activate = useCallback((path: string) => {
+    ref?.current?.forceClose()
+    setActiveCandidateKey(path)
+  }, [])
+
+  const useActiveKey = (callback: (activeKey: string) => void) =>
+    useFocusEffect(
+      useCallback(() => {
+        console.log(`activeKey=${activeKey}`)
+        if (activeKey) {
+          const temp = activeKey
+          setActiveKey(undefined)
+          callback(temp)
+        }
+      }, [activeKey]),
+    )
+
+  return {
+    useActiveKey,
+    activate,
+    handleBottomSheetModalChange,
+  }
+}
+
 const BottomSheetBackdrop = (props: BottomSheetBackdropProps) => (
   <GorhomBottomSheetBackdrop
     disappearsOnIndex={-1}
@@ -24,12 +82,13 @@ const BottomSheetBackdrop = (props: BottomSheetBackdropProps) => (
   />
 )
 
-export type BottomSheetModalType = GorhomBottomSheetModal
+// export type BottomSheetModalType = GorhomBottomSheetModal
 
-export const BottomSheetModal = forwardRef<
-  BottomSheet,
-  PropsWithChildren<BottomSheetModalProps>
->(({children, ...props}, ref) => {
+export const BottomSheetModal = ({
+  children,
+  ref,
+  ...props
+}: PropsWithChildren<BottomSheetModalProps & {ref: Ref<BottomSheet>}>) => {
   return (
     <BottomSheet
       ref={ref}
@@ -49,7 +108,7 @@ export const BottomSheetModal = forwardRef<
       </BottomSheetView>
     </BottomSheet>
   )
-})
+}
 
 BottomSheetModal.displayName = 'BottomSheetModal'
 

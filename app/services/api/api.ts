@@ -265,22 +265,21 @@ export class Api {
    */
   async createTodo({
     tripId,
-    category,
-    presetId,
-  }: Partial<Pick<TodoSnapshotIn, 'category'>> & {
+    todo,
+  }: {
     tripId: string
-    presetId?: string
+    todo: Partial<TodoSnapshotIn>
   }): Promise<ApiResult<TodoSnapshotIn>> {
     const response: ApiResponse<TodoDTO> = await this.apisauce.post(
       `/trip/${tripId}/todo`,
-      {category, presetId: Number(presetId)},
+      mapToTodoDTO({...todo, completeDateISOString: ''} as TodoSnapshotIn),
     )
 
     const todoDTOResponse = this.handleResponse<TodoDTO>(response)
     return todoDTOResponse.kind === 'ok'
       ? {
           kind: 'ok',
-          data: mapToTodo(todoDTOResponse.data),
+          data: mapToTodo(todoDTOResponse.data) as TodoSnapshotIn,
         }
       : todoDTOResponse
   }
@@ -303,7 +302,7 @@ export class Api {
     return todoDTOResponse.kind === 'ok'
       ? {
           kind: 'ok',
-          data: mapToTodo(todoDTOResponse.data),
+          data: mapToTodo(todoDTOResponse.data) as TodoSnapshotIn,
         }
       : todoDTOResponse
   }
@@ -429,6 +428,47 @@ export class Api {
 
     return this.handleResponse<void>(response)
   }
+
+  //   amadeus = new Amadeus({
+  //     clientId: CLIENT_ID,
+  //     clientSecret: CLIENT_SECRET,
+  //   })
+
+  /**
+   * Update todo.
+   * @returns {kind} - Response Status.
+   * @returns {...Todo} - Updated Trip.
+   */
+  //   async fetchLocationsbyKeyword(
+  //     tripId: string,
+  //     accomodationId: string,
+  //   ): Promise<ApiResult<Location>> {
+  //     const response = await amadeus.client.get('/v1/reference-data/locations', {
+  //       keyword,
+  //       subType,
+  //       'page[offset]': page * 10,
+  //     })
+
+  //     return this.handleResponse<Location>(response)
+  //   }
+
+  /**
+   * Update todo.
+   * @returns {kind} - Response Status.
+   * @returns {...Todo} - Updated Trip.
+   */
+  //   async fetchFlightsWithNearbyArrival(
+  //     tripId: string,
+  //     accomodationId: string,
+  //   ): Promise<ApiResult<Location>> {
+  //     const response = await amadeus.client.get('/v1/reference-data/locations', {
+  //       keyword,
+  //       subType,
+  //       'page[offset]': page * 10,
+  //     })
+
+  //     return this.handleResponse<Location>(response)
+  //   }
 }
 
 // Singleton instance of the API for convenience

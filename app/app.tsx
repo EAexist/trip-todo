@@ -61,24 +61,33 @@ const config = {
     ScheduleSetting: 'new/:tripId/schedule',
     TitleSetting: 'new/:tripId/title',
     TodolistSetting: 'new/:tripId/trip',
+
     /*  */
     Todolist: 'trip/:tripId?',
     TripMeta: 'trip/:tripId?/meta',
     TodolistAdd: 'trip/:tripId?/add',
     TodolistDelete: 'trip/:tripId?/delete',
     TodolistReorder: 'trip/:tripId?/reorder',
+
     /*  */
     TodoCreate: 'trip/:tripId?/todo/:todoId?/create',
     TodoEdit: 'trip/:tripId?/todo/:todoId?/edit',
     TodoTitle: 'trip/:tripId?/todo/:todoId?/title',
     TodoNote: 'trip/:tripId?/todo/:todoId?/note',
+
     /*  */
-    ConfirmPassport: 'confirm/passport/id',
-    ConfirmFlight: 'confirm/flight/id',
+    FlightDepartureSetting: 'trip/:tripId?/todo/:todoId?/departure',
+    FlightArrivalSetting: 'trip/:tripId?/todo/:todoId?/arrival',
+    RoundTripSetting: 'trip/:tripId?/todo/:todoId?/roundTrip',
+
+    /*  */
+    ConfirmPassport: 'trip/:tripId?/todo/:todoId?/confirmPassport',
+    ConfirmFlight: 'trip/:tripId?/todo/:todoId?/confirmFlight',
     /*  */
     AccomodationPlan: 'trip/:tripId?/accomodationPlan',
     Accomodation: 'trip/:tripId?/accomodation/:accomodationId?',
     AccomodationNote: 'trip/:tripId?/accomodation/:accomodationId?/note',
+    CreateAccomodation: 'trip/:tripId?/createAccomodation',
   },
 }
 

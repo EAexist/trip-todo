@@ -18,7 +18,7 @@ export const ReorderTrip = () => {
 
   const DATA = tripStore.todolist
   const renderItem = useCallback<SortableGridRenderItem<Todo>>(
-    ({item}) => <ReorderTodo item={item} />,
+    ({item}) => <ReorderTodo todo={item} />,
     [],
   )
 

@@ -1,13 +1,15 @@
-import {Avatar} from '@/components/Avatar'
+import {Avatar, AvatarProps} from '@/components/Avatar'
 import * as Fab from '@/components/Fab'
 import * as Input from '@/components/Input'
-import ContentTitle from '@/components/Layout/Content'
+import ContentTitle, {Title} from '@/components/Layout/Content'
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
 import {Destination, DestinationSnapshotIn} from '@/models/Destination'
 import {useNavigate} from '@/navigators'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {ListItemProps} from '@rneui/base'
+import {Text} from '@rneui/themed'
 import {ListItem} from '@rneui/themed'
 import {FC, ReactNode, useCallback, useEffect, useState} from 'react'
 import {FlatList, ListRenderItem, TouchableOpacity, View} from 'react-native'
@@ -32,6 +34,7 @@ export interface DestinationListItemBaseProps {
   rightContent?: ReactNode
   onPress?: () => void
 }
+
 export const DestinationListItemBase: FC<DestinationListItemBaseProps> = ({
   item,
   rightContent,
@@ -112,6 +115,19 @@ export const DestinationSettingScreen: FC = () => {
   return (
     <Screen>
       <ContentTitle title={titleText} subtitle={subtitlteText} />
+      <Text style={{fontFamily: 'roboto'}}>여행 중 방문할 도시</Text>
+      <Text style={{fontFamily: 'Pretendard', fontWeight: 900}}>
+        여행 중 방문할 도시
+      </Text>
+      <Text style={{fontFamily: 'Pretendard', fontWeight: 700}}>
+        여행 중 방문할 도시
+      </Text>
+      <Text style={{fontFamily: 'Pretendard', fontWeight: 600}}>
+        여행 중 방문할 도시
+      </Text>
+      <Text style={{fontFamily: 'Pretendard', fontWeight: 500}}>
+        여행 중 방문할 도시
+      </Text>
       <View>
         {tripStore.isDestinationSet && (
           <View>
@@ -138,8 +154,10 @@ export const DestinationSettingScreen: FC = () => {
       </View>
       <Fab.Container>
         <Fab.NextButton
-          name="ScheduleSetting"
-          handlePressbeforeNavigate={handleNextPress}
+          navigateProps={{
+            name: 'ScheduleSetting',
+          }}
+          promiseBeforeNavigate={handleNextPress}
         />
       </Fab.Container>
     </Screen>

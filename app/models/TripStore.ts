@@ -38,6 +38,11 @@ export const PresetItemModel = types
 export interface Preset extends Instance<typeof PresetItemModel> {}
 export interface PresetSnapshotIn extends SnapshotOut<typeof PresetItemModel> {}
 
+export const TodolistModel = types
+  .model('Preset')
+  .actions(withSetPropAction)
+  .actions(presetItem => ({}))
+
 export const TripStoreModel = types
   .model('TripStore')
   .props({
@@ -54,8 +59,23 @@ export const TripStoreModel = types
   })
   .actions(withSetPropAction)
   .actions(store => ({
+    syncOrderInCategory(category: string) {
+      store.todolist.get(category)?.sort((a, b) => a.orderKey - b.orderKey)
+    },
+  }))
+  .actions(store => ({
+    syncOrder() {
+      store.todolist.forEach((v, k) => {
+        store.syncOrderInCategory(k.toString())
+      })
+    },
+  }))
+  .actions(store => ({
     addTodo(todo: TodoSnapshotIn) {
       store.todoMap.put(todo)
+      if (!store.todolist.has(todo.category)) {
+        store.todolist.set(todo.category, [])
+      }
       store.todolist.get(todo.category)?.push(todo.id)
     },
     set(trip: TripStoreSnapshot) {
@@ -71,7 +91,14 @@ export const TripStoreModel = types
         //   trip.todolist.map(item => [item.id, item]),
         // ),
       )
-      store.setProp('todolist', trip.todolist)
+      store.setProp('todolist', {})
+      Object.values(trip.todoMap).forEach(todo => {
+        if (!store.todolist.has(todo.category)) {
+          store.todolist.set(todo.category, [])
+        }
+        store.todolist.get(todo.category)?.push(todo.id)
+      })
+      store.syncOrder()
       /* Nested Object: UseSetProps */
       store.setProp('preset', trip.preset)
     },
@@ -111,9 +138,6 @@ export const TripStoreModel = types
       )
       console.log('updatePreset')
     },
-    syncOrderInCategory(category: string) {
-      store.todolist.get(category)?.sort((a, b) => a.orderKey - b.orderKey)
-    },
   }))
   .actions(store => ({
     add(todo: TodoSnapshotIn) {
@@ -137,11 +161,6 @@ export const TripStoreModel = types
           store.setProp('preset', Object.fromEntries(map.entries()))
           store.updatePreset()
         }
-      })
-    },
-    syncOrder() {
-      store.todolist.forEach((v, k) => {
-        store.syncOrderInCategory(k.toString())
       })
     },
   }))
@@ -186,12 +205,12 @@ export const TripStoreModel = types
     /**
      * Create an empty todo and fetch it with backend-generated id.
      */
-    async createCustomTodo(category: string) {
-      const response = await api.createTodo({tripId: store.id, category})
+    async createCustomTodo(todo: Partial<TodoSnapshotIn>) {
+      const response = await api.createTodo({tripId: store.id, todo})
       if (response.kind === 'ok') {
         const todo = response.data
         store.addTodo(todo)
-        return todo
+        return store.todoMap.get(todo.id)
       }
     },
     /**
@@ -209,7 +228,10 @@ export const TripStoreModel = types
      */
     async patchTodo(todo: Todo) {
       const response = await api.patchTodo(store.id, todo)
-      if (response.kind === 'ok') store.setTodo(todo)
+      if (response.kind === 'ok') {
+        console.log(`[patchTodo] todo=${JSON.stringify(todo)}`)
+        store.setTodo(todo)
+      }
     },
     /**
      * Delete a trip.
@@ -305,7 +327,7 @@ export const TripStoreModel = types
         : undefined
     },
     get isScheduleSet() {
-      return this.startDate !== undefined
+      return this.startDate !== null
     },
     get isDestinationSet() {
       return store.destination.length > 0
@@ -413,7 +435,7 @@ export const TripStoreModel = types
       })
     },
     get isActive() {
-      return store.activeItem !== undefined
+      return store.activeItem !== null
     },
   }))
   .views(store => ({
@@ -469,7 +491,11 @@ export const TripStoreModel = types
           .map(async preset => {
             const response = await api.createTodo({
               tripId: store.id,
-              presetId: preset.item.id,
+              todo: {
+                ...preset.item,
+                id: undefined,
+                presetId: Number(preset.item.id),
+              },
             })
             if (response.kind === 'ok') {
               const todo = response.data

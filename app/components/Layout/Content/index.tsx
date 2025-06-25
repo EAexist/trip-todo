@@ -36,7 +36,7 @@ export const SubtitleText: FC<SubtitleTextProps> = ({children}) => {
   )
 }
 
-interface ContentTitleProps {
+export interface ContentTitleProps {
   title?: ReactNode
   subtitle?: ReactNode
 }
