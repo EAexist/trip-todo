@@ -1,4 +1,119 @@
 import {createTheme} from '@rneui/themed'
+import {Platform, TextStyle} from 'react-native'
+
+type Font = {
+  thin?: TextStyle
+  extraLight?: TextStyle
+  light?: TextStyle
+  regular?: TextStyle
+  medium?: TextStyle
+  semiBold?: TextStyle
+  bold?: TextStyle
+  extraBold?: TextStyle
+  black?: TextStyle
+}
+
+const typography: {[key: string]: Font} = {
+  pretendard:
+    Platform.OS == 'android'
+      ? {
+          thin: {
+            fontFamily: 'Pretendard-Thin',
+          },
+          extraLight: {
+            fontFamily: 'Pretendard-ExtraLight',
+          },
+          light: {
+            fontFamily: 'Pretendard-Light',
+          },
+          regular: {
+            fontFamily: 'Pretendard-Regular',
+          },
+          medium: {
+            fontFamily: 'Pretendard-Medium',
+          },
+          semiBold: {
+            fontFamily: 'Pretendard-SemiBold',
+          },
+          bold: {
+            fontFamily: 'Pretendard-Bold',
+          },
+          extraBold: {
+            fontFamily: 'Pretendard-ExtraBold',
+          },
+          black: {
+            fontFamily: 'Pretendard-Black',
+          },
+        }
+      : Platform.OS == 'ios'
+        ? {
+            thin: {
+              fontFamily: 'Pretendard',
+              fontWeight: 100,
+            },
+            extraLight: {
+              fontFamily: 'Pretendard',
+              fontWeight: 200,
+            },
+            light: {
+              fontFamily: 'Pretendard',
+              fontWeight: 300,
+            },
+            regular: {
+              fontFamily: 'Pretendard',
+              fontWeight: 400,
+            },
+            medium: {
+              fontFamily: 'Pretendard',
+              fontWeight: 500,
+            },
+            semiBold: {
+              fontFamily: 'Pretendard',
+              fontWeight: 600,
+            },
+            bold: {
+              fontFamily: 'Pretendard',
+              fontWeight: 700,
+            },
+            extraBold: {
+              fontFamily: 'Pretendard',
+              fontWeight: 800,
+            },
+            black: {
+              fontFamily: 'Pretendard',
+              fontWeight: 900,
+            },
+          }
+        : {
+            thin: {
+              fontFamily: 'Pretendard-Thin',
+            },
+            extraLight: {
+              fontFamily: 'Pretendard-ExtraLight',
+            },
+            light: {
+              fontFamily: 'Pretendard-Light',
+            },
+            regular: {
+              fontFamily: 'Pretendard-Regular',
+            },
+            medium: {
+              fontFamily: 'Pretendard-Medium',
+            },
+            semiBold: {
+              fontFamily: 'Pretendard-SemiBold',
+            },
+            bold: {
+              fontFamily: 'Pretendard-Bold',
+            },
+            extraBold: {
+              fontFamily: 'Pretendard-ExtraBold',
+            },
+            black: {
+              fontFamily: 'Pretendard-Black',
+            },
+          },
+}
 
 const colorTheme = createTheme({
   lightColors: {
@@ -102,10 +217,9 @@ const theme = createTheme({
     }),
     Text: (props, {colors}) => ({
       style: {
+        ...typography.pretendard.regular,
         color: props.primary ? colors.primary : colors.text.primary,
         fontSize: 17,
-        fontFamily: 'Pretendard',
-        fontWeight: 400,
         fontStyle: 'normal',
         lineHeight: 1.5 * 17,
         letterSpacing: 0.15,
@@ -115,14 +229,14 @@ const theme = createTheme({
       },
       h2Style: {
         fontSize: 21,
-        fontWeight: 700,
+        ...typography.pretendard.bold,
         lineHeight: 1.6 * 21,
         letterSpacing: 0,
         textTransform: 'none',
       },
       h3Style: {
         fontSize: 17,
-        fontWeight: 700,
+        ...typography.pretendard.bold,
         lineHeight: 1.33 * 21,
         letterSpacing: 0,
         textTransform: 'none',
@@ -131,9 +245,8 @@ const theme = createTheme({
     }),
     Button: ({color}, {colors}) => ({
       titleStyle: {
-        fontFamily: 'Pretendard',
+        ...typography.pretendard.semiBold,
         fontSize: 17,
-        fontWeight: 600,
         lineHeight: 1.41 * 17,
         ...(color === 'primary'
           ? {color: colors.contrastText.primary}
@@ -148,10 +261,9 @@ const theme = createTheme({
     }),
     Chip: (props, {colors}) => ({
       titleStyle: {
-        fontFamily: 'Pretendard',
+        ...typography.pretendard.semiBold,
         color: colors.contrastText.secondary,
         fontSize: 14,
-        fontWeight: 600,
         letterSpacing: 0.16,
         lineHeight: 18,
       },
@@ -209,7 +321,7 @@ const theme = createTheme({
             // color: colors.text.primary,
           }
         : {
-            fontWeight: 500,
+            ...typography.pretendard.medium,
             fontSize: 17,
             lineHeight: 1.43 * 17,
           },
@@ -222,13 +334,13 @@ const theme = createTheme({
       },
       titleStyle: props.lg
         ? {
-            fontWeight: 600,
+            ...typography.pretendard.semiBold,
             fontSize: 19,
             letterSpacing: 0.01,
             // color: var(-text--secondary),
           }
         : {
-            fontWeight: 500,
+            ...typography.pretendard.medium,
             fontSize: 13,
             letterSpacing: 0.1,
             color: colors.text?.secondary,
@@ -258,8 +370,7 @@ const theme = createTheme({
       },
       // inputContainerStyle: {},
       inputStyle: {
-        fontFamily: 'Pretendard',
-        fontWeight: 600,
+        ...typography.pretendard.semiBold,
         fontSize: 21,
         lineHeight: 1.6 * 22,
         color: colors.text.primary,
@@ -269,8 +380,7 @@ const theme = createTheme({
         // lineHeight: 1.6 * 15,
       },
       labelStyle: {
-        fontFamily: 'Pretendard',
-        fontWeight: 500,
+        ...typography.pretendard.medium,
         fontSize: 12,
         lineHeight: 1 * 12,
         letterSpacing: 0.01,
@@ -301,8 +411,7 @@ const theme = createTheme({
     ListItemTitle: (props, {colors}) => ({
       style: {
         display: 'flex',
-        fontFamily: 'Pretendard',
-        fontWeight: 500,
+        ...typography.pretendard.medium,
         fontSize: 17,
         lineHeight: 1.43 * 17,
         overflow: 'hidden',
@@ -313,9 +422,8 @@ const theme = createTheme({
     }),
     ListItemSubtitle: (_, {colors}) => ({
       style: {
-        fontFamily: 'Pretendard',
+        ...typography.pretendard.regular,
         color: colors.text.secondary,
-        fontWeight: 400,
         fontSize: 12,
         letterSpacing: 0.17,
         lineHeight: 1 * 12,
