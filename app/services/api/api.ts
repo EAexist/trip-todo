@@ -7,7 +7,11 @@
  */
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
 import {DestinationSnapshotIn} from '@/models/Destination'
-import {PresetTodoContentSnapshotIn, TodoSnapshotIn} from '@/models/Todo'
+import {
+  Location,
+  PresetTodoContentSnapshotIn,
+  TodoSnapshotIn,
+} from '@/models/Todo'
 import {TripStore, TripStoreSnapshot} from '@/models/TripStore'
 import {ApiResponse, ApisauceInstance, create} from 'apisauce'
 import {
@@ -27,6 +31,11 @@ import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
 import {KakaoProfile} from '@react-native-seoul/kakao-login'
 import {User} from '@react-native-google-signin/google-signin'
 import {UserStoreSnapshot} from '@/models/UserStore'
+import Amadeus, {
+  ReferenceDataLocationsParams,
+  ReferenceDataLocationsResult,
+  ResponseError,
+} from 'amadeus-ts'
 
 export interface CreateTodoRequest {
   category?: string
@@ -42,6 +51,56 @@ export const DEFAULT_API_CONFIG: ApiConfig = {
   baseURL: process.env.EXPO_PUBLIC_API_URL,
   //   withCredentials: true,
   timeout: 10000,
+}
+
+export class AmadeusApi {
+  amadeus: Amadeus
+  constructor() {
+    console.log(
+      `[AmadeusApi] ${process.env.AMADEUS_CLIENT_ID} ${process.env.AMADEUS_CLIENT_SECRET}`,
+    )
+    this.amadeus = new Amadeus({
+      clientId: process.env.AMADEUS_CLIENT_ID,
+      clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+    })
+  }
+
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async fetchLocations(
+    params: ReferenceDataLocationsParams,
+  ): Promise<ApiResult<Location[]>> {
+    const response = await this.amadeus.referenceData.locations.get({
+      view: 'LIGHT',
+      ...params,
+    })
+
+    if (response.statusCode !== 200) {
+      throw Error(response.statusCode.toString())
+    }
+    try {
+      if (!response.data) {
+        throw Error
+      }
+      const rawData = response.data
+      return {
+        kind: 'ok',
+        data: rawData.map(l => ({
+          title: l.name || '',
+          iataCode: l.iataCode,
+          name: l.name || '',
+        })),
+      }
+    } catch (e) {
+      if (__DEV__ && e instanceof Error) {
+        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return {kind: 'bad-data'}
+    }
+  }
 }
 
 /**
@@ -218,43 +277,6 @@ export class Api {
         }
       : tripDTO
   }
-
-  /**
-   * Update todolist of the trip.
-   * @returns {kind} - Response Status.
-   * @returns {...Trip} - Updated Trip.
-   */
-  //   async patchTodolist(
-  //     trip: TripStore,
-  //   ): Promise<({kind: 'ok'} & TripStoreSnapshot) | GeneralApiProblem> {
-  //     console.log('patchTodolist')
-  //     // make the api call
-  //     const response: ApiResponse<TripDTO> = await this.apisauce.patch(
-  //       `trip/${trip.id}/todolist`,
-  //       {todolist: mapToTripDTO(trip).todolist},
-  //     )
-
-  //     if (!response.ok) {
-  //       const problem = getGeneralApiProblem(response)
-  //       if (problem) return problem
-  //     }
-
-  //     try {
-  //       const rawData = response.data
-  //       if (!rawData) {
-  //         throw Error
-  //       }
-  //       return {
-  //         kind: 'ok',
-  //         ...mapToTrip(rawData),
-  //       }
-  //     } catch (e) {
-  //       if (__DEV__ && e instanceof Error) {
-  //         console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-  //       }
-  //       return {kind: 'bad-data'}
-  //     }
-  //   }
 
   /* Todo CRUD APIS */
 
@@ -473,3 +495,4 @@ export class Api {
 
 // Singleton instance of the API for convenience
 export const api = new Api()
+export const amadeusApi = new AmadeusApi()

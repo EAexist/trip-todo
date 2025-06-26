@@ -22,7 +22,7 @@ import {DestinationListItemBase} from './DestinationSettingScreen'
 const lang = 'ko'
 
 const PlacesAutoCompleteQuery: Query<AutocompleteRequestType> = {
-  key: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,
+  key: process.env.GOOGLE_PLACES_API_KEY,
   language: lang, // language of the results
   types: '(cities)',
 }
@@ -32,7 +32,7 @@ const GooglePlacesSearchBar = () => {
 
   useEffect(() => {
     ref.current?.focus()
-    console.log('APIKEY', process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY)
+    console.log('APIKEY', process.env.GOOGLE_PLACES_API_KEY)
   }, [ref])
 
   const {t} = useLingui()

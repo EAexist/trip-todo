@@ -36,13 +36,13 @@ export interface PresetTodoContentSnapshotIn
   extends SnapshotIn<typeof PresetTodoContentModel> {}
 
 export const LocationModel = types.model('Location').props({
-  iataCode: types.string,
+  iataCode: types.maybe(types.string),
   name: types.string,
   title: types.string,
 })
 
 export interface Location {
-  iataCode: string
+  iataCode?: string
   name: string
   title: string
 }

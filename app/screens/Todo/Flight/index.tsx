@@ -8,10 +8,12 @@ import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {Location, LocationPair, Todo} from '@/models/Todo'
 import {AppStackScreenProps, goBack} from '@/navigators'
+import {amadeusApi} from '@/services/api'
+import {useDebounce} from '@/utils/useDebounce'
 import {useTodo} from '@/utils/useTodo'
 import {useLingui} from '@lingui/react/macro'
 import {Chip} from '@rneui/themed'
-import {FC, ReactNode, useCallback, useEffect} from 'react'
+import {FC, ReactNode, useCallback, useEffect, useState} from 'react'
 import {FlatList, ListRenderItem, View} from 'react-native'
 
 /* @TODO Import of getFlagEmoji fires
@@ -57,17 +59,40 @@ const FlightSettingScreenBase: FC<{
     [],
   )
 
+  const [searchInputText, setSearchInputText] = useState<string>()
+  const debouncedSearchKeyword = useDebounce(searchInputText, 1000)
+  const [searchResult, setSearchResult] = useState<Location[]>()
+
+  useEffect(() => {
+    if (debouncedSearchKeyword?.length && debouncedSearchKeyword?.length > 0) {
+      amadeusApi
+        .fetchLocations({
+          subType: 'AIRPORT,CITY',
+          keyword: debouncedSearchKeyword,
+        })
+        .then(response => {
+          if (response.kind === 'ok') {
+            setSearchResult(response.data)
+          }
+        })
+    }
+  }, [debouncedSearchKeyword])
+
   return (
     <Screen>
       <ContentTitle title={title} subtitle={subtitle} />
-      <Input.SearchBase placeholder={t`출발 공항 또는 도시 검색`} />
+      <Input.SearchBase
+        value={searchInputText}
+        onChangeText={value => setSearchInputText(value)}
+        placeholder={t`출발 공항 또는 도시 검색`}
+      />
       {recommendationContent}
       <View style={{paddingVertical: 8}}>
         <ListSubheader title={'검색 결과'} />
         <FlatList
           data={locationSearchResult}
           renderItem={renderLocationListItem}
-          keyExtractor={item => item.iataCode}
+          keyExtractor={item => item.name}
         />
       </View>
       <Fab.Container>
