@@ -41,7 +41,8 @@
     "include": [
         "**/*.ts",
         "**/*.tsx",
-        "app/services/api/amadeusApi.js"
+        "app/.deprecated/amadeusApi.js",
+        "app/.deprecated/amadeusApi.d.ts"
     ],
     "exclude": [
         "node_modules",
