@@ -8,7 +8,7 @@ import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {Location, LocationPair, Todo} from '@/models/Todo'
 import {AppStackScreenProps, goBack} from '@/navigators'
-import {amadeusApi} from '@/services/api'
+import amadeusApi from '@/services/api/amadeusApi'
 import {useDebounce} from '@/utils/useDebounce'
 import {useTodo} from '@/utils/useTodo'
 import {useLingui} from '@lingui/react/macro'
@@ -59,7 +59,7 @@ const FlightSettingScreenBase: FC<{
     [],
   )
 
-  const [searchInputText, setSearchInputText] = useState<string>()
+  const [searchInputText, setSearchInputText] = useState<string>('')
   const debouncedSearchKeyword = useDebounce(searchInputText, 1000)
   const [searchResult, setSearchResult] = useState<Location[]>()
 

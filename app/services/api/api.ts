@@ -37,31 +37,83 @@ import Amadeus, {
   ResponseError,
 } from 'amadeus-ts'
 
-export interface CreateTodoRequest {
-  category?: string
-  presetId?: number
+type ApiResult<T> = {kind: 'ok'; data: T} | GeneralApiProblem
+
+function handleResponse<T>(response: ApiResponse<T>): ApiResult<T> {
+  if (!response.ok) {
+    const problem = getGeneralApiProblem(response)
+    if (problem) return problem
+  }
+  try {
+    if (!response.data) {
+      throw Error
+    }
+    return {
+      kind: 'ok',
+      data: response.data,
+    }
+  } catch (e) {
+    if (__DEV__ && e instanceof Error) {
+      console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+    }
+    return {kind: 'bad-data'}
+  }
 }
 
-type ApiResult<T> = {kind: 'ok'; data: T} | GeneralApiProblem
+function handleDeleteResponse(response: ApiResponse<void>): ApiResult<null> {
+  if (!response.ok) {
+    const problem = getGeneralApiProblem(response)
+    if (problem) return problem
+  }
+  console.log(
+    `[handleDeleteResponse] response.status=${response.status} response=${response}`,
+  )
+  try {
+    if (response.status !== 204) {
+      throw Error
+    }
+    return {
+      kind: 'ok',
+      data: null,
+    }
+  } catch (e) {
+    if (__DEV__ && e instanceof Error) {
+      console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+    }
+    return {kind: 'bad-data'}
+  }
+}
 
 /**
  * Configuring the apisauce instance.
  */
-export const DEFAULT_API_CONFIG: ApiConfig = {
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+export const AMADEUS_API_CONFIG: ApiConfig = {
+  baseURL: process.env.EXPO_PUBLIC_AMADEUS_API_URL,
   //   withCredentials: true,
   timeout: 10000,
 }
 
 export class AmadeusApi {
-  amadeus: Amadeus
-  constructor() {
-    console.log(
-      `[AmadeusApi] ${process.env.AMADEUS_CLIENT_ID} ${process.env.AMADEUS_CLIENT_SECRET}`,
-    )
-    this.amadeus = new Amadeus({
-      clientId: process.env.AMADEUS_CLIENT_ID,
-      clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+  //   amadeus: Amadeus
+  //   constructor() {
+  //     console
+  //       .log
+  //       //   `[AmadeusApi] ${process.env.AMADEUS_CLIENT_ID} ${process.env.AMADEUS_CLIENT_SECRET} ${process.env.EXPO_PUBLIC_API_URL}`,
+  //       ()
+  //     this.amadeus = new Amadeus({
+  //       clientId: process.env.AMADEUS_CLIENT_ID,
+  //       clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+  //     })
+  //   }
+  apisauce: ApisauceInstance
+  config: ApiConfig
+  constructor(config: ApiConfig = AMADEUS_API_CONFIG) {
+    this.config = config
+    this.apisauce = create({
+      ...config,
+      headers: {
+        Accept: 'application/json',
+      },
     })
   }
 
@@ -73,33 +125,46 @@ export class AmadeusApi {
   async fetchLocations(
     params: ReferenceDataLocationsParams,
   ): Promise<ApiResult<Location[]>> {
-    const response = await this.amadeus.referenceData.locations.get({
-      view: 'LIGHT',
-      ...params,
-    })
-
-    if (response.statusCode !== 200) {
-      throw Error(response.statusCode.toString())
-    }
-    try {
-      if (!response.data) {
-        throw Error
-      }
-      const rawData = response.data
-      return {
-        kind: 'ok',
-        data: rawData.map(l => ({
-          title: l.name || '',
-          iataCode: l.iataCode,
-          name: l.name || '',
-        })),
-      }
-    } catch (e) {
-      if (__DEV__ && e instanceof Error) {
-        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-      }
-      return {kind: 'bad-data'}
-    }
+    const response: ApiResponse<ReferenceDataLocationsResult> =
+      await this.apisauce.get('reference-data/locations', {
+        view: 'LIGHT',
+        ...params,
+      })
+    console.log(`[fetchLocations] ${JSON.stringify(response.data)}`)
+    const handledResponse =
+      handleResponse<ReferenceDataLocationsResult>(response)
+    return handledResponse.kind === 'ok'
+      ? {
+          kind: 'ok',
+          data: handledResponse.data.data.map(l => ({
+            title: l.name || '',
+            iataCode: l.iataCode,
+            name: l.name || '',
+          })),
+        }
+      : handledResponse
+    // if (response.statusCode !== 200) {
+    //   throw Error(response.statusCode.toString())
+    // }
+    // try {
+    //   if (!response.data) {
+    //     throw Error
+    //   }
+    //   const rawData = response.data
+    //   return {
+    //     kind: 'ok',
+    //     data: rawData.map(l => ({
+    //       title: l.name || '',
+    //       iataCode: l.iataCode,
+    //       name: l.name || '',
+    //     })),
+    //   }
+    // } catch (e) {
+    //   if (__DEV__ && e instanceof Error) {
+    //     console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+    //   }
+    //   return {kind: 'bad-data'}
+    // }
   }
 }
 
@@ -107,6 +172,20 @@ export class AmadeusApi {
  * Manages all requests to the API. You can use this class to build out
  * various requests that you need to call from your backend API.
  */
+/**
+ * Configuring the apisauce instance.
+ */
+export const DEFAULT_API_CONFIG: ApiConfig = {
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  //   withCredentials: true,
+  timeout: 10000,
+}
+
+export interface CreateTodoRequest {
+  category?: string
+  presetId?: number
+}
+
 export class Api {
   apisauce: ApisauceInstance
   config: ApiConfig
@@ -136,52 +215,6 @@ export class Api {
     //   }
     // })
   }
-
-  handleResponse<T>(response: ApiResponse<T>): ApiResult<T> {
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-    try {
-      if (!response.data) {
-        throw Error
-      }
-      return {
-        kind: 'ok',
-        data: response.data,
-      }
-    } catch (e) {
-      if (__DEV__ && e instanceof Error) {
-        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-      }
-      return {kind: 'bad-data'}
-    }
-  }
-
-  handleDeleteResponse(response: ApiResponse<void>): ApiResult<null> {
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-    console.log(
-      `[handleDeleteResponse] response.status=${response.status} response=${response}`,
-    )
-    try {
-      if (response.status !== 204) {
-        throw Error
-      }
-      return {
-        kind: 'ok',
-        data: null,
-      }
-    } catch (e) {
-      if (__DEV__ && e instanceof Error) {
-        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-      }
-      return {kind: 'bad-data'}
-    }
-  }
-
   /**
    * Gets a Trip data with given id.
    * @returns {kind} - Response Status.
@@ -195,7 +228,7 @@ export class Api {
       `auth/kakao`,
       profile,
     )
-    return this.handleResponse<UserStoreSnapshot>(response)
+    return handleResponse<UserStoreSnapshot>(response)
   }
 
   /**
@@ -211,7 +244,7 @@ export class Api {
       `auth/google`,
       data,
     )
-    return this.handleResponse<UserStoreSnapshot>(response)
+    return handleResponse<UserStoreSnapshot>(response)
   }
   /**
    * Gets a Trip data with given id.
@@ -220,7 +253,7 @@ export class Api {
    */
   async getCsrf(): Promise<ApiResult<void>> {
     const response: ApiResponse<void> = await this.apisauce.get(`csrf`)
-    return this.handleResponse<void>(response)
+    return handleResponse<void>(response)
   }
 
   /* Trip & Trip.todolist CRUD APIS */
@@ -233,7 +266,7 @@ export class Api {
   async getTrip(id: string): Promise<ApiResult<TripStoreSnapshot>> {
     const response: ApiResponse<TripDTO> = await this.apisauce.get(`trip/${id}`)
 
-    const tripDTO = this.handleResponse<TripDTO>(response)
+    const tripDTO = handleResponse<TripDTO>(response)
     return tripDTO.kind === 'ok'
       ? {
           kind: 'ok',
@@ -249,7 +282,7 @@ export class Api {
   async createTrip(): Promise<ApiResult<TripStoreSnapshot>> {
     const response: ApiResponse<TripDTO> = await this.apisauce.post(`/trip`)
 
-    const tripDTO = this.handleResponse<TripDTO>(response)
+    const tripDTO = handleResponse<TripDTO>(response)
     return tripDTO.kind === 'ok'
       ? {
           kind: 'ok',
@@ -269,7 +302,7 @@ export class Api {
       mapToTripDTO(trip),
     )
 
-    const tripDTO = this.handleResponse<TripDTO>(response)
+    const tripDTO = handleResponse<TripDTO>(response)
     return tripDTO.kind === 'ok'
       ? {
           kind: 'ok',
@@ -297,7 +330,7 @@ export class Api {
       mapToTodoDTO({...todo, completeDateISOString: ''} as TodoSnapshotIn),
     )
 
-    const todoDTOResponse = this.handleResponse<TodoDTO>(response)
+    const todoDTOResponse = handleResponse<TodoDTO>(response)
     return todoDTOResponse.kind === 'ok'
       ? {
           kind: 'ok',
@@ -320,7 +353,7 @@ export class Api {
       mapToTodoDTO(todo),
     )
 
-    const todoDTOResponse = this.handleResponse<TodoDTO>(response)
+    const todoDTOResponse = handleResponse<TodoDTO>(response)
     return todoDTOResponse.kind === 'ok'
       ? {
           kind: 'ok',
@@ -338,7 +371,7 @@ export class Api {
     const response: ApiResponse<void> = await this.apisauce.delete(
       `/trip/${tripId}/todo/${todoId}`,
     )
-    return this.handleDeleteResponse(response)
+    return handleDeleteResponse(response)
   }
 
   /**
@@ -350,7 +383,7 @@ export class Api {
     const response: ApiResponse<TodoPresetDTO[]> = await this.apisauce.get(
       `/trip/${id}/todoPreset`,
     )
-    const presetResponse = this.handleResponse<TodoPresetDTO[]>(response)
+    const presetResponse = handleResponse<TodoPresetDTO[]>(response)
     return presetResponse.kind === 'ok'
       ? {
           ...presetResponse,
@@ -372,7 +405,7 @@ export class Api {
     const response: ApiResponse<DestinationSnapshotIn> =
       await this.apisauce.post(`trip/${tripId}/destination`, destination)
 
-    return this.handleResponse<DestinationSnapshotIn>(response)
+    return handleResponse<DestinationSnapshotIn>(response)
   }
 
   /**
@@ -388,7 +421,7 @@ export class Api {
       `/trip/${tripId}/destination/${destinationId}`,
     )
 
-    return this.handleResponse<void>(response)
+    return handleResponse<void>(response)
   }
 
   /**
@@ -399,7 +432,7 @@ export class Api {
   //       await this.apisauce.get(`trip/1/accomodation`)
 
   //     const accomodationDTO =
-  //       this.handleResponse<AccomodationItemSnapshotIn[]>(response)
+  //       handleResponse<AccomodationItemSnapshotIn[]>(response)
   //     return accomodationDTO
   //   }
 
@@ -413,7 +446,7 @@ export class Api {
     const response: ApiResponse<Partial<AccomodationItemSnapshotIn>> =
       await this.apisauce.get(`trip/${id}/accomodation`)
 
-    return this.handleResponse<Partial<AccomodationItemSnapshotIn>>(response)
+    return handleResponse<Partial<AccomodationItemSnapshotIn>>(response)
   }
 
   /**
@@ -432,7 +465,7 @@ export class Api {
       )
 
     const accomodationDTO =
-      this.handleResponse<Partial<AccomodationItemSnapshotIn>>(response)
+      handleResponse<Partial<AccomodationItemSnapshotIn>>(response)
     return accomodationDTO
   }
   /**
@@ -448,7 +481,7 @@ export class Api {
       `/trip/${tripId}/accomodation/${accomodationId}`,
     )
 
-    return this.handleResponse<void>(response)
+    return handleResponse<void>(response)
   }
 
   //   amadeus = new Amadeus({
@@ -471,7 +504,7 @@ export class Api {
   //       'page[offset]': page * 10,
   //     })
 
-  //     return this.handleResponse<Location>(response)
+  //     return handleResponse<Location>(response)
   //   }
 
   /**
@@ -489,7 +522,7 @@ export class Api {
   //       'page[offset]': page * 10,
   //     })
 
-  //     return this.handleResponse<Location>(response)
+  //     return handleResponse<Location>(response)
   //   }
 }
 

@@ -11,6 +11,7 @@ import {
   AutocompleteRequestType,
   GooglePlaceData,
   GooglePlacesAutocomplete,
+  GooglePlacesAutocompleteProps,
   GooglePlacesAutocompleteRef,
   Query,
   Styles,
@@ -20,6 +21,29 @@ import {DestinationListItemBase} from './DestinationSettingScreen'
 /* https://github.com/FaridSafi/react-native-google-places-autocomplete */
 
 const lang = 'ko'
+
+const $googlePlaceSearchBarStyle: Partial<Styles> = {
+  listView: {},
+  textInputContainer: {},
+  row: {
+    padding: 0,
+  },
+}
+
+export const googlePlacesAutocompleteConfig: Partial<GooglePlacesAutocompleteProps> =
+  {
+    requestUrl: {
+      useOnPlatform: 'web', // or "all"
+      url: 'http://localhost:8081/maps.googleapis.com/maps/api/', // or any proxy server that hits https://maps.googleapis.com/maps/api
+      headers: {
+        Authorization: `an auth token`, // if required for your proxy
+      },
+    },
+    enablePoweredByContainer: false,
+    styles: $googlePlaceSearchBarStyle,
+    listEmptyComponent: <></>,
+    predefinedPlaces: [],
+  }
 
 const PlacesAutoCompleteQuery: Query<AutocompleteRequestType> = {
   key: process.env.GOOGLE_PLACES_API_KEY,
@@ -86,30 +110,11 @@ const GooglePlacesSearchBar = () => {
       }}
       placeholder={t`도시 또는 나라 이름 검색`}
       query={PlacesAutoCompleteQuery}
-      requestUrl={{
-        useOnPlatform: 'web', // or "all"
-        url: 'http://localhost:8081/maps.googleapis.com/maps/api/', // or any proxy server that hits https://maps.googleapis.com/maps/api
-        headers: {
-          Authorization: `an auth token`, // if required for your proxy
-        },
-      }}
-      enablePoweredByContainer={false}
       renderRow={renderRow}
-      styles={$googlePlaceSearchBarStyle}
-      listEmptyComponent={<></>}
-      predefinedPlaces={[]}
+      {...googlePlacesAutocompleteConfig}
     />
   )
 }
-
-const $googlePlaceSearchBarStyle: Partial<Styles> = {
-  listView: {},
-  textInputContainer: {},
-  row: {
-    padding: 0,
-  },
-}
-
 export const DestinationSearchScreen: FC = () => {
   const {tripStore} = useStores()
 
