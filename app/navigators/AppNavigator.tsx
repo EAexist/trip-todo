@@ -56,20 +56,6 @@ export type AppStackParamList = {
   TodolistAdd: TripStackProps
   TodolistDelete: TripStackProps
   TodolistReorder: TripStackProps
-  /* Confirm */
-  //   ConfirmReservationTodo: TodoStackProps
-  ConfirmPassport: TodoStackProps
-  ConfirmFlight: TodoStackProps
-  /* Edit Todo */
-  TodoTitle: TodoStackProps
-  TodoNote: TodoStackProps
-  TodoCreate: TodoStackProps
-  TodoEdit: TodoStackProps
-
-  /* Flight */
-  FlightDepartureSetting: TodoStackProps
-  FlightArrivalSetting: TodoStackProps
-  RoundTripSetting: TodoStackProps
 
   /* Accomodation */
   AccomodationPlan: TripStackProps & {accomodationId: string}
@@ -77,6 +63,26 @@ export type AppStackParamList = {
   AccomodationNote: TripStackProps & {accomodationId: string}
   CreateAccomodation: TripStackProps
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+} & TodoAppStackParamList
+
+export type TodoAppStackParamList = {
+  /* Confirm */
+  //   ConfirmReservationTodo: TodoStackProps
+  ConfirmPassport: TodoStackProps
+  ConfirmFlight: TodoStackProps
+  ConfirmFlightTicket: TodoStackProps
+  /* Edit Todo */
+  TodoTitle: TodoStackProps
+  TodoNote: TodoStackProps
+  TodoCreate: TodoStackProps & {isAirportSet: boolean}
+  TodoEdit: TodoStackProps
+
+  /* Flight */
+  DepartureAirportSetting: TodoStackProps
+  ArrivalAirportSetting: TodoStackProps
+  DepartureAirportEdit: TodoStackProps
+  ArrivalAirportEdit: TodoStackProps
+  RoundTripSetting: TodoStackProps
 }
 
 /**
@@ -166,6 +172,10 @@ const AppStack = observer(function AppStack() {
             component={Screens.Confirm.Flight}
           />
           <Stack.Screen
+            name="ConfirmFlightTicket"
+            component={Screens.Confirm.FlightTicket}
+          />
+          <Stack.Screen
             name="AccomodationPlan"
             component={Screens.Accomodation.Plan}
           />
@@ -186,12 +196,20 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="TodoNote" component={Screens.Todo.Note} />
           <Stack.Screen name="TodoTitle" component={Screens.Todo.Title} />
           <Stack.Screen
-            name="FlightDepartureSetting"
-            component={Screens.Todo.Flight.DepartureSetting}
+            name="DepartureAirportSetting"
+            component={Screens.Todo.Flight.DepartureAirportSetting}
           />
           <Stack.Screen
-            name="FlightArrivalSetting"
-            component={Screens.Todo.Flight.ArrivalSetting}
+            name="ArrivalAirportSetting"
+            component={Screens.Todo.Flight.ArrivalAirportSetting}
+          />
+          <Stack.Screen
+            name="DepartureAirportEdit"
+            component={Screens.Todo.Flight.DepartureAirportEdit}
+          />
+          <Stack.Screen
+            name="ArrivalAirportEdit"
+            component={Screens.Todo.Flight.ArrivalAirportEdit}
           />
           <Stack.Screen
             name="RoundTripSetting"

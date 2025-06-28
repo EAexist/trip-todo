@@ -10,7 +10,7 @@
 // const TripTodoGooglePlacesAutoComplete: FC = ({}) => {
 //   const {placePredictions, getPlacePredictions, isPlacePredictionsLoading} =
 //     usePlacesService({
-//       apiKey: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,
+//       apiKey: process.env.GOOGLE_PLACES_API_KEY,
 //     })
 
 //   const [value, setValue] = useState('')
@@ -31,7 +31,7 @@
 //   return (
 //     <View>
 //       {/* <Autocomplete
-//         apiKey={process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY}
+//         apiKey={process.env.GOOGLE_PLACES_API_KEY}
 //         // onPlaceSelected={place => console.log(place)}
 //       /> */}
 //       <SearchBase

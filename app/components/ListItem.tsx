@@ -1,7 +1,6 @@
-import {AvatarProps} from '@rneui/base'
 import {ListItem, ListItemProps} from '@rneui/themed'
 import {FC, ReactNode} from 'react'
-import {Avatar} from './Avatar'
+import {Avatar, AvatarProps} from './Avatar'
 import {Trans} from '@lingui/react/macro'
 
 export interface ListItemBaseProps extends ListItemProps {

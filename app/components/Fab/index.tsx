@@ -77,7 +77,7 @@ export const Button: FC<ButtonProps> = props => (
     {...props}
   />
 )
-type NavigateProps = {
+export type NavigateProps = {
   name: keyof AppStackParamList
   params?: unknown
 }

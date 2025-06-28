@@ -11,14 +11,14 @@
 //   GooglePlacesAutocompleteRef,
 // } from 'react-native-google-places-autocomplete'
 
-// const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY
+// const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY
 
 // const GooglePlacesSearchBar = () => {
 //   const ref = useRef<GooglePlacesAutocompleteRef>(null)
 
 //   useEffect(() => {
 //     ref.current?.focus()
-//     console.log('APIKEY', process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY)
+//     console.log('APIKEY', process.env.GOOGLE_PLACES_API_KEY)
 //   }, [ref])
 
 //   const {t} = useLingui()
@@ -37,7 +37,7 @@
 //       }}
 //       placeholder={t`도시 또는 국가 검색`}
 //       query={{
-//         key: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,
+//         key: process.env.GOOGLE_PLACES_API_KEY,
 //         language: 'en', // language of the results
 //       }}
 //       requestUrl={{

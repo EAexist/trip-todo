@@ -29,77 +29,56 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
-import {FlightTodoEditScreen} from './Flight/FlightTodoEditScreen'
+import {
+  FlightTicketTodoEditScreen,
+  FlightTodoEditScreen,
+} from './Flight/FlightTodoEditScreen'
+import {withTodo} from '@/utils/withTodo'
 
-export const TodoCreateScreen: FC<
-  AppStackScreenProps<'TodoCreate'>
-> = props => {
-  const todo = useTodo(props.route)
+export const TodoCreateScreen = withTodo<'TodoCreate'>(({todo, params}) => {
   const {navigateWithTrip} = useNavigate()
-
-  const [isInitialized, setIsInitialized] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
-      console.log('[TodoCreateScreen] useEffect')
-      if (todo?.type === 'flight') {
+      console.log(`[TodoCreateScreen] isInitialized=${params?.isAirportSet}`)
+      if (todo?.type === 'flight' && !params?.isAirportSet) {
         if (todo?.departure === null) {
           console.log('[TodoCreateScreen] todo?.departure === null')
-          navigateWithTrip('FlightDepartureSetting', props.route.params)
-        } else if (todo?.arrival === null) {
-          console.log('[TodoCreateScreen] todo?.arrival === null')
-          navigateWithTrip('FlightArrivalSetting', props.route.params)
-        } else {
-          setIsInitialized(true)
+          navigateWithTrip('DepartureAirportSetting', {todoId: todo.id})
         }
+      } else {
+        // goBack()
       }
-    }, [todo?.departure, todo?.arrival]),
+    }, [todo?.departure, params?.isAirportSet]),
   )
 
-  return !!todo ? (
-    todo.type === 'custom' ? (
-      <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
-    ) : todo.type === 'flight' ? (
-      isInitialized ? (
-        <FlightTodoEditScreen todo={todo} isBeforeInitialization={true} />
-      ) : (
-        <>Hello</>
-      )
-    ) : (
-      <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
-    )
-  ) : (
+  return todo.type === 'custom' ? (
+    <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
+  ) : todo.type === 'flight' ? (
     <></>
+  ) : (
+    <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
   )
-}
+})
 
-export const TodoEditScreen: FC<AppStackScreenProps<'TodoEdit'>> = observer(
-  props => {
-    const todo = useTodo(props.route)
-    return !!todo ? (
-      todo.type === 'custom' ? (
-        <TodoEditScreenBase todo={todo} />
-      ) : todo.type === 'flight' ? (
-        todo?.departure !== null && todo?.arrival !== null ? (
-          <FlightTodoEditScreen todo={todo} />
-        ) : (
-          <></>
-        )
-      ) : (
-        <TodoEditScreenBase todo={todo} />
-      )
-    ) : (
-      <></>
-    )
-  },
-)
+export const TodoEditScreen = withTodo<'TodoEdit'>(({todo}) => {
+  return todo.type === 'custom' ? (
+    <CustomTodoEditScreen todo={todo} />
+  ) : todo.type === 'flight' ? (
+    <FlightTodoEditScreen todo={todo} />
+  ) : todo.type === 'flightTicket' ? (
+    <FlightTicketTodoEditScreen todo={todo} />
+  ) : (
+    <CustomTodoEditScreen todo={todo} />
+  )
+})
 
 interface TodoEditScreenProps {
   todo: Todo
   isBeforeInitialization?: boolean
 }
 
-export const TodoEditScreenBase: FC<TodoEditScreenProps> = props => {
+const TodoEditScreenBase: FC<TodoEditScreenProps> = props => {
   switch (props.todo.type) {
     case 'flight':
       return <FlightTodoEditScreen {...props} />
