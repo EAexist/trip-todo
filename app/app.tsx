@@ -76,13 +76,14 @@ const config = {
     TodoNote: 'trip/:tripId?/todo/:todoId?/note',
 
     /*  */
-    FlightDepartureSetting: 'trip/:tripId?/todo/:todoId?/departure',
-    FlightArrivalSetting: 'trip/:tripId?/todo/:todoId?/arrival',
+    DepartureAirportSetting: 'trip/:tripId?/todo/:todoId?/departure',
+    ArrivalAirportSetting: 'trip/:tripId?/todo/:todoId?/arrival',
     RoundTripSetting: 'trip/:tripId?/todo/:todoId?/roundTrip',
 
     /*  */
     ConfirmPassport: 'trip/:tripId?/todo/:todoId?/confirmPassport',
     ConfirmFlight: 'trip/:tripId?/todo/:todoId?/confirmFlight',
+    ConfirmFlightTicket: 'trip/:tripId?/todo/:todoId?/confirmFlightTicket',
     /*  */
     AccomodationPlan: 'trip/:tripId?/accomodationPlan',
     Accomodation: 'trip/:tripId?/accomodation/:accomodationId?',

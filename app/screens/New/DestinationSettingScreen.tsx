@@ -7,30 +7,33 @@ import {Screen} from '@/components/Screen'
 import {useStores} from '@/models'
 import {Destination, DestinationSnapshotIn} from '@/models/Destination'
 import {useNavigate} from '@/navigators'
+import {getFlagEmoji} from '@/utils/nation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {ListItemProps} from '@rneui/base'
 import {Text} from '@rneui/themed'
 import {ListItem} from '@rneui/themed'
-import {FC, ReactNode, useCallback, useEffect, useState} from 'react'
+import {observer} from 'mobx-react-lite'
+import {FC, Key, ReactNode, useCallback, useEffect, useState} from 'react'
 import {FlatList, ListRenderItem, TouchableOpacity, View} from 'react-native'
 
 /* @TODO Import of getFlagEmoji fires
  * ERROR  TypeError: Cannot read property 'prototype' of undefined, js engine: hermes [Component Stack]
  * ERROR  Warning: TypeError: Cannot read property 'getFlagEmoji' of undefined
  */
-const getFlagEmoji = (countryCode: string) => {
-  if (!/^[A-Za-z]{2}$/.test(countryCode)) {
-    return '🏳️' // Return white flag for invalid codes.
-  }
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map(char => 127397 + char.charCodeAt(0))
-  return '🏳️' // Return white flag for invalid codes.
-}
+// const getFlagEmoji = (countryCode: string) => {
+//   if (!/^[A-Za-z]{2}$/.test(countryCode)) {
+//     return '🏳️' // Return white flag for invalid codes.
+//   }
+//   const codePoints = countryCode
+//     .toUpperCase()
+//     .split('')
+//     .map(char => 127397 + char.charCodeAt(0))
+//   return String.fromCodePoint(0x1f44d)
+//   return String.fromCodePoint(...codePoints) // Return white flag for invalid codes.
+// }
 
 export interface DestinationListItemBaseProps {
-  item: Omit<DestinationSnapshotIn, 'id'>
+  item: Omit<DestinationSnapshotIn, 'id' | 'description'>
   rightContent?: ReactNode
   onPress?: () => void
 }
@@ -40,22 +43,23 @@ export const DestinationListItemBase: FC<DestinationListItemBaseProps> = ({
   rightContent,
   onPress,
 }) => {
-  const [flag, setFlag] = useState<string>()
-  useEffect(() => {
-    setFlag(getFlagEmoji(item.nation))
-  }, [getFlagEmoji])
+  //   const [flag, setFlag] = useState<string>()
+  //   useEffect(() => {
+  //     console.log(getFlagEmoji(item.nation))
+  //     setFlag(getFlagEmoji(item.nation))
+  //   }, [getFlagEmoji, item.nation])
 
   return (
     <ListItem onPress={onPress} containerStyle={{height: 60}}>
-      {/* <Avatar title={getFlagEmoji(item.nation)} size={35} /> */}
-      <Avatar title={flag} size={35} />
+      <Avatar iconId={getFlagEmoji(item.nation)} size={35} iconStyle={{}} />
+      {/* <Avatar title={flag} size={35} /> */}
       <ListItem.Content>
         <ListItem.Title>
           <Trans>{item.title}</Trans>
         </ListItem.Title>
         <ListItem.Subtitle>
           {/* <Trans>{`${regionNames.of(item.nation.toUpperCase())}ㆍ${item.state}`}</Trans> */}
-          <Trans>{`${item.state}${item.nation}`}</Trans>
+          <Trans>{`${item.region}${item.nation}`}</Trans>
         </ListItem.Subtitle>
       </ListItem.Content>
       {rightContent}
@@ -74,6 +78,7 @@ const DestinationListItem: FC<DestinationListItemProps> = ({destination}) => {
   }, [])
   return (
     <DestinationListItemBase
+      key={destination.id}
       item={destination}
       rightContent={
         <ListItem.Chevron
@@ -84,12 +89,12 @@ const DestinationListItem: FC<DestinationListItemProps> = ({destination}) => {
     />
   )
 }
-export const DestinationSettingScreen: FC = () => {
+export const DestinationSettingScreen: FC = observer(() => {
   const {tripStore} = useStores()
   const {t} = useLingui()
 
   const renderDestinationListItem: ListRenderItem<Destination> = useCallback(
-    ({item}) => <DestinationListItem destination={item} />,
+    ({item}) => <DestinationListItem key={item.id} destination={item} />,
     [],
   )
 
@@ -98,9 +103,9 @@ export const DestinationSettingScreen: FC = () => {
   const handleSearchPress = useCallback(() => {
     navigateWithTrip('DestinationSearch')
   }, [])
-  const handleNextPress = useCallback(async () => {
-    tripStore.patch()
-  }, [])
+  //   const handleNextPress = useCallback(async () => {
+  //     tripStore.patch()
+  //   }, [])
 
   const {titleText, subtitlteText} = tripStore.isDestinationSet
     ? {
@@ -115,19 +120,6 @@ export const DestinationSettingScreen: FC = () => {
   return (
     <Screen>
       <ContentTitle title={titleText} subtitle={subtitlteText} />
-      <Text style={{fontFamily: 'roboto'}}>여행 중 방문할 도시</Text>
-      <Text style={{fontFamily: 'Pretendard', fontWeight: 900}}>
-        여행 중 방문할 도시
-      </Text>
-      <Text style={{fontFamily: 'Pretendard', fontWeight: 700}}>
-        여행 중 방문할 도시
-      </Text>
-      <Text style={{fontFamily: 'Pretendard', fontWeight: 600}}>
-        여행 중 방문할 도시
-      </Text>
-      <Text style={{fontFamily: 'Pretendard', fontWeight: 500}}>
-        여행 중 방문할 도시
-      </Text>
       <View>
         {tripStore.isDestinationSet && (
           <View>
@@ -157,9 +149,9 @@ export const DestinationSettingScreen: FC = () => {
           navigateProps={{
             name: 'ScheduleSetting',
           }}
-          promiseBeforeNavigate={handleNextPress}
+          //   promiseBeforeNavigate={handleNextPress}
         />
       </Fab.Container>
     </Screen>
   )
-}
+})

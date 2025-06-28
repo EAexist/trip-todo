@@ -1,4 +1,5 @@
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
+import {DestinationSnapshotIn} from '@/models/Destination'
 import {PresetTodoContentSnapshotIn, Todo, TodoSnapshotIn} from '@/models/Todo'
 import {TripStoreSnapshot, Preset, TripStore} from '@/models/TripStore'
 import {ApisauceConfig} from 'apisauce'
@@ -8,6 +9,7 @@ import {getSnapshot} from 'mobx-state-tree'
  * These types indicate the shape of the data you expect to receive from your
  * API endpoint, assuming it's a JSON object like we have.
  */
+
 // export interface EpisodeItem {
 //   title: string
 //   pubDate: string
@@ -39,6 +41,28 @@ import {getSnapshot} from 'mobx-state-tree'
 //   }
 //   items: EpisodeItem[]
 // }
+
+export interface DestinationDTO extends Omit<DestinationSnapshotIn, 'id'> {
+  id?: number
+}
+
+export const mapToDestinationDTO: (
+  destination: DestinationSnapshotIn,
+) => DestinationDTO = destination => ({
+  ...destination,
+  id: destination.id ? Number(destination.id) : undefined,
+})
+
+export const mapToDestination: (
+  destination: DestinationDTO,
+) => DestinationSnapshotIn = destination => {
+  if (destination.id)
+    return {
+      ...destination,
+      id: destination.id?.toString(),
+    }
+  else throw Error
+}
 
 export interface TodoDTO
   extends Omit<TodoSnapshotIn, 'id' | 'isFlaggedToDelete'> {
@@ -73,11 +97,12 @@ export const mapToTodo: (todo: TodoDTO) => Partial<TodoSnapshotIn> = todo => ({
 export interface TripDTO
   extends Omit<
     TripStoreSnapshot,
-    'id' | 'todoMap' | 'todolist' | 'accomodation'
+    'id' | 'todoMap' | 'todolist' | 'accomodation' | 'destination'
   > {
   id: number
   todolist: TodoDTO[]
   accomodation: AccomodationItemSnapshotIn[]
+  destination: DestinationDTO[]
 }
 
 export const mapToTripDTO: (trip: TripStore) => TripDTO = trip => ({
@@ -91,6 +116,7 @@ export const mapToTripDTO: (trip: TripStore) => TripDTO = trip => ({
     })
     .flat(),
   accomodation: Array.from(trip.accomodation.values()),
+  destination: trip.destination.map(dest => mapToDestinationDTO(dest)),
 })
 
 export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
@@ -116,6 +142,9 @@ export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
       },
       {},
     ),
+    destination: tripDTO.destination
+      .filter(dest => dest.id != undefined)
+      .map(dest => mapToDestination(dest)),
   }
 }
 

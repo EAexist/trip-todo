@@ -59,6 +59,17 @@ export async function setupRootStore(rootStore: RootStore) {
     //   JSON.stringify(rootStore.tripStore.todolistWithPreset),
     // )
   })
+
+  autorun(() => {
+    console.log(
+      'RoundTripStore changed:',
+      JSON.stringify(rootStore.roundTripStore),
+    )
+    // console.log(
+    //   'TripStore changed todolistWithPreset =\n:',
+    //   JSON.stringify(rootStore.tripStore.todolistWithPreset),
+    // )
+  })
   // reaction(
   //   () => [
   //     rootStore.tripStore.title,

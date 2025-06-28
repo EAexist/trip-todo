@@ -117,6 +117,9 @@ export const TripStoreModel = types
       store.todolist.get(todo.category)?.remove(todo)
       store.todoMap.delete(todo.id)
     },
+    _deleteDestination(destination: Destination) {
+      store.destination.remove(destination)
+    },
     updatePreset() {
       const usedPresetIds = [
         ...new Set(
@@ -143,6 +146,9 @@ export const TripStoreModel = types
     add(todo: TodoSnapshotIn) {
       store.todoMap.put(todo)
       store.addTodo(todo)
+    },
+    addDestination(destination: DestinationSnapshotIn) {
+      store.destination.push(destination)
     },
     async fetchPreset() {
       api.getTodoPreset(store.id).then(response => {
@@ -231,6 +237,7 @@ export const TripStoreModel = types
       if (response.kind === 'ok') {
         console.log(`[patchTodo] todo=${JSON.stringify(todo)}`)
         store.setTodo(todo)
+        return todo
       }
     },
     /**
@@ -270,7 +277,7 @@ export const TripStoreModel = types
     async createDestination(destination: DestinationContent) {
       const response = await api.createDestination(store.id, destination)
       if (response.kind === 'ok') {
-        store.destination.push(response.data)
+        store.addDestination(response.data)
       }
     },
     /**
@@ -278,8 +285,9 @@ export const TripStoreModel = types
      */
     async deleteDestination(destination: Destination) {
       api.deleteDestination(store.id, destination.id).then(({kind}) => {
+        console.log(kind, destination)
         if (kind == 'ok') {
-          store.destination.remove(destination)
+          store._deleteDestination(destination)
         }
       })
     },
@@ -311,6 +319,16 @@ export const TripStoreModel = types
         }
       })
     },
+    /**
+     * Delete a accomodation.
+     */
+    // async uploadReservation(item: AccomodationItemSnapshotIn) {
+    //   api.deleteAccomodation(store.id, item.id).then(({kind}) => {
+    //     if (kind == 'ok') {
+    //       store.accomodation.delete(item.id)
+    //     }
+    //   })
+    // },
   }))
   .views(store => ({
     // get preset() {
@@ -477,6 +495,18 @@ export const TripStoreModel = types
     },
   }))
   .actions(store => ({
+    async completeAndPatchTodo(todo: Todo) {
+      todo.complete()
+      store.patchTodo(todo).then(todo => {
+        if (todo) {
+          if (todo.type == 'flight')
+            store.createCustomTodo({
+              ...todo,
+              type: 'flightTicket',
+            })
+        }
+      })
+    },
     async deleteTodos() {
       await Promise.all(
         Array.from(store.todoMap.values())

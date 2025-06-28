@@ -9,23 +9,13 @@ export const DestinationModel = types
   .model('Destination')
   .props({
     id: types.identifier,
+    description: types.string,
     nation: types.string,
     title: types.string,
-    state: types.string,
-    isFlaggedToDelete: false,
-    isFlaggedToAdd: false,
+    region: types.string,
   })
   .actions(withSetPropAction)
   .actions(item => ({
-    setIncomplete() {
-      item.setProp('isFlaggedToAdd', undefined)
-    },
-    toggleDeleteFlag() {
-      item.setProp('isFlaggedToDelete', !item.isFlaggedToDelete)
-    },
-    toggleAddFlag() {
-      item.setProp('isFlaggedToAdd', !item.isFlaggedToAdd)
-    },
     // removeFavorite(Destination: Destination) {
     //   store.favorites.remove(todo)
     // },

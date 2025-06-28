@@ -36,15 +36,19 @@ export interface PresetTodoContentSnapshotIn
   extends SnapshotIn<typeof PresetTodoContentModel> {}
 
 export const LocationModel = types.model('Location').props({
-  iataCode: types.maybe(types.string),
   name: types.string,
   title: types.string,
+  nation: types.string,
+  region: types.maybe(types.string),
+  iataCode: types.maybe(types.string),
 })
 
 export interface Location {
-  iataCode?: string
   name: string
   title: string
+  nation: string
+  region?: string
+  iataCode?: string
 }
 
 export interface LocationPair {
@@ -83,6 +87,11 @@ export const TodoModel = types
         ? `${item.departure?.title} → ${item.arrival?.title || '목적지'}`
         : ''
     },
+    get flightTitleWithCode() {
+      return item.departure
+        ? `${item.departure?.title}${item.departure?.iataCode ? ` (${item.departure?.iataCode})` : ''} → ${item.arrival?.title || '목적지'}${item.arrival?.iataCode ? ` (${item.arrival?.iataCode})` : ''}`
+        : ''
+    },
   }))
   .actions(item => ({
     complete() {
@@ -96,11 +105,11 @@ export const TodoModel = types
     },
     setDeparture(departure: Location) {
       item.setProp('departure', departure)
-      item.setProp('title', item.flightTitle)
+      //   item.setProp('title', item.flightTitle)
     },
     setArrival(arrival: Location) {
       item.setProp('arrival', arrival)
-      item.setProp('title', item.flightTitle)
+      //   item.setProp('title', item.flightTitle)
     },
   }))
   .views(item => ({

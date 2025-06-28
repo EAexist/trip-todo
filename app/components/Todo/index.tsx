@@ -82,7 +82,7 @@ export type TodoProps = {id: string} & Pick<
 //   onPress?: () => void
 // }
 
-export const AddTodo: FC<{todo: PresetTodoContent}> = ({todo}) => {
+export const AddTodo: FC<{todo: Todo}> = ({todo}) => {
   const [isAdded, setIsAdded] = useState(true)
 
   const handlePress = useCallback(() => {
@@ -92,6 +92,11 @@ export const AddTodo: FC<{todo: PresetTodoContent}> = ({todo}) => {
   return (
     <TodoBase
       caption={'추가함'}
+      subtitle={
+        todo.type == 'flight' || todo.type == 'flightTicket'
+          ? todo.flightTitle
+          : undefined
+      }
       onPress={handlePress}
       // useDisabledStyle
       {...todo}
@@ -172,9 +177,12 @@ export const CompleteTodo: FC<{todo: Todo}> = observer(({todo}) => {
       if (displayComplete !== todo.isCompleted) {
         const sleep = new Promise(resolve => setTimeout(resolve, displayDelay))
         sleep.then(() => {
-          if (displayComplete) todo.complete()
-          else todo.setIncomplete()
-          tripStore.patchTodo(todo)
+          if (displayComplete) {
+            tripStore.completeAndPatchTodo(todo)
+          } else {
+            todo.setIncomplete()
+            tripStore.patchTodo(todo)
+          }
         })
       }
     }, [displayComplete]),
@@ -189,26 +197,28 @@ export const CompleteTodo: FC<{todo: Todo}> = observer(({todo}) => {
     if (!todo.isCompleted) {
       switch (todo.type) {
         case 'passport':
-          todo.complete()
-          tripStore.patchTodo(todo).then(() => {
-            navigateWithTrip('ConfirmPassport', {todoId: todo.id})
-          })
+          navigateWithTrip('ConfirmPassport', {todoId: todo.id})
+          //   tripStore.completeAndPatchTodo(todo).then(() => {
+          //     navigateWithTrip('ConfirmPassport', {todoId: todo.id})
+          //   })
           break
         case 'flight':
-          todo.complete()
-          tripStore.patchTodo(todo).then(() => {
-            navigateWithTrip('ConfirmFlight', {todoId: todo.id})
-          })
+          navigateWithTrip('ConfirmFlight', {todoId: todo.id})
+          //   tripStore.completeAndPatchTodo(todo).then(() => {
+          //     navigateWithTrip('ConfirmFlight', {todoId: todo.id})
+          //   })
+          break
+        case 'flightTicket':
+          navigateWithTrip('ConfirmFlightTicket', {todoId: todo.id})
+          //   tripStore.completeAndPatchTodo(todo).then(() => {
+          //     navigateWithTrip('ConfirmFlight', {todoId: todo.id})
+          //   })
           break
         default:
           setDisplayComplete(prev => !prev)
           break
       }
-    }
-    // setDisplayComplete(prev => !prev)
-    else setDisplayComplete(prev => !prev)
-    // if (!todo.isCompleted) todo.complete()
-    // else todo.setIncomplete()
+    } else setDisplayComplete(prev => !prev)
   }, [todo, navigateWithTrip])
 
   const handlePress = useCallback(
@@ -231,7 +241,13 @@ export const CompleteTodo: FC<{todo: Todo}> = observer(({todo}) => {
           uncheckedIcon="circle-o"
         />
       }
-      subtitle={todo.note !== '' ? todo.note : undefined}
+      subtitle={
+        todo.type == 'flight' || todo.type == 'flightTicket'
+          ? todo.flightTitle
+          : todo.note !== ''
+            ? todo.note
+            : undefined
+      }
       onPress={handlePress}
       {...todo}
     />

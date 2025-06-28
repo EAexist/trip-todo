@@ -31,10 +31,9 @@ import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
 import {KakaoProfile} from '@react-native-seoul/kakao-login'
 import {User} from '@react-native-google-signin/google-signin'
 import {UserStoreSnapshot} from '@/models/UserStore'
-import Amadeus, {
+import {
   ReferenceDataLocationsParams,
   ReferenceDataLocationsResult,
-  ResponseError,
 } from 'amadeus-ts'
 
 type ApiResult<T> = {kind: 'ok'; data: T} | GeneralApiProblem
@@ -85,90 +84,6 @@ function handleDeleteResponse(response: ApiResponse<void>): ApiResult<null> {
 }
 
 /**
- * Configuring the apisauce instance.
- */
-export const AMADEUS_API_CONFIG: ApiConfig = {
-  baseURL: process.env.EXPO_PUBLIC_AMADEUS_API_URL,
-  //   withCredentials: true,
-  timeout: 10000,
-}
-
-export class AmadeusApi {
-  //   amadeus: Amadeus
-  //   constructor() {
-  //     console
-  //       .log
-  //       //   `[AmadeusApi] ${process.env.AMADEUS_CLIENT_ID} ${process.env.AMADEUS_CLIENT_SECRET} ${process.env.EXPO_PUBLIC_API_URL}`,
-  //       ()
-  //     this.amadeus = new Amadeus({
-  //       clientId: process.env.AMADEUS_CLIENT_ID,
-  //       clientSecret: process.env.AMADEUS_CLIENT_SECRET,
-  //     })
-  //   }
-  apisauce: ApisauceInstance
-  config: ApiConfig
-  constructor(config: ApiConfig = AMADEUS_API_CONFIG) {
-    this.config = config
-    this.apisauce = create({
-      ...config,
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-  }
-
-  /**
-   * Gets a Trip data with given id.
-   * @returns {kind} - Response Status.
-   * @returns {...Trip} - Trip.
-   */
-  async fetchLocations(
-    params: ReferenceDataLocationsParams,
-  ): Promise<ApiResult<Location[]>> {
-    const response: ApiResponse<ReferenceDataLocationsResult> =
-      await this.apisauce.get('reference-data/locations', {
-        view: 'LIGHT',
-        ...params,
-      })
-    console.log(`[fetchLocations] ${JSON.stringify(response.data)}`)
-    const handledResponse =
-      handleResponse<ReferenceDataLocationsResult>(response)
-    return handledResponse.kind === 'ok'
-      ? {
-          kind: 'ok',
-          data: handledResponse.data.data.map(l => ({
-            title: l.name || '',
-            iataCode: l.iataCode,
-            name: l.name || '',
-          })),
-        }
-      : handledResponse
-    // if (response.statusCode !== 200) {
-    //   throw Error(response.statusCode.toString())
-    // }
-    // try {
-    //   if (!response.data) {
-    //     throw Error
-    //   }
-    //   const rawData = response.data
-    //   return {
-    //     kind: 'ok',
-    //     data: rawData.map(l => ({
-    //       title: l.name || '',
-    //       iataCode: l.iataCode,
-    //       name: l.name || '',
-    //     })),
-    //   }
-    // } catch (e) {
-    //   if (__DEV__ && e instanceof Error) {
-    //     console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-    //   }
-    //   return {kind: 'bad-data'}
-    // }
-  }
-}
-
-/**
  * Manages all requests to the API. You can use this class to build out
  * various requests that you need to call from your backend API.
  */
@@ -215,6 +130,7 @@ export class Api {
     //   }
     // })
   }
+
   /**
    * Gets a Trip data with given id.
    * @returns {kind} - Response Status.
@@ -405,7 +321,17 @@ export class Api {
     const response: ApiResponse<DestinationSnapshotIn> =
       await this.apisauce.post(`trip/${tripId}/destination`, destination)
 
-    return handleResponse<DestinationSnapshotIn>(response)
+    const handledResponse = handleResponse<DestinationSnapshotIn>(response)
+    console.log(JSON.stringify(handledResponse))
+    return handledResponse.kind === 'ok'
+      ? {
+          ...handledResponse,
+          data: {
+            ...handledResponse.data,
+            id: handledResponse.data.id.toString(),
+          },
+        }
+      : handledResponse
   }
 
   /**
@@ -416,12 +342,12 @@ export class Api {
   async deleteDestination(
     tripId: string,
     destinationId: string,
-  ): Promise<ApiResult<void>> {
+  ): Promise<ApiResult<null>> {
     const response: ApiResponse<void> = await this.apisauce.delete(
       `/trip/${tripId}/destination/${destinationId}`,
     )
 
-    return handleResponse<void>(response)
+    return handleDeleteResponse(response)
   }
 
   /**
@@ -476,12 +402,12 @@ export class Api {
   async deleteAccomodation(
     tripId: string,
     accomodationId: string,
-  ): Promise<ApiResult<void>> {
+  ): Promise<ApiResult<null>> {
     const response: ApiResponse<void> = await this.apisauce.delete(
       `/trip/${tripId}/accomodation/${accomodationId}`,
     )
 
-    return handleResponse<void>(response)
+    return handleDeleteResponse(response)
   }
 
   //   amadeus = new Amadeus({
@@ -524,8 +450,30 @@ export class Api {
 
   //     return handleResponse<Location>(response)
   //   }
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  //   async fetchLocations(
+  //     params: ReferenceDataLocationsParams,
+  //   ): Promise<ApiResult<Location[]>> {
+  //     const response: ApiResponse<ReferenceDataLocationsResult['data']> =
+  //       await this.apisauce.get(`amadeus/locations`, params)
+  //     const handledResponse =
+  //       handleResponse<ReferenceDataLocationsResult['data']>(response)
+  //     return handledResponse.kind === 'ok'
+  //       ? {
+  //           kind: 'ok',
+  //           data: handledResponse.data.map(l => ({
+  //             title: l.name || '',
+  //             iataCode: l.iataCode,
+  //             name: l.name || '',
+  //           })),
+  //         }
+  //       : handledResponse
+  //   }
 }
 
 // Singleton instance of the API for convenience
 export const api = new Api()
-export const amadeusApi = new AmadeusApi()
