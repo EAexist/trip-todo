@@ -32,6 +32,8 @@ import {AppNavigator, useNavigationPersistence} from './navigators'
 import {loadDateFnsLocale} from './utils/formatDate'
 import './utils/gestureHandler'
 import * as storage from './utils/storage'
+import {useFonts} from 'expo-font'
+import {Platform} from 'react-native'
 
 export const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 
@@ -91,7 +93,11 @@ const config = {
     CreateAccomodation: 'trip/:tripId?/createAccomodation',
   },
 }
-
+const customFontsToLoad = {
+  'Pretendard Variable': require('assets/fonts/pretendard/PretendardVariable.ttf'),
+  Tossface: require('assets/fonts/tossface/Tossface.ttf'),
+  //   Pretendard: require('assets/fonts/pretendard/PretendardVariable.woff2'),
+}
 /**
  * This is the root component of our app.
  * @param {AppProps} props - The props for the `App` component.
@@ -104,7 +110,9 @@ export function App() {
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
-  //   const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad)
+  const [areFontsLoaded, fontLoadError] =
+    Platform.OS == 'web' ? useFonts(customFontsToLoad) : [true, true]
+
   const [isI18nInitialized, setIsI18nInitialized] = useState(false)
 
   useEffect(() => {
@@ -130,8 +138,8 @@ export function App() {
   if (
     !rehydrated ||
     !isNavigationStateRestored ||
-    !isI18nInitialized
-    // (!areFontsLoaded && !fontLoadError)
+    !isI18nInitialized ||
+    (!areFontsLoaded && !fontLoadError)
   ) {
     return null
   }

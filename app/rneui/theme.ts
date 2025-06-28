@@ -18,31 +18,40 @@ const typography: {[key: string]: Font} = {
     Platform.OS == 'web'
       ? {
           thin: {
-            fontFamily: 'Pretendard-Thin',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 100,
           },
           extraLight: {
-            fontFamily: 'Pretendard-ExtraLight',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 200,
           },
           light: {
-            fontFamily: 'Pretendard-Light',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 300,
           },
           regular: {
-            fontFamily: 'Pretendard-Regular',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 400,
           },
           medium: {
-            fontFamily: 'Pretendard-Medium',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 500,
           },
           semiBold: {
-            fontFamily: 'Pretendard-SemiBold',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 600,
           },
           bold: {
-            fontFamily: 'Pretendard-Bold',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 700,
           },
           extraBold: {
-            fontFamily: 'Pretendard-ExtraBold',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 800,
           },
           black: {
-            fontFamily: 'Pretendard-Black',
+            fontFamily: 'Pretendard Variable',
+            fontWeight: 900,
           },
         }
       : Platform.OS == 'android'

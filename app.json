@@ -59,15 +59,16 @@
                 "expo-font",
                 {
                     "fonts": [
-                        "./assets/fonts/pretendard/Pretendard-thin.otf",
-                        "./assets/fonts/pretendard/Pretendard-extralight.otf",
-                        "./assets/fonts/pretendard/Pretendard-light.otf",
-                        "./assets/fonts/pretendard/Pretendard-regular.otf",
-                        "./assets/fonts/pretendard/Pretendard-medium.otf",
-                        "./assets/fonts/pretendard/Pretendard-semibold.otf",
-                        "./assets/fonts/pretendard/Pretendard-bold.otf",
-                        "./assets/fonts/pretendard/Pretendard-extrabold.otf",
-                        "./assets/fonts/pretendard/Pretendard-black.otf"
+                        "./assets/fonts/pretendard/Pretendard-Thin.otf",
+                        "./assets/fonts/pretendard/Pretendard-Extralight.otf",
+                        "./assets/fonts/pretendard/Pretendard-Light.otf",
+                        "./assets/fonts/pretendard/Pretendard-Regular.otf",
+                        "./assets/fonts/pretendard/Pretendard-Medium.otf",
+                        "./assets/fonts/pretendard/Pretendard-Semibold.otf",
+                        "./assets/fonts/pretendard/Pretendard-Bold.otf",
+                        "./assets/fonts/pretendard/Pretendard-Extrabold.otf",
+                        "./assets/fonts/pretendard/Pretendard-Black.otf",
+                        "./assets/fonts/tossFace/Tossface.ttf"
                     ]
                 }
             ],

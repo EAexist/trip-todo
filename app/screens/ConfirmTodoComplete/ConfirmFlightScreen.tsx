@@ -28,7 +28,9 @@ export const ConfirmFlightScreen = withTodo<'ConfirmFlight'>(({todo}) => {
       <ContentTitle
         title={
           <TransText h2>
-            {todo.departure ? `${todo.flightTitleWithCode} 항공권 ` : '항공권 '}
+            {todo.departure
+              ? `${todo.flightTitleWithCode} 항공권\n`
+              : '항공권 '}
             <TransText h2 primary>
               예약 내역 화면을 캡쳐
             </TransText>
