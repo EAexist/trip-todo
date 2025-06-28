@@ -15,7 +15,7 @@ type Font = {
 
 const typography: {[key: string]: Font} = {
   pretendard:
-    Platform.OS == 'android'
+    Platform.OS == 'web'
       ? {
           thin: {
             fontFamily: 'Pretendard-Thin',
@@ -45,46 +45,8 @@ const typography: {[key: string]: Font} = {
             fontFamily: 'Pretendard-Black',
           },
         }
-      : Platform.OS == 'ios'
+      : Platform.OS == 'android'
         ? {
-            thin: {
-              fontFamily: 'Pretendard',
-              fontWeight: 100,
-            },
-            extraLight: {
-              fontFamily: 'Pretendard',
-              fontWeight: 200,
-            },
-            light: {
-              fontFamily: 'Pretendard',
-              fontWeight: 300,
-            },
-            regular: {
-              fontFamily: 'Pretendard',
-              fontWeight: 400,
-            },
-            medium: {
-              fontFamily: 'Pretendard',
-              fontWeight: 500,
-            },
-            semiBold: {
-              fontFamily: 'Pretendard',
-              fontWeight: 600,
-            },
-            bold: {
-              fontFamily: 'Pretendard',
-              fontWeight: 700,
-            },
-            extraBold: {
-              fontFamily: 'Pretendard',
-              fontWeight: 800,
-            },
-            black: {
-              fontFamily: 'Pretendard',
-              fontWeight: 900,
-            },
-          }
-        : {
             thin: {
               fontFamily: 'Pretendard-Thin',
             },
@@ -112,7 +74,75 @@ const typography: {[key: string]: Font} = {
             black: {
               fontFamily: 'Pretendard-Black',
             },
-          },
+          }
+        : Platform.OS == 'ios'
+          ? {
+              thin: {
+                fontFamily: 'Pretendard',
+                fontWeight: 100,
+              },
+              extraLight: {
+                fontFamily: 'Pretendard',
+                fontWeight: 200,
+              },
+              light: {
+                fontFamily: 'Pretendard',
+                fontWeight: 300,
+              },
+              regular: {
+                fontFamily: 'Pretendard',
+                fontWeight: 400,
+              },
+              medium: {
+                fontFamily: 'Pretendard',
+                fontWeight: 500,
+              },
+              semiBold: {
+                fontFamily: 'Pretendard',
+                fontWeight: 600,
+              },
+              bold: {
+                fontFamily: 'Pretendard',
+                fontWeight: 700,
+              },
+              extraBold: {
+                fontFamily: 'Pretendard',
+                fontWeight: 800,
+              },
+              black: {
+                fontFamily: 'Pretendard',
+                fontWeight: 900,
+              },
+            }
+          : {
+              thin: {
+                fontFamily: 'Pretendard-Thin',
+              },
+              extraLight: {
+                fontFamily: 'Pretendard-ExtraLight',
+              },
+              light: {
+                fontFamily: 'Pretendard-Light',
+              },
+              regular: {
+                fontFamily: 'Pretendard-Regular',
+              },
+              medium: {
+                fontFamily: 'Pretendard-Medium',
+              },
+              semiBold: {
+                fontFamily: 'Pretendard-SemiBold',
+              },
+              bold: {
+                fontFamily: 'Pretendard-Bold',
+              },
+              extraBold: {
+                fontFamily: 'Pretendard-ExtraBold',
+              },
+              black: {
+                fontFamily: 'Pretendard-Black',
+              },
+            },
 }
 
 const colorTheme = createTheme({
