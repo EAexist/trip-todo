@@ -5,15 +5,40 @@ import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {withTodo} from '@/utils/withTodo'
 import {useCallback} from 'react'
+import {launchImageLibraryAsync} from 'expo-image-picker'
+import * as storage from '../../utils/storage'
+
+const usePickIamge = () => {
+  const pickImage = async () => {
+    const result = await launchImageLibraryAsync({mediaTypes: 'images'})
+    if (result.assets && result.assets.length > 0) {
+      const imagePath = result.assets[0].uri
+      return imagePath
+      //   storage.save('profileImagePath', imagePath)
+      //   console.log('Image path saved:', imagePath)
+    }
+  }
+
+  return {pickImage}
+}
 
 export const ConfirmFlightTicketScreen = withTodo<'ConfirmFlightTicket'>(
   ({todo}) => {
     const {
       tripStore: {completeAndPatchTodo},
+      reservationStore: {addFlightTicket},
     } = useStores()
-    const handleUploadPress = useCallback(() => {
-      // Handle next button press
-      console.log('Next button pressed')
+
+    const {pickImage} = usePickIamge()
+    const handleUploadPress = useCallback(async () => {
+      pickImage().then(imagePath => {
+        if (imagePath) {
+          console.log(
+            `[ConfirmFlightTicketScreen] Image Upload iamgePath=${imagePath}`,
+          )
+          addFlightTicket(imagePath)
+        }
+      })
     }, [])
 
     const instruction = '공항에서 간편하게 꺼내볼 수 있도록 준비해드릴게요'

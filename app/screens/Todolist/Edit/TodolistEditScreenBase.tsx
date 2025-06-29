@@ -44,7 +44,7 @@ const CheckListEditScreenBase = observer(function <
 }: PropsWithChildren<CheckListEditScreenBaseProps<SectionT>>) {
   // const {tripStore} = useStores()
   // useEffect(() => {
-  //   tripStore.fetch('30').then(() => {
+  //   rootStore.fetchTrip('30').then(() => {
   //     console.log(tripStore)
   //   })
   // }, [])

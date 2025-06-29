@@ -9,16 +9,18 @@ import {View} from 'react-native'
 
 export const WelcomeScreen: FC<AppStackScreenProps<'Welcome'>> = observer(
   () => {
-    const {tripStore, userStore} = useStores()
+    const rootStore = useStores()
+    const {userStore, tripStore} = rootStore
     const {navigateWithTrip} = useNavigate()
 
     useEffect(() => {
       if (userStore.trip.length > 0) {
-        tripStore.fetch(userStore.trip[-1]).then(() => {
+        rootStore.fetchTrip(userStore.trip[-1]).then(() => {
           navigateWithTrip('Todolist')
         })
       } else {
-        tripStore.create().then(() => {
+        rootStore.createTrip().then(() => {
+          console.log('navigating')
           navigateWithTrip('DestinationSetting')
         })
       }

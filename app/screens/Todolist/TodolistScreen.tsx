@@ -58,13 +58,13 @@ import {Observer, observer} from 'mobx-react-lite'
 
 export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
   ({route}) => {
-    const {tripStore} = useStores()
+    const rootStore = useStores()
+    const {tripStore} = rootStore
+
     const {tripId} = route.params
 
     useEffect(() => {
-      tripStore.fetch(tripId).then(() => {
-        console.log(tripStore)
-      })
+      rootStore.fetchTrip(tripId)
     }, [])
 
     const renderItem: SectionListRenderItem<Todo, DefaultSectionT> = ({

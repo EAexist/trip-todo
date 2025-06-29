@@ -32,6 +32,8 @@ export async function setupRootStore(rootStore: RootStore) {
     restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ??
       {}) as RootStoreSnapshot
     applySnapshot(rootStore, restoredState)
+
+    // if(restoredState=={})
   } catch (e) {
     // if there's any problems loading, then inform the dev what happened
     if (__DEV__) {
@@ -51,13 +53,14 @@ export async function setupRootStore(rootStore: RootStore) {
     _disposer?.()
     _disposer = undefined
   }
-
   autorun(() => {
     console.log('TripStore changed:', JSON.stringify(rootStore.tripStore))
-    // console.log(
-    //   'TripStore changed todolistWithPreset =\n:',
-    //   JSON.stringify(rootStore.tripStore.todolistWithPreset),
-    // )
+  })
+  autorun(() => {
+    console.log(
+      'ReservationStore changed:',
+      JSON.stringify(rootStore.reservationStore),
+    )
   })
 
   autorun(() => {
@@ -65,22 +68,20 @@ export async function setupRootStore(rootStore: RootStore) {
       'RoundTripStore changed:',
       JSON.stringify(rootStore.roundTripStore),
     )
-    // console.log(
-    //   'TripStore changed todolistWithPreset =\n:',
-    //   JSON.stringify(rootStore.tripStore.todolistWithPreset),
-    // )
   })
-  // reaction(
-  //   () => [
-  //     rootStore.tripStore.title,
-  //     rootStore.tripStore.destination,
-  //     rootStore.tripStore.startDateISOString,
-  //     rootStore.tripStore.endDateISOString,
-  //   ],
-  //   title => {
-  //     console.log(title)
-  //   },
-  // )
+  reaction(
+    () => rootStore.tripStore?.accomodation,
+    accomodation => {
+      console.log(accomodation)
+    },
+  )
+  reaction(
+    () => rootStore.tripStore?.id,
+    id => {
+      console.log(`[reaction] tripStore.id=${id}`)
+      rootStore.reservationStore.setProp('tripStore', rootStore.tripStore)
+    },
+  )
 
   return {rootStore, restoredState, unsubscribe}
 }

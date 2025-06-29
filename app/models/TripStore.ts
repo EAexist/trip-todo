@@ -46,7 +46,7 @@ export const TodolistModel = types
 export const TripStoreModel = types
   .model('TripStore')
   .props({
-    id: '',
+    id: types.identifier,
     title: '',
     startDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
     endDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
@@ -171,18 +171,18 @@ export const TripStoreModel = types
     },
   }))
   .actions(store => ({
-    /**
-     * Trip CRUD Actions
-     */
-    /**
-     * Create an empty trip and fetch it with backend-generated id.
-     */
-    async create() {
-      const response = await api.createTrip()
-      if (response.kind === 'ok') {
-        store.setProp('id', response.data.id)
-      }
-    },
+    // /**
+    //  * Trip CRUD Actions
+    //  */
+    // /**
+    //  * Create an empty trip and fetch it with backend-generated id.
+    //  */
+    // async create() {
+    //   const response = await api.createTrip()
+    //   if (response.kind === 'ok') {
+    //     store.setProp('id', response.data.id)
+    //   }
+    // },
     /**
      * Fetch a trip with given id.
      */

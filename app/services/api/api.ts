@@ -35,6 +35,12 @@ import {
   ReferenceDataLocationsParams,
   ReferenceDataLocationsResult,
 } from 'amadeus-ts'
+import {
+  ReservationSnapshot,
+  ReservationStoreSnapshot,
+} from '@/models/ReservationStore'
+import Reservation from 'react-native-calendars/src/agenda/reservation-list/reservation'
+import * as flightTicketSample from 'flightTicket_Easterjet_mobileWebScreenshot_1.png'
 
 type ApiResult<T> = {kind: 'ok'; data: T} | GeneralApiProblem
 
@@ -129,6 +135,50 @@ export class Api {
     //     request.headers['X-CSRFToken'] = csrfToken
     //   }
     // })
+  }
+
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async getReservation(
+    tripId: string,
+  ): Promise<ApiResult<ReservationStoreSnapshot>> {
+    const response: ApiResponse<ReservationStoreSnapshot> =
+      await this.apisauce.get(`trip/${tripId}/reservation`)
+
+    const reservation = handleResponse<ReservationStoreSnapshot>(response)
+    return reservation
+    // return reservation.kind === 'ok'
+    //   ? {
+    //       kind: 'ok',
+    //       data: mapToTrip(reservation.data),
+    //     }
+    //   : reservation
+  }
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async addFlightTicket(
+    tripId: string,
+    ticketImageFile: File,
+  ): Promise<ApiResult<ReservationSnapshot>> {
+    const formData = new FormData()
+    formData.append('image', ticketImageFile)
+
+    const response: ApiResponse<ReservationSnapshot> = await this.apisauce.post(
+      `trip/${tripId}/reservation/flight`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    )
+    return handleResponse<ReservationSnapshot>(response)
   }
 
   /**

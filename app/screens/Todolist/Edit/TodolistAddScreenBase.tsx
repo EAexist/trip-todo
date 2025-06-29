@@ -59,13 +59,13 @@ export const TodolistAddScreenBase = observer(
     nextButtonProps,
     tripId,
   }: TodolistAddScreenBaseProps) => {
-    const {tripStore} = useStores()
-    const {navigateWithTrip} = useNavigate()
+    const rootStore = useStores()
+    const {tripStore} = rootStore
 
     useEffect(() => {
       async function fetchPreset() {
         if (tripStore.id === '') {
-          await tripStore.fetch(tripId)
+          await rootStore.fetchTrip(tripId)
         }
         await tripStore.fetchPreset()
       }

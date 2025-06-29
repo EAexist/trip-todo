@@ -208,10 +208,11 @@ export function navigate(name: unknown, params?: unknown) {
  * @param {object} unknown - The params to pass to the route.
  */
 export function useNavigate(todoId?: string) {
-  const {
-    tripStore,
-    // : {id: tripId},
-  } = useStores()
+  //   const {
+  //     tripStore,
+  //     // : {id: tripId},
+  //   } = useStores()
+  const rootStore = useStores()
 
   const navigateWithTrip = useCallback(
     (
@@ -220,15 +221,24 @@ export function useNavigate(todoId?: string) {
       promiseBeforeNavigate?: () => Promise<any>,
     ) => {
       console.log(
-        `[navigateWithTrip] ${name} ${tripStore.id} ${JSON.stringify(params)}`,
+        `[navigateWithTrip] ${name} ${rootStore.tripStore.id} ${JSON.stringify(params)}`,
       )
       if (promiseBeforeNavigate)
         promiseBeforeNavigate().then(() => {
-          navigate(name, {tripId: tripStore.id, todoId, ...(params as object)})
+          navigate(name, {
+            tripId: rootStore.tripStore.id,
+            todoId,
+            ...(params as object),
+          })
         })
-      else navigate(name, {tripId: tripStore.id, todoId, ...(params as object)})
+      else
+        navigate(name, {
+          tripId: rootStore.tripStore.id,
+          todoId,
+          ...(params as object),
+        })
     },
-    [tripStore.id],
+    [rootStore],
   )
 
   //   const navigateWithTrip = () => navigateWithTodo()
