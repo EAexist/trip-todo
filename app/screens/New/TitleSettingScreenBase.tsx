@@ -1,5 +1,5 @@
 import * as Fab from '@/components/Fab'
-import {Input} from '@/components/Input'
+import {ControlledInput} from '@/components/Input'
 import ContentTitle from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {InputProps} from '@rneui/base'
@@ -21,7 +21,7 @@ export const TripTitleSettingScreenBase: FC<{
     <Screen>
       <ContentTitle title={title} />
       <View>
-        <Input value={value} setValue={setValue} {...inputProps} />
+        <ControlledInput value={value} setValue={setValue} {...inputProps} />
       </View>
       <Fab.Container>
         <Fab.NextButton

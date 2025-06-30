@@ -20,11 +20,9 @@ import {
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
 import {AccomodationTodo, CompleteTodo} from '@/components/Todo'
-import {TodoBottomSheet} from '@/components/Todo/TodoModal'
 import {useStores} from '@/models'
 import {Todo} from '@/models/Todo'
 import {useNavigate} from '@/navigators'
-// import BottomSheet from '@gorhom/bottom-sheet'
 import {MainTabScreenProps} from '@/navigators/MainTabNavigator'
 import {useHeader} from '@/utils/useHeader'
 import {Observer, observer} from 'mobx-react-lite'
@@ -152,7 +150,6 @@ export const TodolistScreen: FC<MainTabScreenProps<'Todolist'>> = observer(
           )}
         </ScrollView>
         <SettingsDropDownBottomSheet ref={settingsDropDownBottomSheetRef} />
-        <TodoBottomSheet />
       </Screen>
       //   </GestureHandlerRootViewWrapper>
     )

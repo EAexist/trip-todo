@@ -20,10 +20,7 @@ export const ReorderTrip = observer(({category}: {category: string}) => {
   const {tripStore} = useStores()
 
   const renderItem = useCallback<SortableGridRenderItem<Todo>>(
-    ({item}) =>
-      // <Sortable.Handle mode={item.isCompleted ? 'draggable' : 'draggable'}>
-      item.isCompleted ? <></> : <ReorderTodo todo={item} />,
-    // </Sortable.Handle>
+    ({item}) => (item.isCompleted ? <></> : <ReorderTodo todo={item} />),
     [],
   )
 
@@ -33,7 +30,6 @@ export const ReorderTrip = observer(({category}: {category: string}) => {
     ({indexToKey, keyToIndex}) => {
       'worklet'
       tripStore.reorder(category, keyToIndex)
-      // Your code here
     },
     [tripStore, category],
   )

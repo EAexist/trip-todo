@@ -1,6 +1,7 @@
 import {Avatar} from '@/components/Avatar'
-import {Input} from '@/components/Input'
+import * as Fab from '@/components/Fab'
 import {Title} from '@/components/Layout/Content'
+import {Note} from '@/components/Note'
 import {Screen} from '@/components/Screen'
 import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
@@ -29,6 +30,9 @@ export const AccomodationNoteScreen: FC<
 
   useHeader({rightActionTitle: '완료', onRightPress: handleCompletePress})
 
+  const [isFocused, setIsFocused] = useState(false)
+  const handleChangeNote = (value: string) => item.setProp('note', value)
+
   return (
     <Screen>
       <Title>
@@ -46,12 +50,17 @@ export const AccomodationNoteScreen: FC<
           </ListItem.Content>
         </ListItem>
       </Title>
-      <Input
-        setValue={setValue}
-        value={value}
-        label="메모"
-        placeholder="메모를 입력하세요"
+      <Note
+        onChangeNote={handleChangeNote}
+        initialValue={item.note}
+        isFocused={isFocused}
+        setIsFocused={setIsFocused}
       />
+      {isFocused && (
+        <Fab.Container>
+          <Fab.Button title={'확인'} />
+        </Fab.Container>
+      )}
     </Screen>
   )
 })

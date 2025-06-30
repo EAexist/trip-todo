@@ -1,4 +1,8 @@
-import {Avatar as RNEAvatar, AvatarProps as RNEAvatarProps} from '@rneui/themed'
+import {
+  Avatar as RNEAvatar,
+  AvatarProps as RNEAvatarProps,
+  Text,
+} from '@rneui/themed'
 import {PropsWithChildren} from 'react'
 import {StyleSheet} from 'react-native'
 
@@ -15,17 +19,12 @@ export const Avatar = ({
   icon,
   ...props
 }: PropsWithChildren<AvatarProps>) => {
-  //   const { theme, updateTheme, replaceTheme } = props
-
   return (
     <RNEAvatar
       {...(type === 'tossface' && !icon
-        ? {title: iconId, titleStyle: styles.titleStyle}
+        ? {renderCustomContent: <Text style={styles.titleStyle}>{iconId}</Text>}
         : {icon})}
-      //   {...{title: iconId, titleStyle: styles.titleStyle}}
-      {...props}
-      // icon={props.icon}
-    >
+      {...props}>
       {children}
     </RNEAvatar>
   )

@@ -30,7 +30,6 @@ export const RootStoreModel = types
       departure: null,
       arrival: null,
     }),
-    //   accomodationStore: types.optional(AccomodationStoreModel, {}),
   })
   .actions(withSetPropAction)
   .actions(rootStore => ({

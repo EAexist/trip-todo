@@ -25,9 +25,9 @@ const FabHeightContext = createContext<FabHeightContextType>(
 )
 export const FabProvider = ({children}: PropsWithChildren) => {
   const [height, setHeight] = useState(0)
-  useEffect(() => {
-    console.log(`[FabHeightContext] height=${height}`)
-  }, [height])
+  //   useEffect(() => {
+  //     console.log(`[FabHeightContext] height=${height}`)
+  //   }, [height])
   return (
     <FabHeightContext.Provider value={{height, setHeight}}>
       {children}

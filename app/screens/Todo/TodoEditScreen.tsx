@@ -3,26 +3,20 @@ import BottomSheetModal, {
   GestureHandlerRootViewWrapper,
 } from '@/components/BottomSheetModal'
 import * as Fab from '@/components/Fab'
-import {Input} from '@/components/Input'
+import {ControlledListItemInput} from '@/components/Input'
 import ContentTitle, {Title} from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {TextInfoListItem} from '@/components/TextInfoListItem'
 import {TransText} from '@/components/TransText'
 import {useStores} from '@/models'
 import {CATEGORY_TO_TITLE, Todo} from '@/models/Todo'
-import {
-  AppStackParamList,
-  AppStackScreenProps,
-  goBack,
-  useNavigate,
-} from '@/navigators'
+import {goBack, useNavigate} from '@/navigators'
 import {useHeader} from '@/utils/useHeader'
-import {useTodo} from '@/utils/useTodo'
-import BottomSheet from '@gorhom/bottom-sheet'
+import {withTodo} from '@/utils/withTodo'
 import {useFocusEffect} from '@react-navigation/native'
-import {ListItem} from '@rneui/themed'
+import {Input, ListItem} from '@rneui/themed'
 import {observer} from 'mobx-react-lite'
-import {FC, useCallback, useEffect, useRef, useState} from 'react'
+import {FC, useCallback, useRef, useState} from 'react'
 import {
   FlatList,
   ListRenderItem,
@@ -33,7 +27,6 @@ import {
   FlightTicketTodoEditScreen,
   FlightTodoEditScreen,
 } from './Flight/FlightTodoEditScreen'
-import {withTodo} from '@/utils/withTodo'
 
 export const TodoCreateScreen = withTodo<'TodoCreate'>(({todo, params}) => {
   const {navigateWithTrip} = useNavigate()
@@ -93,10 +86,8 @@ export const CustomTodoEditScreen: FC<{
   todo: Todo
   isBeforeInitialization?: boolean
 }> = observer(({todo, isBeforeInitialization}) => {
-  // const [note, setNote] = useState('')
   const [title, setTitle] = useState(todo.title)
   const [isConfirmed, setIsConfirmed] = useState(false)
-  // const [category, setCategory] = useState(todo.category)
   const categoryBottomSheetModalRef = useRef<BottomSheetModal>(null)
   const iconBottomSheetModalRef = useRef<BottomSheetModal>(null)
   const {navigateWithTrip} = useNavigate()
@@ -110,7 +101,6 @@ export const CustomTodoEditScreen: FC<{
   const handleConfirmPress = useCallback(() => {
     setIsConfirmed(true)
     todo.setProp('title', title)
-    //   todo.setProp('note', note)
     tripStore.patchTodo(todo).then(() => {
       goBack()
     })
@@ -179,7 +169,6 @@ export const CustomTodoEditScreen: FC<{
           console.log(
             `[bottomSheetModalRef.current] ${categoryBottomSheetModalRef.current}`,
           )
-          // setCategory(item.category)
           todo.setProp('category', item.category)
           categoryBottomSheetModalRef.current?.close()
         }
@@ -203,6 +192,7 @@ export const CustomTodoEditScreen: FC<{
 
   useHeader({onBackPressBeforeNavigate: handleBackPressBeforeNavigate})
 
+  const [isFocused, setIsFocused] = useState(false)
   return (
     <GestureHandlerRootViewWrapper>
       <Screen>
@@ -212,14 +202,16 @@ export const CustomTodoEditScreen: FC<{
               <Avatar iconId={todo.iconId} size="xlarge" />
             </TouchableOpacity>
             <ListItem.Content>
-              <ListItem.Title>
-                <Input
-                  setValue={setTitle}
-                  value={title}
-                  placeholder={'할 일 이름 입력'}
-                  autoFocus={isBeforeInitialization}
-                />
-              </ListItem.Title>
+              <ControlledListItemInput
+                setValue={setTitle}
+                value={title}
+                placeholder={'할 일 이름 입력'}
+                autoFocus={isBeforeInitialization}
+                onBlur={() => setIsFocused(false)}
+                onFocus={() => setIsFocused(true)}
+                inputContainerStyle={{borderBottomWidth: isFocused ? 2 : 0}}
+                primary={isFocused}
+              />
             </ListItem.Content>
           </ListItem>
         </Title>
@@ -247,23 +239,17 @@ export const CustomTodoEditScreen: FC<{
         <TextInfoListItem
           onPress={handleNotePress}
           title={'메모'}
-          // onPress={handleInputPress}
           rightContent={<ListItem.Chevron />}>
-          <TransText primary>{todo.note || '메모를 남겨보세요'}</TransText>
+          <TransText primary={!todo.note} numberOfLines={2}>
+            {todo.note || '메모를 남겨보세요'}
+          </TransText>
         </TextInfoListItem>
         <Fab.Container>
-          <Fab.Button
-            onPress={handleConfirmPress}
-            title={'확인'}
-            // disabled={title === todo.title}
-          />
+          <Fab.Button onPress={handleConfirmPress} title={'확인'} />
         </Fab.Container>
         <IconDropdownBottomSheet />
         <CategoryDropdownBottomSheet />
-        <BottomSheetModal
-          ref={iconBottomSheetModalRef}
-          // onChange={handleBottomSheetModalChange}
-        >
+        <BottomSheetModal ref={iconBottomSheetModalRef}>
           <ContentTitle title={'아이콘 선택'} />
           <FlatList
             data={iconMenu}

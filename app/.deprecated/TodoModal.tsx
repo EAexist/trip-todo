@@ -7,10 +7,12 @@ import {Input, ListItem} from '@rneui/themed'
 import {observer} from 'mobx-react-lite'
 import {FC, useCallback, useEffect, useRef, useState} from 'react'
 import {TouchableOpacity, ViewStyle} from 'react-native'
-import {Avatar} from '../Avatar'
-import BottomSheetModal, {BottomSheetModalType} from '../BottomSheetModal'
-import {Title} from '../Layout/Content'
-import {TransText} from '../TransText'
+import {Avatar} from '../components/Avatar'
+import BottomSheetModal, {
+  BottomSheetModalType,
+} from '../components/BottomSheetModal'
+import {Title} from '../components/Layout/Content'
+import {TransText} from '../components/TransText'
 
 export const TodoBottomSheet: FC = observer(({}) => {
   const {tripStore} = useStores()
@@ -36,8 +38,7 @@ export const TodoBottomSheet: FC = observer(({}) => {
     (index: number) => {
       console.log(`handleSheetChanges index=${index}`)
       if (index < 0) {
-        if (pathToOpen)
-          navigateWithTrip('ConfirmPassport', {todoId: item.id})
+        if (pathToOpen) navigateWithTrip('ConfirmPassport', {todoId: item.id})
         tripStore.removeActiveItem()
       } else {
         setPathToOpen(undefined)

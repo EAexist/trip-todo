@@ -42,8 +42,7 @@
     "include": [
         "**/*.ts",
         "**/*.tsx",
-        "app/.deprecated/amadeusApi.js",
-        "app/.deprecated/amadeusApi.d.ts"
+        "app/.deprecated/TodoModal.tsx",
     ],
     "exclude": [
         "node_modules",

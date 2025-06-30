@@ -30,6 +30,9 @@ declare module '@rneui/themed' {
   export interface InputProps {
     primary?: boolean
   }
+  export interface ListItemInputProps {
+    primary?: boolean
+  }
   // export interface AvatarProps {
   //   size?: ('small' | 'medium' | 'large' | 'xlarge' | '2xlarge') | number
   // }
@@ -44,6 +47,7 @@ declare module '@rneui/themed' {
     Input: Partial<InputProps>
     Icon: Partial<IconProps>
     ListItemTitle: Partial<TextProps>
+    ListItemInput: Partial<ListItemInputProps>
   }
   // export interface ListItem {
   //   Caption: Component

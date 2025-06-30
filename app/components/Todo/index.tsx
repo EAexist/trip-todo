@@ -43,12 +43,7 @@ export const TodoBase: FC<TodoBaseProps> = ({
 }) => {
   return (
     <ListItem {...props}>
-      <Avatar
-        iconId={iconId}
-        size="small"
-        {...avatarProps}
-        // {...(avatarStyle && {containerStyle: avatarStyle})}
-      />
+      <Avatar iconId={iconId} size="small" {...avatarProps} />
       <ListItem.Content
         style={contentStyle || {}}
         onPress={() => {

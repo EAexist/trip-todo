@@ -443,6 +443,39 @@ const theme = createTheme({
       //   paddingRight: 8,
       // },
     }),
+    ListItemInput: ({primary}, {colors}) => ({
+      containerStyle: {
+        // paddingHorizontal: 20,
+        // height: 92
+        // paddingVertical: 14,
+        // width: '100%',
+        // borderBottomWidth: 1,
+        // borderColor: colors.light0,
+      },
+      inputContainerStyle: {
+        // paddingTop: label ? 0 : 12,
+        borderBottomWidth: 2,
+        borderColor: primary ? colors.primary : colors.grey0,
+        flexDirection: 'column',
+        alignItems: 'stretch',
+      },
+      // inputContainerStyle: {},
+      inputStyle: {
+        ...typography.pretendard.semiBold,
+        fontSize: 21,
+        lineHeight: 1.6 * 22,
+        color: colors.text.primary,
+        outlineStyle: undefined,
+        textAlign: 'left',
+      },
+      labelStyle: {
+        ...typography.pretendard.medium,
+        fontSize: 12,
+        lineHeight: 1 * 12,
+        letterSpacing: 0.01,
+        color: primary ? colors.light0 : colors.text.secondary,
+      },
+    }),
     ListItem: props => ({
       style: {
         ...(props.useDisabledStyle ? {opacity: 0.5} : {}),

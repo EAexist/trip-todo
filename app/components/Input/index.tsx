@@ -1,83 +1,72 @@
 import {
+  ListItemInput,
+  ListItemInputProps,
+} from '@rneui/base/dist/ListItem/ListItem.Input'
+import {
   Icon,
   IconProps,
   InputProps,
   Input as RNEInput,
   useTheme,
+  ListItem,
+  Text,
 } from '@rneui/themed'
-import {createRef, forwardRef, useCallback, useEffect, useState} from 'react'
-import {TextInput, ViewStyle} from 'react-native'
-import {TextStyle} from 'react-native'
+import {
+  ComponentType,
+  createRef,
+  FC,
+  forwardRef,
+  PropsWithChildren,
+  RefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {GooglePlacesAutocompleteRef} from 'react-native-google-places-autocomplete'
 
-export const Input = ({
-  value,
-  setValue,
-  // label,
-  // placeholder,
-  ...props
-}: {
-  value?: string
-  setValue: (value: string) => void
-} & Partial<InputProps>) => {
-  const handleChangeText = useCallback(
-    (input: string) => {
-      setValue(input)
-    },
-    [setValue],
-  )
-  const [isFocused, setIsFocused] = useState(false)
-
-  return (
-    <RNEInput
-      onChangeText={handleChangeText}
-      // label={label}
-      // placeholder={placeholder || label}
-      value={value}
-      numberOfLines={1}
-      //   underlineColorAndroid={'transparent'}
-      //   style={{
-      //     paddingTop: 0,
-      //     paddingBottom: 0,
-      //   }}
-      // https://stackoverflow.com/questions/34087459/focus-style-for-textinput-in-react-native
-      onBlur={() => setIsFocused(false)}
-      onFocus={() => setIsFocused(true)}
-      primary={isFocused}
-      autoFocus={props.autoFocus || true}
-      {...props}
-    />
-  )
+// https://stackoverflow.com/questions/34087459/focus-style-for-textinput-in-react-native
+export const withControl = <T,>(
+  WrappedComponent: ComponentType<T & InputProps>,
+) => {
+  const Component: FC<
+    {
+      value?: string
+      setValue: (value: string) => void
+    } & Omit<InputProps, 'onChangeText' | 'value' | 'numberOfLines'> &
+      T
+  > = ({value, setValue, autoFocus, ...props}) => {
+    const handleChangeText = useCallback(
+      (input: string) => {
+        setValue(input)
+      },
+      [setValue],
+    )
+    const [isFocused, setIsFocused] = useState(false)
+    return (
+      <WrappedComponent
+        onChangeText={handleChangeText}
+        value={value}
+        numberOfLines={1}
+        onBlur={() => setIsFocused(false)}
+        onFocus={() => setIsFocused(true)}
+        primary={isFocused}
+        autoFocus={autoFocus}
+        {...(props as T)}
+      />
+    )
+  }
+  return Component
 }
-// interface InputBaseProps extends InputProps {
-//   iconProps?: IconProps
-// }
-// export const InputBase = ({iconProps, ...props}: InputBaseProps) => {
-//   const {
-//     theme: {colors},
-//   } = useTheme()
-//   return (
-//     <RNEInput
-//       {...(iconProps
-//         ? {
-//             leftIcon: (
-//               <Icon
-//                 size={24}
-//                 type={'material'}
-//                 color={colors.text.secondary}
-//                 {...iconProps}
-//               />
-//             ),
-//             leftIconContainerStyle: {
-//               paddingRight: 16,
-//               width: 48,
-//             },
-//           }
-//         : {})}
-//       {...props}
-//     />
-//   )
-// }
+
+export const ControlledInput = withControl<InputProps>(RNEInput as FC)
+export const ControlledListItemInput = withControl(ListItem.Input as FC)
 
 export const InputIcon = (props: IconProps) => {
   const {
@@ -160,3 +149,33 @@ const $inputStyle: TextStyle = {
   // height: 1.6 * 21,
   // minHeight: 1.6 * 21,
 }
+
+// interface InputBaseProps extends InputProps {
+//   iconProps?: IconProps
+// }
+// export const InputBase = ({iconProps, ...props}: InputBaseProps) => {
+//   const {
+//     theme: {colors},
+//   } = useTheme()
+//   return (
+//     <RNEInput
+//       {...(iconProps
+//         ? {
+//             leftIcon: (
+//               <Icon
+//                 size={24}
+//                 type={'material'}
+//                 color={colors.text.secondary}
+//                 {...iconProps}
+//               />
+//             ),
+//             leftIconContainerStyle: {
+//               paddingRight: 16,
+//               width: 48,
+//             },
+//           }
+//         : {})}
+//       {...props}
+//     />
+//   )
+// }

@@ -163,7 +163,6 @@ export const TripStoreModel = types
               item: preset,
             })
           })
-
           store.setProp('preset', Object.fromEntries(map.entries()))
           store.updatePreset()
         }
