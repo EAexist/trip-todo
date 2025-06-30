@@ -35,6 +35,7 @@ export const RootStoreModel = types
   .actions(withSetPropAction)
   .actions(rootStore => ({
     fetchTrip: async (tripid: string) => {
+      console.log('[RootStore] fetchTrip()')
       const response = await api.getTrip(tripid)
       if (response.kind === 'ok') {
         rootStore.setProp('tripStore', response.data as TripStoreSnapshot)
@@ -43,7 +44,11 @@ export const RootStoreModel = types
       }
     },
     async createTrip() {
+      console.log('[RootStore] createTrip()')
       await api.createTrip().then(response => {
+        console.log(
+          `[RootStore] createTrip() response=${JSON.stringify(response)}`,
+        )
         if (response.kind === 'ok') {
           console.log('changed')
           rootStore.setProp('tripStore', response.data as TripStoreSnapshot)

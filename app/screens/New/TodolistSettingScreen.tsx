@@ -11,7 +11,7 @@ export const TodolistSettingScreen: FC<AppStackScreenProps<'TodolistSetting'>> =
         instruction={'체크리스트에서 관리할 할 일을 추가해보세요'}
         tripId={route.params.tripId}
         nextButtonProps={{
-          navigateProps: {name: 'Todolist'},
+          navigateProps: {name: 'Main', params: {screen: 'Todolist'}},
           title: '확인',
         }}
       />

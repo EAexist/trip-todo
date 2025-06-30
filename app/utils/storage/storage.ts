@@ -1,4 +1,6 @@
 import {MMKV} from 'react-native-mmkv'
+import * as FileSystem from 'expo-file-system'
+
 export const storage = new MMKV()
 
 /**
@@ -78,4 +80,43 @@ export function clear(): void {
   try {
     storage.clearAll()
   } catch {}
+}
+const IMAGES_DIR = `${FileSystem.documentDirectory}my_app_images/`
+
+export const copyImageToLocalStorage = async (localOSFileUri: string) => {
+  if (!localOSFileUri) {
+    console.log(`No Image Selected, Please pick an image first.`)
+    return
+  }
+
+  try {
+    // Ensure the target directory exists
+    //   await ensureDirExists();
+
+    // Extract file name and extension from the original URI
+    const fileNameWithExtension = localOSFileUri.substring(
+      localOSFileUri.lastIndexOf('/') + 1,
+    )
+    // Optional: Generate a unique name to avoid collisions
+    const uniqueFileName = `${Date.now()}_${fileNameWithExtension}`
+    const localFileUri = `${IMAGES_DIR}${uniqueFileName}`
+
+    await FileSystem.copyAsync({
+      from: localOSFileUri,
+      to: localFileUri,
+    })
+
+    console.log(`Image successfully copied to app storage!`)
+    console.log('Image copied to:', localFileUri)
+
+    // Verify the file exists in the new location
+    const fileInfo = await FileSystem.getInfoAsync(localFileUri)
+    console.log('Copied file info:', fileInfo)
+    if (fileInfo.exists) {
+      console.log('Copied file exists and size:', fileInfo.size)
+      return localFileUri
+    }
+  } catch (error) {
+    console.error('Error copying image:', error)
+  }
 }

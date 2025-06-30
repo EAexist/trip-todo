@@ -13,7 +13,7 @@ type Font = {
   black?: TextStyle
 }
 
-const typography: {[key: string]: Font} = {
+export const typography: {pretendard: Font} = {
   pretendard:
     Platform.OS == 'web'
       ? {
@@ -58,30 +58,39 @@ const typography: {[key: string]: Font} = {
         ? {
             thin: {
               fontFamily: 'Pretendard-Thin',
+              fontWeight: 'normal',
             },
             extraLight: {
               fontFamily: 'Pretendard-ExtraLight',
+              fontWeight: 'normal',
             },
             light: {
               fontFamily: 'Pretendard-Light',
+              fontWeight: 'normal',
             },
             regular: {
               fontFamily: 'Pretendard-Regular',
+              fontWeight: 'normal',
             },
             medium: {
               fontFamily: 'Pretendard-Medium',
+              fontWeight: 'normal',
             },
             semiBold: {
               fontFamily: 'Pretendard-SemiBold',
+              fontWeight: 'normal',
             },
             bold: {
               fontFamily: 'Pretendard-Bold',
+              fontWeight: 'normal',
             },
             extraBold: {
               fontFamily: 'Pretendard-ExtraBold',
+              fontWeight: 'normal',
             },
             black: {
               fontFamily: 'Pretendard-Black',
+              fontWeight: 'normal',
             },
           }
         : Platform.OS == 'ios'
@@ -162,6 +171,8 @@ const colorTheme = createTheme({
     light1: '#E2EEFF',
     secondary: '#F2F3F5',
     black: '#333D4B',
+    active: '#191E28',
+    inactive: '#AFB8C1',
     text: {
       primary: '#333D4B',
       secondary: '#6B7684',
@@ -267,15 +278,15 @@ const theme = createTheme({
         ...(props.disabled ? {opacity: 0.5} : {}),
       },
       h2Style: {
-        fontSize: 21,
         ...typography.pretendard.bold,
+        fontSize: 21,
         lineHeight: 1.6 * 21,
         letterSpacing: 0,
         textTransform: 'none',
       },
       h3Style: {
-        fontSize: 17,
         ...typography.pretendard.bold,
+        fontSize: 17,
         lineHeight: 1.33 * 21,
         letterSpacing: 0,
         textTransform: 'none',
@@ -320,8 +331,8 @@ const theme = createTheme({
     Header: (props, {colors}) => ({
       elevated: false,
       containerStyle: {
-        // backgroundColor: colors.white,
-        backgroundColor: 'bisque',
+        backgroundColor: colors.white,
+        // backgroundColor: 'bisque',
         borderBottomWidth: 0,
         height: 48,
         paddingHorizontal: 8,

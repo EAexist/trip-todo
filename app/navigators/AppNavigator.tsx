@@ -8,7 +8,10 @@ import {BackButton} from '@/components/Header'
 import theme from '@/rneui/theme'
 import * as Screens from '@/screens'
 import {useThemeProvider} from '@/utils/useAppTheme'
-import {NavigationContainer} from '@react-navigation/native'
+import {
+  NavigationContainer,
+  NavigatorScreenParams,
+} from '@react-navigation/native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -21,6 +24,9 @@ import {useStores} from '../models'
 import {navigationRef, useBackButtonHandler} from './navigationUtilities'
 import {FabProvider} from '@/components/Fab'
 import {LoginScreen} from '@/screens/Login/LoginScreen'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {MainTabNavigator, MainTabParamList} from './MainTabNavigator'
+import {GestureHandlerRootViewWrapper} from '@/components/BottomSheetModal'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -36,7 +42,7 @@ import {LoginScreen} from '@/screens/Login/LoginScreen'
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type TripStackProps = {tripId: string}
-export type TodoStackProps = {tripId: string; todoId: string}
+export type TodoStackProps = TripStackProps & {todoId: string}
 
 export type AppStackParamList = {
   // 🔥 Your screens go here
@@ -51,8 +57,13 @@ export type AppStackParamList = {
   ScheduleSetting: TripStackProps
   TitleSetting: TripStackProps
   TodolistSetting: TripStackProps
+
+  /* Main */
+  Main: NavigatorScreenParams<MainTabParamList> & TripStackProps
+  //   Main: TripStackProps
+
   /* Edit Trip */
-  Todolist: TripStackProps
+  //   Todolist: TripStackProps
   TodolistAdd: TripStackProps
   TodolistDelete: TripStackProps
   TodolistReorder: TripStackProps
@@ -62,6 +73,13 @@ export type AppStackParamList = {
   Accomodation: TripStackProps & {accomodationId: string}
   AccomodationNote: TripStackProps & {accomodationId: string}
   CreateAccomodation: TripStackProps
+
+  //   Reservation: TripStackProps & {reservationId: string}
+  FullScreenImage: TripStackProps & {
+    reservationId: string
+    localAppStorageFileUri: string
+  }
+
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 } & TodoAppStackParamList
 
@@ -97,6 +115,8 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> =
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
+const Tab = createBottomTabNavigator()
+
 const AppStack = observer(function AppStack() {
   const {
     userStore: {isAuthenticated},
@@ -122,47 +142,41 @@ const AppStack = observer(function AppStack() {
       initialRouteName={isAuthenticated ? 'Welcome' : 'Login'}>
       {isAuthenticated ? (
         <>
-          {/* <Stack.Group> */}
-          <Stack.Screen name="Welcome" component={Screens.New.Welcome} />
-          <Stack.Screen
-            name="DestinationSetting"
-            component={Screens.New.DestinationSetting}
-          />
-          <Stack.Screen
-            name="ScheduleSetting"
-            component={Screens.New.ScheduleSetting}
-          />
-          <Stack.Screen
-            name="DestinationSearch"
-            component={Screens.New.DestinationSearch}
-          />
-          <Stack.Screen
-            name="TitleSetting"
-            component={Screens.New.TitleSetting}
-          />
-          <Stack.Screen
-            name="TodolistSetting"
-            component={Screens.New.TodolistSetting}
-          />
-          {/* <Stack.Screen
-              name="New"
-              component={Screens.DestinationSettingScreen}
-            /> */}
-          {/* </Stack.Group> */}
-          {/* <Stack.Group> */}
-          <Stack.Screen
-            name="Todolist"
-            component={Screens.Todolist.TodolistScreen}
-          />
-          <Stack.Screen name="TodolistAdd" component={Screens.Todolist.Add} />
-          <Stack.Screen
-            name="TodolistReorder"
-            component={Screens.Todolist.Reorder}
-          />
-          <Stack.Screen
-            name="TodolistDelete"
-            component={Screens.Todolist.Delete}
-          />
+          <Stack.Group>
+            <Stack.Screen name="Welcome" component={Screens.New.Welcome} />
+            <Stack.Screen
+              name="DestinationSetting"
+              component={Screens.New.DestinationSetting}
+            />
+            <Stack.Screen
+              name="ScheduleSetting"
+              component={Screens.New.ScheduleSetting}
+            />
+            <Stack.Screen
+              name="DestinationSearch"
+              component={Screens.New.DestinationSearch}
+            />
+            <Stack.Screen
+              name="TitleSetting"
+              component={Screens.New.TitleSetting}
+            />
+            <Stack.Screen
+              name="TodolistSetting"
+              component={Screens.New.TodolistSetting}
+            />
+          </Stack.Group>
+          <Stack.Screen name="Main" component={MainTabNavigator} />
+          <Stack.Group>
+            <Stack.Screen name="TodolistAdd" component={Screens.Todolist.Add} />
+            <Stack.Screen
+              name="TodolistReorder"
+              component={Screens.Todolist.Reorder}
+            />
+            <Stack.Screen
+              name="TodolistDelete"
+              component={Screens.Todolist.Delete}
+            />
+          </Stack.Group>
           <Stack.Screen
             name="ConfirmPassport"
             component={Screens.Confirm.Passport}
@@ -215,6 +229,12 @@ const AppStack = observer(function AppStack() {
             name="RoundTripSetting"
             component={Screens.Todo.Flight.RoundTripSetting}
           />
+          <>
+            <Stack.Screen
+              name="FullScreenImage"
+              component={Screens.Reservation.FullScreenImage}
+            />
+          </>
         </>
       ) : (
         <>
@@ -248,13 +268,14 @@ export const AppNavigator = observer(function AppNavigator(
   return (
     <AppThemeProvider value={{themeScheme, setThemeContextOverride}}>
       <ThemeProvider theme={theme}>
+        {/* <GestureHandlerRootViewWrapper> */}
         <NavigationContainer
           ref={navigationRef}
           theme={{
             ...navigationTheme,
             colors: {
               ...navigationTheme.colors,
-              //   background: 'transparent',
+              background: 'white',
             },
           }}
           {...props}>
@@ -264,6 +285,7 @@ export const AppNavigator = observer(function AppNavigator(
             </Screens.ErrorBoundary>
           </FabProvider>
         </NavigationContainer>
+        {/* </GestureHandlerRootViewWrapper> */}
       </ThemeProvider>
     </AppThemeProvider>
   )

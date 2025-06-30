@@ -12,10 +12,10 @@ const usePickIamge = () => {
   const pickImage = async () => {
     const result = await launchImageLibraryAsync({mediaTypes: 'images'})
     if (result.assets && result.assets.length > 0) {
-      const imagePath = result.assets[0].uri
-      return imagePath
-      //   storage.save('profileImagePath', imagePath)
-      //   console.log('Image path saved:', imagePath)
+      const localFileUri = result.assets[0].uri
+      return localFileUri
+      //   storage.save('profilelocalFileUri', localFileUri)
+      //   console.log('Image path saved:', localFileUri)
     }
   }
 
@@ -31,12 +31,12 @@ export const ConfirmFlightTicketScreen = withTodo<'ConfirmFlightTicket'>(
 
     const {pickImage} = usePickIamge()
     const handleUploadPress = useCallback(async () => {
-      pickImage().then(imagePath => {
-        if (imagePath) {
+      pickImage().then(localFileUri => {
+        if (localFileUri) {
           console.log(
-            `[ConfirmFlightTicketScreen] Image Upload iamgePath=${imagePath}`,
+            `[ConfirmFlightTicketScreen] Image Upload iamgePath=${localFileUri}`,
           )
-          addFlightTicket(imagePath)
+          addFlightTicket(localFileUri)
         }
       })
     }, [])
@@ -68,7 +68,8 @@ export const ConfirmFlightTicketScreen = withTodo<'ConfirmFlightTicket'>(
           />
           <Fab.NextButton
             navigateProps={{
-              name: 'Todolist',
+              name: 'Main',
+              params: {screen: 'Todolist'},
             }}
             title={'올리지 않고 할일 완료하기'}
             color={'secondary'}

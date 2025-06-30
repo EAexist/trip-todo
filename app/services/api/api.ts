@@ -8,39 +8,33 @@
 import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
 import {DestinationSnapshotIn} from '@/models/Destination'
 import {
-  Location,
-  PresetTodoContentSnapshotIn,
-  TodoSnapshotIn,
-} from '@/models/Todo'
+  ReservationSnapshot,
+  ReservationStoreSnapshot,
+} from '@/models/ReservationStore'
+import {PresetTodoContentSnapshotIn, TodoSnapshotIn} from '@/models/Todo'
 import {TripStore, TripStoreSnapshot} from '@/models/TripStore'
+import {UserStoreSnapshot} from '@/models/UserStore'
+import {User} from '@react-native-google-signin/google-signin'
+import {KakaoProfile} from '@react-native-seoul/kakao-login'
 import {ApiResponse, ApisauceInstance, create} from 'apisauce'
 import {
+  uploadAsync,
+  FileSystemUploadOptions,
+  FileSystemUploadType,
+  FileSystemUploadResult,
+} from 'expo-file-system'
+import {
   type ApiConfig,
-  type ApiPresetResponse,
-  TodoPresetDTO,
   TodoDTO,
+  TodoPresetDTO,
   type TripDTO,
-  WithStatus,
+  mapToPresetTodo,
   mapToTodo,
   mapToTodoDTO,
   mapToTrip,
   mapToTripDTO,
-  mapToPresetTodo,
 } from './api.types'
 import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
-import {KakaoProfile} from '@react-native-seoul/kakao-login'
-import {User} from '@react-native-google-signin/google-signin'
-import {UserStoreSnapshot} from '@/models/UserStore'
-import {
-  ReferenceDataLocationsParams,
-  ReferenceDataLocationsResult,
-} from 'amadeus-ts'
-import {
-  ReservationSnapshot,
-  ReservationStoreSnapshot,
-} from '@/models/ReservationStore'
-import Reservation from 'react-native-calendars/src/agenda/reservation-list/reservation'
-import * as flightTicketSample from 'flightTicket_Easterjet_mobileWebScreenshot_1.png'
 
 type ApiResult<T> = {kind: 'ok'; data: T} | GeneralApiProblem
 
@@ -117,7 +111,8 @@ export class Api {
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
     this.config = config
     this.apisauce = create({
-      ...config,
+      baseURL: this.config.baseURL,
+      timeout: this.config.timeout,
       headers: {
         Accept: 'application/json',
       },
@@ -162,6 +157,22 @@ export class Api {
    * @returns {kind} - Response Status.
    * @returns {...Trip} - Trip.
    */
+  async setLocalAppStorageFileUri(
+    tripId: string,
+    reservationId: string,
+    localAppStorageFileUri: string,
+  ): Promise<ApiResult<ReservationSnapshot>> {
+    const response: ApiResponse<ReservationSnapshot> =
+      await this.apisauce.patch(`trip/${tripId}/reservation/${reservationId}`, {
+        localAppStorageFileUri: localAppStorageFileUri,
+      })
+    return handleResponse<ReservationSnapshot>(response)
+  }
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
   async addFlightTicket(
     tripId: string,
     ticketImageFile: File,
@@ -179,6 +190,29 @@ export class Api {
       },
     )
     return handleResponse<ReservationSnapshot>(response)
+  }
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async uploadFlightTicket(
+    tripId: string,
+    localFileUri: string,
+  ): Promise<FileSystemUploadResult> {
+    const uploadUrl = `${this.config.baseURL}/trip/${tripId}/reservation/flight`
+    const fileSystemUploadOptions: FileSystemUploadOptions = {
+      httpMethod: 'POST',
+      uploadType: FileSystemUploadType.MULTIPART,
+      fieldName: 'image', // This 'file' must match the @RequestParam name in Spring Boot
+      parameters: {}, // Optional: Include other form data
+    }
+    const response = await uploadAsync(
+      uploadUrl,
+      localFileUri,
+      fileSystemUploadOptions,
+    )
+    return response
   }
 
   /**
@@ -247,6 +281,8 @@ export class Api {
    */
   async createTrip(): Promise<ApiResult<TripStoreSnapshot>> {
     const response: ApiResponse<TripDTO> = await this.apisauce.post(`/trip`)
+    console.log(`[api.createTrip() config=${JSON.stringify(this.config)}`)
+    console.log(`[api.createTrip() response=${JSON.stringify(response)}`)
 
     const tripDTO = handleResponse<TripDTO>(response)
     return tripDTO.kind === 'ok'

@@ -13,6 +13,7 @@ import {
 } from 'react'
 import {LayoutChangeEvent, View, ViewStyle} from 'react-native'
 import {Button as ButtonBase} from '../Button'
+import {MainTabParamList} from '@/navigators/MainTabNavigator'
 
 interface FabHeightContextType {
   height: number
@@ -78,7 +79,7 @@ export const Button: FC<ButtonProps> = props => (
   />
 )
 export type NavigateProps = {
-  name: keyof AppStackParamList
+  name: keyof (AppStackParamList & MainTabParamList)
   params?: unknown
 }
 /**

@@ -41,21 +41,20 @@ export const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 const prefix = Linking.createURL('/')
 const config = {
   screens: {
-    // Login: {
-    //   path: '',
-    // },
-    // Welcome: 'welcome',
-    // Demo: {
+    Main: {
+      path: 'trip/:tripId?',
+      screens: {
+        Todolist: '/',
+        Reservation: '/reservation',
+      },
+    },
+    // Main: {
     //   screens: {
-    //     DemoShowroom: {
-    //       path: 'showroom/:queryIndex?/:itemIndex?',
-    //     },
-    //     DemoDebug: 'debug',
-    //     DemoPodcastList: 'podcast',
-    //     DemoCommunity: 'community',
+    //     Todolist: 'trip/:tripId?/todolist',
+    //     Reservation: 'trip/:tripId?/reservation',
     //   },
     // },
-    /*  */
+
     Login: 'login',
     Welcome: 'welcome',
     DestinationSetting: 'new/:tripId/destination',
@@ -65,7 +64,6 @@ const config = {
     TodolistSetting: 'new/:tripId/trip',
 
     /*  */
-    Todolist: 'trip/:tripId?',
     TripMeta: 'trip/:tripId?/meta',
     TodolistAdd: 'trip/:tripId?/add',
     TodolistDelete: 'trip/:tripId?/delete',
@@ -86,11 +84,15 @@ const config = {
     ConfirmPassport: 'trip/:tripId?/todo/:todoId?/confirmPassport',
     ConfirmFlight: 'trip/:tripId?/todo/:todoId?/confirmFlight',
     ConfirmFlightTicket: 'trip/:tripId?/todo/:todoId?/confirmFlightTicket',
+
     /*  */
     AccomodationPlan: 'trip/:tripId?/accomodationPlan',
     Accomodation: 'trip/:tripId?/accomodation/:accomodationId?',
     AccomodationNote: 'trip/:tripId?/accomodation/:accomodationId?/note',
     CreateAccomodation: 'trip/:tripId?/createAccomodation',
+
+    FullScreenImage:
+      'trip/:tripId?/reservation/:reservationId?/fullScreenImage',
   },
 }
 const customFontsToLoad = {

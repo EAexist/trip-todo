@@ -43,7 +43,8 @@ export const ConfirmFlightScreen = withTodo<'ConfirmFlight'>(({todo}) => {
         <Fab.Button onPress={handleUploadPress} title={'화면 캡쳐 올리기'} />
         <Fab.NextButton
           navigateProps={{
-            name: 'Todolist',
+            name: 'Main',
+            params: {screen: 'Todolist'},
           }}
           title={'올리지 않고 할일 완료하기'}
           color={'secondary'}

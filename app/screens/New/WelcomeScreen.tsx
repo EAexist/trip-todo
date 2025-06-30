@@ -16,7 +16,7 @@ export const WelcomeScreen: FC<AppStackScreenProps<'Welcome'>> = observer(
     useEffect(() => {
       if (userStore.trip.length > 0) {
         rootStore.fetchTrip(userStore.trip[-1]).then(() => {
-          navigateWithTrip('Todolist')
+          navigateWithTrip('Main')
         })
       } else {
         rootStore.createTrip().then(() => {

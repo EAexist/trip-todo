@@ -60,15 +60,15 @@
                 {
                     "fonts": [
                         "./assets/fonts/pretendard/Pretendard-Thin.otf",
-                        "./assets/fonts/pretendard/Pretendard-Extralight.otf",
+                        "./assets/fonts/pretendard/Pretendard-ExtraLight.otf",
                         "./assets/fonts/pretendard/Pretendard-Light.otf",
                         "./assets/fonts/pretendard/Pretendard-Regular.otf",
                         "./assets/fonts/pretendard/Pretendard-Medium.otf",
-                        "./assets/fonts/pretendard/Pretendard-Semibold.otf",
+                        "./assets/fonts/pretendard/Pretendard-SemiBold.otf",
                         "./assets/fonts/pretendard/Pretendard-Bold.otf",
-                        "./assets/fonts/pretendard/Pretendard-Extrabold.otf",
+                        "./assets/fonts/pretendard/Pretendard-ExtraBold.otf",
                         "./assets/fonts/pretendard/Pretendard-Black.otf",
-                        "./assets/fonts/tossFace/Tossface.ttf"
+                        "./assets/fonts/tossface/Tossface.ttf"
                     ]
                 }
             ],
@@ -93,9 +93,10 @@
         },
         "extra": {
             "eas": {
-                "projectId": "b47c3b69-2bf0-4b16-b39c-c268d8bb5ef1"
+                "projectId": "2d655092-0a51-4956-81c9-d2386da69171"
             }
-        }
+        },
+        "owner": "hyeon.expression"
     },
     "ignite": {
         "version": "10.5.3"

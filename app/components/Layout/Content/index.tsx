@@ -1,5 +1,5 @@
 import {TransText} from '@/components/TransText'
-import {useTheme} from '@rneui/themed'
+import {Text, useTheme} from '@rneui/themed'
 import {FC, PropsWithChildren, ReactNode} from 'react'
 import {StyleSheet, View} from 'react-native'
 

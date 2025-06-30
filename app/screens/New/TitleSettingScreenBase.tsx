@@ -4,7 +4,7 @@ import ContentTitle from '@/components/Layout/Content'
 import {Screen} from '@/components/Screen'
 import {InputProps} from '@rneui/base'
 import {FC, useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 
 export const TripTitleSettingScreenBase: FC<{
   title: string

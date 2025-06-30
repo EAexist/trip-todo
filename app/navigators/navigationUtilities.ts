@@ -223,20 +223,30 @@ export function useNavigate(todoId?: string) {
       console.log(
         `[navigateWithTrip] ${name} ${rootStore.tripStore.id} ${JSON.stringify(params)}`,
       )
+      const _params = {
+        tripId: rootStore.tripStore.id,
+        todoId,
+      }
+      const _navigate = () =>
+        navigate(
+          name,
+          !!params && 'screen' in (params as Object)
+            ? {...params, ..._params, params: _params}
+            : {
+                ..._params,
+                ...(params as Object),
+              },
+        )
+      // navigate(name, {
+      //   ..._params,
+      //   ...(params as Object),
+      // })
+
       if (promiseBeforeNavigate)
         promiseBeforeNavigate().then(() => {
-          navigate(name, {
-            tripId: rootStore.tripStore.id,
-            todoId,
-            ...(params as object),
-          })
+          _navigate()
         })
-      else
-        navigate(name, {
-          tripId: rootStore.tripStore.id,
-          todoId,
-          ...(params as object),
-        })
+      else _navigate()
     },
     [rootStore],
   )

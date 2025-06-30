@@ -1,8 +1,9 @@
 import {api} from '@/services/api'
+import {copyImageToLocalStorage} from '@/utils/storage'
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
-import {AccomodationItemModel} from './AccomodationItem'
 import {withSetPropAction} from './helpers/withSetPropAction'
 import {TripStoreModel} from './TripStore'
+import {AccomodationItemModel} from './AccomodationItem'
 
 export const ReservationModel = types.model('Reservation').props({
   id: types.identifier,
@@ -10,8 +11,9 @@ export const ReservationModel = types.model('Reservation').props({
   type: types.string,
   title: types.string,
   link: types.maybeNull(types.string),
-  imagePath: types.maybeNull(types.string),
-  accomodation: types.maybeNull(AccomodationItemModel),
+  localAppStorageFileUri: types.maybeNull(types.string),
+  serverFileUri: types.maybeNull(types.string),
+  accomodation: types.maybeNull(types.reference(AccomodationItemModel)),
 })
 export interface Reservation extends Instance<typeof ReservationModel> {}
 export interface ReservationSnapshot
@@ -21,7 +23,7 @@ export const ReservationStoreModel = types
   .props({
     // id: types.string,
     tripStore: types.maybe(types.reference(TripStoreModel)),
-    reservations: types.array(ReservationModel),
+    reservation: types.map(ReservationModel),
   })
   .actions(withSetPropAction)
   .actions(store => ({
@@ -33,7 +35,7 @@ export const ReservationStoreModel = types
         const response = await api.getReservation(store.tripStore.id)
         if (response.kind === 'ok') {
           const data = response.data
-          store.setProp('reservations', data.reservations)
+          store.setProp('reservation', data.reservation)
         } else {
           console.error(
             `Error fetching Reservation: ${JSON.stringify(response)}`,
@@ -42,23 +44,72 @@ export const ReservationStoreModel = types
       }
     },
     addReservation(reservation: ReservationSnapshot) {
-      store.reservations.push(reservation)
+      store.reservation.set(reservation.id, reservation)
     },
     // syncOrderInCategory(category: string) {
     //   store.todolist.get(category)?.sort((a, b) => a.orderKey - b.orderKey)
     // },
   }))
   .actions(store => ({
-    async addFlightTicket(imagePath: string) {
+    async addFlightTicket(localOSFileUri: string) {
       console.log('[addFlightTicket]')
       if (!!store.tripStore) {
-        const file = new File([], '')
         console.log('[addFlightTicket] Calling api')
-        api.addFlightTicket(store.tripStore.id, file).then(response => {
-          if (response.kind == 'ok') {
-            store.reservations.push(response.data)
-          }
-        })
+        api
+          .uploadFlightTicket(store.tripStore.id, localOSFileUri)
+          .then(response => {
+            if (response.status >= 200 && response.status < 300) {
+              try {
+                const createdReservation: Reservation = JSON.parse(
+                  response.body,
+                )
+                // Copy image to local app storage and patch its uri to the reservation DB.
+                copyImageToLocalStorage(localOSFileUri).then(
+                  localAppStorageFileUri => {
+                    if (!!localAppStorageFileUri && !!store.tripStore)
+                      api
+                        .setLocalAppStorageFileUri(
+                          store.tripStore.id,
+                          createdReservation.id,
+                          localAppStorageFileUri,
+                        )
+                        .then(response => {
+                          if (response.kind == 'ok') {
+                            store.reservation.set(
+                              response.data.id,
+                              response.data,
+                            )
+                          }
+                        })
+                  },
+                )
+              } catch (parseError) {
+                console.error('Error parsing JSON:', parseError)
+                throw parseError
+              }
+            }
+          })
+      }
+    },
+  }))
+  .views(store => ({
+    get reservationSections() {
+      if (store.tripStore) {
+        const reservations: ReservationSnapshot[] = (
+          Array.from(store.reservation.values()) as ReservationSnapshot[]
+        ).concat(
+          Array.from(store.tripStore.accomodation.values()).map(acc => ({
+            id: `acc-${acc.id}`,
+            dateTimeISOString: acc.checkinStartTimeISOString,
+            type: 'accomodation',
+            title: acc.title,
+            link: acc.links.length > 0 ? acc.links[0].url : null,
+            localAppStorageFileUri: '',
+            serverFileUri: '',
+            accomodation: acc.id,
+          })),
+        )
+        return [{title: 'reservation', data: reservations}]
       }
     },
   }))

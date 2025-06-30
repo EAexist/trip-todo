@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react/macro'
-import {Divider, Header, Icon, ListItem, Text} from '@rneui/themed'
-import {FC, RefObject, useCallback, useEffect, useRef, useState} from 'react'
+import {Divider, Icon, ListItem, Text} from '@rneui/themed'
+import {FC, RefObject, useCallback, useEffect, useRef} from 'react'
 import {
   DefaultSectionT,
   FlatList,
@@ -18,16 +18,17 @@ import {
   GestureHandlerRootViewWrapper,
   useNavigationBottomSheet,
 } from '@/components/BottomSheetModal'
-import {AccomodationTodo, CompleteTodo} from '@/components/Todo'
-import {TodoBottomSheet} from '@/components/Todo/TodoModal'
 import ListSubheader from '@/components/ListSubheader'
 import {Screen} from '@/components/Screen'
+import {AccomodationTodo, CompleteTodo} from '@/components/Todo'
+import {TodoBottomSheet} from '@/components/Todo/TodoModal'
 import {useStores} from '@/models'
 import {Todo} from '@/models/Todo'
-import {AppStackScreenProps, useNavigate} from '@/navigators'
+import {useNavigate} from '@/navigators'
 // import BottomSheet from '@gorhom/bottom-sheet'
+import {MainTabScreenProps} from '@/navigators/MainTabNavigator'
 import {useHeader} from '@/utils/useHeader'
-import BottomSheet, {BottomSheetModalProvider} from '@gorhom/bottom-sheet'
+import BottomSheet from '@gorhom/bottom-sheet'
 import {Observer, observer} from 'mobx-react-lite'
 
 // const SettingsDialog: FC = ({ visible6: boolean }) => {
@@ -56,7 +57,7 @@ import {Observer, observer} from 'mobx-react-lite'
 //   )
 // }
 
-export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
+export const TodolistScreen: FC<MainTabScreenProps<'Todolist'>> = observer(
   ({route}) => {
     const rootStore = useStores()
     const {tripStore} = rootStore
@@ -65,7 +66,7 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
 
     useEffect(() => {
       rootStore.fetchTrip(tripId)
-    }, [])
+    }, [tripId])
 
     const renderItem: SectionListRenderItem<Todo, DefaultSectionT> = ({
       item,
@@ -124,38 +125,38 @@ export const TodolistScreen: FC<AppStackScreenProps<'Todolist'>> = observer(
       rightContainerStyle: styles.headerRightContainer,
     })
     return (
-      <GestureHandlerRootViewWrapper>
-        <Screen>
-          <ScrollView>
+      //   <GestureHandlerRootViewWrapper>
+      <Screen>
+        <ScrollView>
+          <View>
+            <SectionList
+              sections={tripStore.incompleteTrip}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+              renderSectionHeader={renderSectionHeader}
+            />
+          </View>
+          <Divider />
+          {tripStore.completedTrip.length > 0 && (
             <View>
+              <View style={styles.sectionHeaderContainer}>
+                <Text h3 style={styles.sectionHeaderText}>
+                  <Trans id="completedTasksTitle">완료했어요</Trans>
+                </Text>
+              </View>
               <SectionList
-                sections={tripStore.incompleteTrip}
+                sections={tripStore.completedTrip}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
                 renderSectionHeader={renderSectionHeader}
               />
             </View>
-            <Divider />
-            {tripStore.completedTrip.length > 0 && (
-              <View>
-                <View style={styles.sectionHeaderContainer}>
-                  <Text h3 style={styles.sectionHeaderText}>
-                    <Trans id="completedTasksTitle">완료했어요</Trans>
-                  </Text>
-                </View>
-                <SectionList
-                  sections={tripStore.completedTrip}
-                  keyExtractor={item => item.title}
-                  renderItem={renderItem}
-                  renderSectionHeader={renderSectionHeader}
-                />
-              </View>
-            )}
-          </ScrollView>
-          <SettingsDropDownBottomSheet ref={settingsDropDownBottomSheetRef} />
-          <TodoBottomSheet />
-        </Screen>
-      </GestureHandlerRootViewWrapper>
+          )}
+        </ScrollView>
+        <SettingsDropDownBottomSheet ref={settingsDropDownBottomSheetRef} />
+        <TodoBottomSheet />
+      </Screen>
+      //   </GestureHandlerRootViewWrapper>
     )
   },
 )

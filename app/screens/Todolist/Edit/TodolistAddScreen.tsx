@@ -25,7 +25,8 @@ export const TodolistAddScreen: FC<TodolistAddScreenProps> = observer(
         nextButtonProps={{
           title: '확인',
           navigateProps: {
-            name: 'Todolist',
+            name: 'Main',
+            params: {screen: 'Todolist'},
           },
         }}
       />

@@ -15,6 +15,8 @@ declare module '@rneui/themed' {
     transparent: string
     light0: string
     light1: string
+    active: string
+    inactive: string
   }
   export interface ListItemProps {
     useDisabledStyle?: boolean
