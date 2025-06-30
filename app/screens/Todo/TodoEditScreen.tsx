@@ -97,8 +97,8 @@ export const CustomTodoEditScreen: FC<{
   const [title, setTitle] = useState(todo.title)
   const [isConfirmed, setIsConfirmed] = useState(false)
   // const [category, setCategory] = useState(todo.category)
-  const categoryBottomSheetModalRef = useRef<BottomSheet>(null)
-  const iconBottomSheetModalRef = useRef<BottomSheet>(null)
+  const categoryBottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const iconBottomSheetModalRef = useRef<BottomSheetModal>(null)
   const {navigateWithTrip} = useNavigate()
   const {tripStore} = useStores()
 
@@ -117,7 +117,7 @@ export const CustomTodoEditScreen: FC<{
   }, [todo, title, setIsConfirmed])
 
   const handleIconPress = useCallback(() => {
-    iconBottomSheetModalRef.current?.expand()
+    iconBottomSheetModalRef.current?.present()
   }, [iconBottomSheetModalRef])
 
   const handleNotePress = useCallback(() => {
@@ -128,7 +128,7 @@ export const CustomTodoEditScreen: FC<{
   }, [navigateWithTrip, todo.id])
 
   const handleCategoryPress = useCallback(() => {
-    categoryBottomSheetModalRef.current?.expand()
+    categoryBottomSheetModalRef.current?.present()
   }, [categoryBottomSheetModalRef])
 
   const iconMenu = [

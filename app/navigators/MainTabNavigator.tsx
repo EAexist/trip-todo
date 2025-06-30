@@ -90,7 +90,7 @@ export const MainTabNavigator: FC<AppStackScreenProps<'Main'>> = ({route}) => {
         initialParams={{tripId: tripId}}
         component={MainScreens.Todolist}
         options={{
-          tabBarLabel: '할 일 목록',
+          tabBarLabel: '할 일',
           tabBarIcon: ({focused}) => (
             <Icon
               name="checklist"
@@ -106,7 +106,7 @@ export const MainTabNavigator: FC<AppStackScreenProps<'Main'>> = ({route}) => {
         initialParams={{tripId: tripId}}
         component={MainScreens.Reservation}
         options={{
-          tabBarLabel: '내 예약',
+          tabBarLabel: '예약',
           tabBarIcon: ({focused}) => (
             <Icon
               name="qr-code"

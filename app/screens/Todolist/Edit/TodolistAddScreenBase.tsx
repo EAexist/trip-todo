@@ -92,7 +92,7 @@ export const TodolistAddScreenBase = observer(
     )
 
     /* BottomSheet */
-    const bottomSheetRef = useRef<BottomSheet>(null)
+    const bottomSheetRef = useRef<BottomSheetModal>(null)
 
     const renderSectionHeader = useCallback(
       ({section: {category, title}}: {section: DefaultSectionT}) => (
@@ -106,7 +106,7 @@ export const TodolistAddScreenBase = observer(
                   title: '예약 할 일 추가하기',
                   subtitle: '항공권 · 기차표 · 입장권',
                   onPress: () => {
-                    bottomSheetRef.current?.expand()
+                    bottomSheetRef.current?.present()
                   },
                 }
               : {
@@ -157,7 +157,7 @@ export const TodolistAddScreenBase = observer(
 const ReservationTypeDropDownBottomSheet = ({
   ref,
 }: {
-  ref: RefObject<BottomSheet | null>
+  ref: RefObject<BottomSheetModal | null>
 }) => {
   const {handleAddTodo} = useHandleAddTodo()
 

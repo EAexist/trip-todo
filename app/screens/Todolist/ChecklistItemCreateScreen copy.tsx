@@ -29,8 +29,8 @@
 //     const [note, setNote] = useState('')
 //     const [title, setTitle] = useState('')
 //     const [category, setCategory] = useState('')
-//     const categoryBottomSheetModalRef = useRef<BottomSheet>(null)
-//     const iconBottomSheetModalRef = useRef<BottomSheet>(null)
+//     const categoryBottomSheetModalRef = useRef<BottomSheetModal>(null)
+//     const iconBottomSheetModalRef = useRef<BottomSheetModal>(null)
 //     const {navigateWithTrip} = useNavigate()
 
 //     const handleCompletePress = useCallback(() => {

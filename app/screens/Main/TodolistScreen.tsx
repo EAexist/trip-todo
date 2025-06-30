@@ -15,7 +15,6 @@ import {
 //
 import {
   BottomSheetModal,
-  GestureHandlerRootViewWrapper,
   useNavigationBottomSheet,
 } from '@/components/BottomSheetModal'
 import ListSubheader from '@/components/ListSubheader'
@@ -28,7 +27,6 @@ import {useNavigate} from '@/navigators'
 // import BottomSheet from '@gorhom/bottom-sheet'
 import {MainTabScreenProps} from '@/navigators/MainTabNavigator'
 import {useHeader} from '@/utils/useHeader'
-import BottomSheet from '@gorhom/bottom-sheet'
 import {Observer, observer} from 'mobx-react-lite'
 
 // const SettingsDialog: FC = ({ visible6: boolean }) => {
@@ -94,10 +92,10 @@ export const TodolistScreen: FC<MainTabScreenProps<'Todolist'>> = observer(
 
     /* SettingList */
 
-    const settingsDropDownBottomSheetRef = useRef<BottomSheet>(null)
+    const settingsDropDownBottomSheetRef = useRef<BottomSheetModal>(null)
 
     const handleSettingsButtonPress = useCallback(() => {
-      settingsDropDownBottomSheetRef.current?.expand()
+      settingsDropDownBottomSheetRef.current?.present()
     }, [settingsDropDownBottomSheetRef])
 
     useHeader({
@@ -164,7 +162,7 @@ export const TodolistScreen: FC<MainTabScreenProps<'Todolist'>> = observer(
 const SettingsDropDownBottomSheet = ({
   ref,
 }: {
-  ref: RefObject<BottomSheet | null>
+  ref: RefObject<BottomSheetModal | null>
 }) => {
   const {useActiveKey, handleBottomSheetModalChange, activate} =
     useNavigationBottomSheet(ref)

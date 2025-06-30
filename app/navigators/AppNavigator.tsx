@@ -27,6 +27,7 @@ import {LoginScreen} from '@/screens/Login/LoginScreen'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {MainTabNavigator, MainTabParamList} from './MainTabNavigator'
 import {GestureHandlerRootViewWrapper} from '@/components/BottomSheetModal'
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -268,24 +269,26 @@ export const AppNavigator = observer(function AppNavigator(
   return (
     <AppThemeProvider value={{themeScheme, setThemeContextOverride}}>
       <ThemeProvider theme={theme}>
-        {/* <GestureHandlerRootViewWrapper> */}
-        <NavigationContainer
-          ref={navigationRef}
-          theme={{
-            ...navigationTheme,
-            colors: {
-              ...navigationTheme.colors,
-              background: 'white',
-            },
-          }}
-          {...props}>
-          <FabProvider>
-            <Screens.ErrorBoundary catchErrors={Config.catchErrors}>
-              <AppStack />
-            </Screens.ErrorBoundary>
-          </FabProvider>
-        </NavigationContainer>
-        {/* </GestureHandlerRootViewWrapper> */}
+        <GestureHandlerRootViewWrapper>
+          <BottomSheetModalProvider>
+            <NavigationContainer
+              ref={navigationRef}
+              theme={{
+                ...navigationTheme,
+                colors: {
+                  ...navigationTheme.colors,
+                  background: 'white',
+                },
+              }}
+              {...props}>
+              <FabProvider>
+                <Screens.ErrorBoundary catchErrors={Config.catchErrors}>
+                  <AppStack />
+                </Screens.ErrorBoundary>
+              </FabProvider>
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootViewWrapper>
       </ThemeProvider>
     </AppThemeProvider>
   )

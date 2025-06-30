@@ -1,5 +1,5 @@
+import {useNavigate} from '@/navigators'
 import BottomSheet, {
-  BottomSheetModal as GorhomBottomSheetModal,
   BottomSheetBackdropProps,
   BottomSheetModalProps,
   BottomSheetView,
@@ -82,34 +82,31 @@ const BottomSheetBackdrop = (props: BottomSheetBackdropProps) => (
   />
 )
 
-export type BottomSheetModal = GorhomBottomSheetModal
+// export type BottomSheetModalType = GorhomBottomSheetModal
 
 export const BottomSheetModal = ({
   children,
   ref,
   ...props
-}: PropsWithChildren<BottomSheetModalProps & {ref: Ref<BottomSheetModal>}>) => {
+}: PropsWithChildren<BottomSheetModalProps & {ref: Ref<BottomSheet>}>) => {
   return (
-    <GorhomBottomSheetModal
+    <BottomSheet
       ref={ref}
       style={styles.sheetContainer}
       backgroundStyle={styles.sheetBackground}
       backdropComponent={BottomSheetBackdrop}
-      onChange={index => {
-        console.log(`BottomSheetModal Change ${index}`)
-      }}
       detached={true}
       bottomInset={12}
       enableDynamicSizing={true}
       enablePanDownToClose={true}
-      //   index={-1}
+      index={-1}
       {...props}
       // snapPoints={snapPoints}
     >
       <BottomSheetView style={styles.contentContainer}>
         {children}
       </BottomSheetView>
-    </GorhomBottomSheetModal>
+    </BottomSheet>
   )
 }
 
