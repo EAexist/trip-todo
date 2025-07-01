@@ -25,6 +25,7 @@ import {
 } from 'expo-file-system'
 import {
   type ApiConfig,
+  GoogleUserDTO,
   TodoDTO,
   TodoPresetDTO,
   type TripDTO,
@@ -100,7 +101,6 @@ export interface CreateTodoRequest {
   category?: string
   presetId?: number
 }
-
 export class Api {
   apisauce: ApisauceInstance
   config: ApiConfig
@@ -226,7 +226,7 @@ export class Api {
   ): Promise<ApiResult<UserStoreSnapshot>> {
     const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
       `auth/kakao`,
-      profile,
+      {idToken, profile},
     )
     return handleResponse<UserStoreSnapshot>(response)
   }
@@ -237,12 +237,11 @@ export class Api {
    * @returns {...Trip} - Trip.
    */
   async googleLogin(
-    idToken: string,
-    data: User,
+    googleUser: GoogleUserDTO,
   ): Promise<ApiResult<UserStoreSnapshot>> {
     const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
       `auth/google`,
-      data,
+      googleUser,
     )
     return handleResponse<UserStoreSnapshot>(response)
   }

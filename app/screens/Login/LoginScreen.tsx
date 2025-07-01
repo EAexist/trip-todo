@@ -1,9 +1,9 @@
-import {FC, useCallback} from 'react'
+import {FC, useCallback, useEffect} from 'react'
 //
 import {Container} from '@/components/Fab'
 import {Screen} from '@/components/Screen'
 import {AppStackScreenProps} from '@/navigators'
-import {api} from '@/services/api'
+import {api, GoogleUserDTO} from '@/services/api'
 import {useHeader} from '@/utils/useHeader'
 import {
   GoogleSignin,
@@ -162,25 +162,33 @@ const _signIn = async () => {
 export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
   const {userStore} = useStores()
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '428235231680-j847tt5013n612lk39j8rjp6gih61fsd.apps.googleusercontent.com',
+    })
+  }, [])
+
   const handleKakaoLoginPress = useCallback(async () => {
     console.log(`[handleKakaoLoginPress]`)
-    // const token: KakaoOAuthToken =
-    await login().then(token =>
-      console.log(`[handleKakaoLoginPress] token=${token}`),
-    )
-    // console.log(`[handleKakaoLoginPress] token=${token}`)
+    const token: KakaoOAuthToken = await login()
+    // .then(token =>
+    //   console.log(`[handleKakaoLoginPress] token=${token}`),
+    // )
+    console.log(`[handleKakaoLoginPress] token=${token}`)
     const profile = await getProfile()
     console.log(`[handleKakaoLoginPress] profile=${profile}`)
-    // await userStore.kakaoLogin(token.idToken, profile)
+    await userStore.kakaoLogin(token.idToken, profile)
   }, [])
 
   const handleGoogleLoginPress = useCallback(async () => {
     try {
       const {type, data} = await GoogleSignin.signIn()
       if (type === 'success') {
-        console.log({data})
-        const tokens = await GoogleSignin.getTokens()
-        await userStore.googleLogin(tokens.idToken, data)
+        // console.log(JSON.stringify(data))
+        // const token = await GoogleSignin.getTokens()
+        // console.log(JSON.stringify(token))
+        await userStore.googleLogin(data.user)
       } else {
         // sign in was cancelled by user
         setTimeout(() => {
@@ -227,7 +235,7 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
         <GoogleLoginButton onPress={handleGoogleLoginPress} />
         <GoogleLoginButton
           onPress={() => {
-            userStore.setAuthToken('hello')
+            userStore.setProp('id', 0)
           }}
         />
       </Container>

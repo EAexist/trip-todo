@@ -1,14 +1,13 @@
-import {api} from '@/services/api'
+import {api, GoogleUserDTO} from '@/services/api'
 import {KakaoProfile} from '@react-native-seoul/kakao-login'
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
 import {withSetPropAction} from './helpers/withSetPropAction'
-import {User} from '@react-native-google-signin/google-signin'
 
 export const UserStoreModel = types
   .model('UserStore')
   .props({
-    authToken: types.maybe(types.string),
-    id: types.maybe(types.number),
+    // authToken: types.maybe(types.string),
+    id: types.maybeNull(types.number),
     nickname: types.maybe(types.string),
     trip: types.array(types.string),
   })
@@ -16,18 +15,17 @@ export const UserStoreModel = types
   .views(store => ({
     get isAuthenticated() {
       //   return true
-      return !!store.authToken
+      return !!store.id
     },
   }))
   .actions(store => ({
-    setAuthToken(value?: string) {
-      store.authToken = value
-    },
-    logout() {
-      store.authToken = undefined
-    },
+    // setAuthToken(value?: string) {
+    //   store.authToken = value
+    // },
+    // logout() {
+    //   store.authToken = undefined
+    // },
     setUser(user: UserStoreSnapshot) {
-      store.setProp('authToken', user.authToken)
       store.setProp('id', user.id)
       store.setProp('nickname', user.nickname)
       store.setProp('trip', user.trip)
@@ -47,8 +45,9 @@ export const UserStoreModel = types
         }
       })
     },
-    async googleLogin(idToken: string, data: User) {
-      api.googleLogin(idToken, data).then(response => {
+    async googleLogin(googleUser: GoogleUserDTO) {
+      api.googleLogin(googleUser).then(response => {
+        // console.log(`[api.googleLogin] response=${JSON.stringify(response)}`)
         if (response.kind == 'ok') {
           store.setUser(response.data)
         }
