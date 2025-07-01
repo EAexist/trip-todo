@@ -10,7 +10,11 @@ import {
   isErrorWithCode,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import {getProfile, login} from '@react-native-seoul/kakao-login'
+import {
+  getProfile,
+  KakaoOAuthToken,
+  login,
+} from '@react-native-seoul/kakao-login'
 import {Button, ButtonProps, Image, Text} from '@rneui/themed'
 import * as appIcon from 'assets/images/app/app-icon.png'
 import * as g from 'assets/images/third-party/g.png'
@@ -159,9 +163,15 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
   const {userStore} = useStores()
 
   const handleKakaoLoginPress = useCallback(async () => {
-    const token = await login()
+    console.log(`[handleKakaoLoginPress]`)
+    // const token: KakaoOAuthToken =
+    await login().then(token =>
+      console.log(`[handleKakaoLoginPress] token=${token}`),
+    )
+    // console.log(`[handleKakaoLoginPress] token=${token}`)
     const profile = await getProfile()
-    await userStore.kakaoLogin(token.idToken, profile)
+    console.log(`[handleKakaoLoginPress] profile=${profile}`)
+    // await userStore.kakaoLogin(token.idToken, profile)
   }, [])
 
   const handleGoogleLoginPress = useCallback(async () => {

@@ -15,8 +15,8 @@ export const UserStoreModel = types
   .actions(withSetPropAction)
   .views(store => ({
     get isAuthenticated() {
-      return true
-      //   return !!store.authToken
+      //   return true
+      return !!store.authToken
     },
   }))
   .actions(store => ({
@@ -35,7 +35,13 @@ export const UserStoreModel = types
   }))
   .actions(store => ({
     async kakaoLogin(idToken: string, profile: KakaoProfile) {
+      console.log(
+        `[UserStore.kakaoLogin] idToken=${idToken} profile=${JSON.stringify(profile)}`,
+      )
       api.kakaoLogin(idToken, profile).then(response => {
+        console.log(
+          `[UserStore.kakaoLogin] response=${response.kind} ${JSON.stringify(response)}`,
+        )
         if (response.kind == 'ok') {
           store.setUser(response.data)
         }
