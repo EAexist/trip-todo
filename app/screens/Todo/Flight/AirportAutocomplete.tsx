@@ -24,7 +24,7 @@ const AirportSearchResultListItem: FC<{data: GooglePlaceData}> = ({data}) => {
       avatarProps={{
         title: getFlagEmoji('KR'),
         size: 35,
-        iconStyle: {fontFamily: 'tossface'},
+        iconStyle: {fontFamily: 'Tossface'},
       }}
       title={data.structured_formatting.main_text}
       subtitle={data.structured_formatting.secondary_text

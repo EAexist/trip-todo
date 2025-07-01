@@ -32,7 +32,9 @@ export const Avatar = ({
 
 const styles = StyleSheet.create({
   titleStyle: {
-    fontFamily: 'tossface',
+    fontFamily: 'Tossface',
+    textAlign: 'center',
+    overflow: 'hidden',
   },
 })
 
