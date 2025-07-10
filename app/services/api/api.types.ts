@@ -2,6 +2,7 @@ import {AccomodationItemSnapshotIn} from '@/models/AccomodationItem'
 import {DestinationSnapshotIn} from '@/models/Destination'
 import {PresetTodoContentSnapshotIn, Todo, TodoSnapshotIn} from '@/models/Todo'
 import {TripStoreSnapshot, Preset, TripStore} from '@/models/TripStore'
+import {UserStoreSnapshot} from '@/models/UserStore'
 import {User} from '@react-native-google-signin/google-signin'
 import {ApisauceConfig} from 'apisauce'
 import {getSnapshot} from 'mobx-state-tree'
@@ -47,6 +48,23 @@ export type GoogleUserDTO = User['user']
 
 export interface DestinationDTO extends Omit<DestinationSnapshotIn, 'id'> {
   id?: number
+}
+
+export interface UserAccountDTO extends Omit<UserStoreSnapshot, 'id' | 'trip'> {
+  id?: number
+  trip: number[]
+}
+
+export const mapToUserAccount: (
+  userAccountDTO: UserAccountDTO,
+) => UserStoreSnapshot = userAccountDTO => {
+  if (userAccountDTO.id)
+    return {
+      ...userAccountDTO,
+      id: userAccountDTO.id?.toString(),
+      trip: userAccountDTO.trip.map(trip => trip.toString()),
+    }
+  else throw Error
 }
 
 export const mapToDestinationDTO: (

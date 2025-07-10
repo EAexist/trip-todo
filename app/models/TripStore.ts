@@ -47,6 +47,7 @@ export const TripStoreModel = types
   .model('TripStore')
   .props({
     id: types.identifier,
+    isInitialized: false,
     title: '',
     startDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
     endDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
@@ -494,6 +495,10 @@ export const TripStoreModel = types
     },
   }))
   .actions(store => ({
+    async initialize() {
+      store.setProp('isInitialized', true)
+      store.patch()
+    },
     async completeAndPatchTodo(todo: Todo) {
       todo.complete()
       store.patchTodo(todo).then(todo => {

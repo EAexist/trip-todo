@@ -1,5 +1,5 @@
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
-import {UserStoreModel} from './UserStore'
+import {UserStoreModel, UserStoreSnapshot} from './UserStore'
 import {TripStoreModel, TripStoreSnapshot} from './TripStore'
 import {TodoModel} from './Todo'
 import {ReservationStoreModel} from './ReservationStore'
@@ -12,7 +12,7 @@ import {api} from '@/services/api'
 export const RootStoreModel = types
   .model('RootStore')
   .props({
-    userStore: types.optional(UserStoreModel, {}),
+    userStore: types.optional(UserStoreModel, {id: null}),
     tripStore: types.optional(TripStoreModel, {id: ''}),
     reservationStore: types.optional(ReservationStoreModel, {}),
     //   reservationStore: types.maybe(ReservationStoreModel),
@@ -32,10 +32,23 @@ export const RootStoreModel = types
     }),
   })
   .actions(withSetPropAction)
+  //   .actions(rootStore => ({
+  //     fetchUserAccount: async () => {
+  //       console.log('[RootStore] fetchUser()')
+  //       if (rootStore.userStore.id) {
+  //         const response = await api.getUserAccount(rootStore.userStore.id)
+  //         if (response.kind === 'ok') {
+  //           rootStore.setProp('userStore', response.data as UserStoreSnapshot)
+  //         } else {
+  //           console.error(`Error fetching User: ${JSON.stringify(response)}`)
+  //         }
+  //       }
+  //     },
+  //   }))
   .actions(rootStore => ({
-    fetchTrip: async (tripid: string) => {
-      console.log('[RootStore] fetchTrip()')
-      const response = await api.getTrip(tripid)
+    fetchTrip: async (tripId: string) => {
+      console.log(`[RootStore.fetchTrip] tripId=${tripId}`)
+      const response = await api.getTrip(tripId)
       if (response.kind === 'ok') {
         rootStore.setProp('tripStore', response.data as TripStoreSnapshot)
       } else {
@@ -44,13 +57,14 @@ export const RootStoreModel = types
     },
     async createTrip() {
       console.log('[RootStore] createTrip()')
-      await api.createTrip().then(response => {
+      api.createTrip().then(async response => {
         console.log(
           `[RootStore] createTrip() response=${JSON.stringify(response)}`,
         )
         if (response.kind === 'ok') {
           console.log('changed')
           rootStore.setProp('tripStore', response.data as TripStoreSnapshot)
+          await rootStore.userStore.fetchUserAccount()
         }
       })
     },

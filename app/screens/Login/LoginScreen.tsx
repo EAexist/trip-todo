@@ -22,6 +22,7 @@ import * as kakaoSymbol from 'assets/images/third-party/kakao-symbol.svg'
 import {observer} from 'mobx-react-lite'
 import {ImageSourcePropType, Platform, StyleSheet, View} from 'react-native'
 import {useStores} from '@/models'
+import {loadString, saveString, storage} from '@/utils/storage'
 
 const LoginButton: FC<ButtonProps & {symbolSource: ImageSourcePropType}> = ({
   symbolSource,
@@ -162,6 +163,10 @@ const _signIn = async () => {
 export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
   const {userStore} = useStores()
 
+  //   useEffect(() => {
+  //     const googleIdToken = getIdToken()
+  //   }, [])
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -184,11 +189,11 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
   const handleGoogleLoginPress = useCallback(async () => {
     try {
       const {type, data} = await GoogleSignin.signIn()
-      if (type === 'success') {
-        // console.log(JSON.stringify(data))
-        // const token = await GoogleSignin.getTokens()
-        // console.log(JSON.stringify(token))
-        await userStore.googleLogin(data.user)
+      const idToken = data?.idToken
+      if (type === 'success' && !!data.idToken) {
+        userStore.googleLogin(data.user).then(() => {
+          saveString('googleIdToken', data?.idToken as string)
+        })
       } else {
         // sign in was cancelled by user
         setTimeout(() => {
@@ -235,10 +240,18 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
         <GoogleLoginButton onPress={handleGoogleLoginPress} />
         <GoogleLoginButton
           onPress={() => {
-            userStore.setProp('id', 0)
+            userStore.setProp('id', '0')
           }}
         />
       </Container>
     </Screen>
   )
 })
+
+const saveIdToken = async (idToken: string) => {
+  saveString('googleIdToken', idToken)
+}
+
+const getIdToken = async () => {
+  return loadString('googleIdToken')
+}

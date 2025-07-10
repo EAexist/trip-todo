@@ -20,6 +20,7 @@ export const TripTitleSettingScreen: FC = () => {
       inputProps={{
         label: `여행 이름`,
         placeholder: `여행 이름`,
+        autoFocus: true,
       }}
       title={`여행의 이름을 정해주세요`}
       onConfirm={handleNextPress}

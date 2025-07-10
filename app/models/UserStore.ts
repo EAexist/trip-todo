@@ -7,7 +7,7 @@ export const UserStoreModel = types
   .model('UserStore')
   .props({
     // authToken: types.maybe(types.string),
-    id: types.maybeNull(types.number),
+    id: types.maybeNull(types.string),
     nickname: types.maybe(types.string),
     trip: types.array(types.string),
   })
@@ -15,7 +15,15 @@ export const UserStoreModel = types
   .views(store => ({
     get isAuthenticated() {
       //   return true
+      console.log(`[UserStore.isAuthenticated] store.id=${store.id}`)
       return !!store.id
+    },
+  }))
+  .actions(store => ({
+    setUser(user: UserStoreSnapshot) {
+      store.setProp('id', user.id)
+      store.setProp('nickname', user.nickname)
+      store.setProp('trip', user.trip)
     },
   }))
   .actions(store => ({
@@ -25,13 +33,31 @@ export const UserStoreModel = types
     // logout() {
     //   store.authToken = undefined
     // },
-    setUser(user: UserStoreSnapshot) {
-      store.setProp('id', user.id)
-      store.setProp('nickname', user.nickname)
-      store.setProp('trip', user.trip)
+    login(user: UserStoreSnapshot) {
+      store.setUser(user)
+      if (!!store.id) {
+        console.log(`[UserStore.login] !!store.id=${!!store.id}`)
+        api.authenticate(store.id.toString())
+      }
+      //   console.log(`[UserStore.login] end`)
     },
   }))
   .actions(store => ({
+    // async localLogin() {
+    //     const user: UserStoreSnapshot =
+    //     store.setUser()
+    // },
+    fetchUserAccount: async () => {
+      const response = await api.getUserAccount()
+      if (response.kind === 'ok') {
+        console.log(
+          `[UserStore.fetchUserAccount] response=${JSON.stringify(response.data)}`,
+        )
+        store.setUser(response.data)
+      } else {
+        console.error(`Error fetching User: ${JSON.stringify(response)}`)
+      }
+    },
     async kakaoLogin(idToken: string, profile: KakaoProfile) {
       console.log(
         `[UserStore.kakaoLogin] idToken=${idToken} profile=${JSON.stringify(profile)}`,
@@ -40,18 +66,23 @@ export const UserStoreModel = types
         console.log(
           `[UserStore.kakaoLogin] response=${response.kind} ${JSON.stringify(response)}`,
         )
-        if (response.kind == 'ok') {
-          store.setUser(response.data)
+        if (response.kind === 'ok') {
+          store.login(response.data)
         }
       })
     },
     async googleLogin(googleUser: GoogleUserDTO) {
       api.googleLogin(googleUser).then(response => {
-        // console.log(`[api.googleLogin] response=${JSON.stringify(response)}`)
+        console.log(`[api.googleLogin] response=${JSON.stringify(response)}`)
         if (response.kind == 'ok') {
-          store.setUser(response.data)
+          store.login(response.data)
         }
       })
+    },
+  }))
+  .views(store => ({
+    get currentTrip() {
+      return store.trip[store.trip.length - 1]
     },
   }))
 

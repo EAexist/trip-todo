@@ -3,7 +3,6 @@ import BottomSheetModal, {
   GestureHandlerRootViewWrapper,
   useNavigationBottomSheet,
 } from '@/components/BottomSheetModal'
-import * as Fab from '@/components/Fab'
 import ContentTitle from '@/components/Layout/Content'
 import ListSubheader from '@/components/ListSubheader'
 import {AddPresetTodo, AddTodo, TodoBase} from '@/components/Todo'
@@ -14,7 +13,7 @@ import {useNavigate} from '@/navigators'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {ListItem} from '@rneui/themed'
 import {Observer, observer} from 'mobx-react-lite'
-import {RefObject, useCallback, useEffect, useRef} from 'react'
+import {ReactNode, RefObject, useCallback, useEffect, useRef} from 'react'
 import {
   DefaultSectionT,
   FlatList,
@@ -29,8 +28,16 @@ import CheckListEditScreenBase, {
 
 interface TodolistAddScreenBaseProps
   extends Pick<CheckListEditScreenBaseProps, 'title' | 'instruction'> {
-  nextButtonProps: Fab.NextButtonProps
+  fab: ReactNode
   tripId: string
+}
+
+export const useAddFlaggedPreset = () => {
+  const {tripStore} = useStores()
+  const addFlaggedPreset = useCallback(async () => {
+    await tripStore.addFlaggedPreset()
+  }, [tripStore])
+  return addFlaggedPreset
 }
 
 export const useHandleAddTodo = () => {
@@ -53,12 +60,7 @@ export const useHandleAddTodo = () => {
 }
 
 export const TodolistAddScreenBase = observer(
-  ({
-    title,
-    instruction,
-    nextButtonProps,
-    tripId,
-  }: TodolistAddScreenBaseProps) => {
+  ({title, instruction, fab, tripId}: TodolistAddScreenBaseProps) => {
     const rootStore = useStores()
     const {tripStore} = rootStore
 
@@ -128,9 +130,6 @@ export const TodolistAddScreenBase = observer(
         item.todo ? `todo-${item.todo.id}` : `preset-${item.preset.item.id}`,
       [],
     )
-    const handleNextPress = useCallback(async () => {
-      await tripStore.addFlaggedPreset()
-    }, [tripStore])
 
     return (
       <GestureHandlerRootViewWrapper>
@@ -141,12 +140,7 @@ export const TodolistAddScreenBase = observer(
           renderSectionHeader={renderSectionHeader}
           sections={tripStore.todolistWithPreset}
           keyExtractor={keyExtractor}>
-          <Fab.Container>
-            <Fab.NextButton
-              promiseBeforeNavigate={handleNextPress}
-              {...nextButtonProps}
-            />
-          </Fab.Container>
+          {fab}
           <ReservationTypeDropDownBottomSheet ref={bottomSheetRef} />
         </CheckListEditScreenBase>
       </GestureHandlerRootViewWrapper>

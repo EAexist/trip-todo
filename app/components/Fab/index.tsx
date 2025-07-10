@@ -122,7 +122,6 @@ export const GoBackButton: FC<
   return (
     <NavigateButtonBase
       title={props?.title || '확인'}
-      uppercase
       navigate={navigate}
       {...props}
     />

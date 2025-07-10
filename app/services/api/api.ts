@@ -29,11 +29,13 @@ import {
   TodoDTO,
   TodoPresetDTO,
   type TripDTO,
+  UserAccountDTO,
   mapToPresetTodo,
   mapToTodo,
   mapToTodoDTO,
   mapToTrip,
   mapToTripDTO,
+  mapToUserAccount,
 } from './api.types'
 import {GeneralApiProblem, getGeneralApiProblem} from './apiProblem'
 
@@ -132,6 +134,10 @@ export class Api {
     // })
   }
 
+  authenticate(userId: string) {
+    this.apisauce.setBaseURL(`${this.config.baseURL}/user/${userId}`)
+  }
+
   /**
    * Gets a Trip data with given id.
    * @returns {kind} - Response Status.
@@ -224,11 +230,17 @@ export class Api {
     idToken: string,
     profile: KakaoProfile,
   ): Promise<ApiResult<UserStoreSnapshot>> {
-    const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
+    const response: ApiResponse<UserAccountDTO> = await this.apisauce.post(
       `auth/kakao`,
       {idToken, profile},
     )
-    return handleResponse<UserStoreSnapshot>(response)
+    const userAccountResponse = handleResponse<UserAccountDTO>(response)
+    return userAccountResponse.kind === 'ok'
+      ? {
+          kind: 'ok',
+          data: mapToUserAccount(userAccountResponse.data),
+        }
+      : userAccountResponse
   }
 
   /**
@@ -239,11 +251,17 @@ export class Api {
   async googleLogin(
     googleUser: GoogleUserDTO,
   ): Promise<ApiResult<UserStoreSnapshot>> {
-    const response: ApiResponse<UserStoreSnapshot> = await this.apisauce.post(
+    const response: ApiResponse<UserAccountDTO> = await this.apisauce.post(
       `auth/google`,
       googleUser,
     )
-    return handleResponse<UserStoreSnapshot>(response)
+    const userAccountResponse = handleResponse<UserAccountDTO>(response)
+    return userAccountResponse.kind === 'ok'
+      ? {
+          kind: 'ok',
+          data: mapToUserAccount(userAccountResponse.data),
+        }
+      : userAccountResponse
   }
   /**
    * Gets a Trip data with given id.
@@ -255,6 +273,22 @@ export class Api {
     return handleResponse<void>(response)
   }
 
+  /**
+   * Gets a Trip data with given id.
+   * @returns {kind} - Response Status.
+   * @returns {...Trip} - Trip.
+   */
+  async getUserAccount(): Promise<ApiResult<UserStoreSnapshot>> {
+    const response: ApiResponse<UserAccountDTO> = await this.apisauce.get(``)
+
+    const userDTO = handleResponse<UserAccountDTO>(response)
+    return userDTO.kind === 'ok'
+      ? {
+          kind: 'ok',
+          data: mapToUserAccount(userDTO.data),
+        }
+      : userDTO
+  }
   /* Trip & Trip.todolist CRUD APIS */
 
   /**
