@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Button, ButtonProps, Image } from '@rneui/themed'
 import { ImageSourcePropType, Platform, StyleSheet } from 'react-native'
 
-export const LoginButton: FC<ButtonProps & { symbolSource: ImageSourcePropType }> = ({
+export const LoginButton: FC<ButtonProps & { symbolSource?: ImageSourcePropType }> = ({
     symbolSource,
     title,
     buttonStyle,
@@ -13,12 +13,15 @@ export const LoginButton: FC<ButtonProps & { symbolSource: ImageSourcePropType }
         buttonStyle={[$loginButtonStyle.buttonStyle, buttonStyle]}
         titleStyle={[$loginButtonStyle.titleStyle, titleStyle]}
         {...props}>
-        <Image
-            source={symbolSource}
-            containerStyle={$loginButtonStyle.symbolContainerStyle}
-            style={$loginButtonStyle.symbolStyle}
-            resizeMode={'contain'}
-        />
+        {
+            (symbolSource !== undefined) &&
+            <Image
+                source={symbolSource}
+                containerStyle={$loginButtonStyle.symbolContainerStyle}
+                style={$loginButtonStyle.symbolStyle}
+                resizeMode={'contain'}
+            />
+        }
         {title}
     </Button>
 )
@@ -44,6 +47,9 @@ const $loginButtonStyle = StyleSheet.create(
         }
         : {
             buttonStyle: {
+                height: 40,
+                borderRadius: 32,
+                paddingVertical: 2,
                 paddingHorizontal: 10,
                 paddingRight: 16,
             },

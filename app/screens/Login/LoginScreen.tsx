@@ -1,257 +1,70 @@
-import {FC, useCallback, useEffect} from 'react'
+import { FC, useCallback } from 'react'
 //
-import {Container} from '@/components/Fab'
-import {Screen} from '@/components/Screen'
-import {AppStackScreenProps} from '@/navigators'
-import {api, GoogleUserDTO} from '@/services/api'
-import {useHeader} from '@/utils/useHeader'
+import { Container } from '@/components/Fab'
+import { GoogleLoginButton } from '@/components/Login/GoogleLoginButton'
+import { LoginButton } from '@/components/Login/LoginButton'
+import { Screen } from '@/components/Screen'
+import { useStores } from '@/models'
+import { AppStackScreenProps } from '@/navigators'
+import { loadString, saveString } from '@/utils/storage'
+import { useHeader } from '@/utils/useHeader'
 import {
-  GoogleSignin,
-  isErrorWithCode,
-  statusCodes,
-} from '@react-native-google-signin/google-signin'
-import {
-  getProfile,
-  KakaoOAuthToken,
-  login,
+    getProfile,
+    KakaoOAuthToken,
+    login,
 } from '@react-native-seoul/kakao-login'
-import {Button, ButtonProps, Image, Text} from '@rneui/themed'
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { Image, Text } from '@rneui/themed'
 import * as appIcon from 'assets/images/app/app-icon.png'
-import * as g from 'assets/images/third-party/g.png'
-import * as kakaoSymbol from 'assets/images/third-party/kakao-symbol.svg'
-import {observer} from 'mobx-react-lite'
-import {ImageSourcePropType, Platform, StyleSheet, View} from 'react-native'
-import {useStores} from '@/models'
-import {loadString, saveString, storage} from '@/utils/storage'
-
-const LoginButton: FC<ButtonProps & {symbolSource: ImageSourcePropType}> = ({
-  symbolSource,
-  title,
-  buttonStyle,
-  titleStyle,
-  ...props
-}) => (
-  <Button
-    buttonStyle={[$loginButtonStyle.buttonStyle, buttonStyle]}
-    titleStyle={[$loginButtonStyle.titleStyle, titleStyle]}
-    {...props}>
-    <Image
-      source={symbolSource}
-      containerStyle={$loginButtonStyle.symbolContainerStyle}
-      style={$loginButtonStyle.symbolStyle}
-      resizeMode={'contain'}
-    />
-    {title}
-  </Button>
-)
-
-const $loginButtonStyle = StyleSheet.create(
-  Platform.OS === 'android'
-    ? {
-        buttonStyle: {
-          paddingHorizontal: 10,
-          paddingRight: 12,
-        },
-        titleStyle: {
-          flexGrow: 1,
-          fontSize: 14,
-        },
-        symbolContainerStyle: {
-          width: 20,
-          height: 20,
-          paddingLeft: 12,
-          paddingRight: 10,
-        },
-        symbolStyle: {width: 20, height: 20},
-      }
-    : {
-        buttonStyle: {
-          paddingHorizontal: 10,
-          paddingRight: 16,
-        },
-        titleStyle: {flexGrow: 1, fontSize: 14},
-        symbolContainerStyle: {
-          width: 20,
-          height: 20,
-          paddingLeft: 16,
-          paddingRight: 12,
-        },
-        symbolStyle: {width: 20, height: 20},
-      },
-)
-
-const KakaoLoginButton: FC<ButtonProps> = props => (
-  <LoginButton
-    title={'카카오로 시작하기'}
-    buttonStyle={$kakaoButtonStyle.buttonStyle}
-    titleStyle={$kakaoButtonStyle.titleStyle}
-    symbolSource={kakaoSymbol}
-    {...props}
-  />
-)
-
-const GoogleLoginButton: FC<ButtonProps> = props => (
-  <LoginButton
-    title={'구글로 시작하기'}
-    buttonStyle={$googleButtonStyle.buttonStyle}
-    titleStyle={$googleButtonStyle.titleStyle}
-    symbolSource={g}
-    {...props}
-  />
-)
-
-/* https://developers.kakao.com/docs/latest/ko/kakaosync/design-guide */
-const $kakaoButtonStyle = StyleSheet.create({
-  buttonStyle: {
-    backgroundColor: '#FEE500',
-    paddingVertical: 10,
-  },
-  titleStyle: {color: '#191919'},
-})
-
-/* https://developers.google.com/identity/branding-guidelines */
-const $googleButtonStyle = StyleSheet.create({
-  buttonStyle: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#747775',
-    borderWidth: 1,
-    paddingVertical: 10,
-  },
-  titleStyle: {color: '#1F1F1F'},
-})
-
-const _signIn = async () => {
-  try {
-    const {type, data} = await GoogleSignin.signIn()
-    if (type === 'success') {
-      console.log({data})
-      return data
-      // this.setState({userInfo: data, error: undefined})
-    } else {
-      // sign in was cancelled by user
-      setTimeout(() => {
-        console.log('cancelled')
-      }, 500)
-    }
-  } catch (error) {
-    if (isErrorWithCode(error)) {
-      console.log('error', error.message)
-      switch (error.code) {
-        case statusCodes.IN_PROGRESS:
-          // operation (eg. sign in) already in progress
-          console.log(
-            'in progress',
-            'operation (eg. sign in) already in progress',
-          )
-          break
-        // case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-        //   // android only
-        //   console.log('play services not available or outdated')
-        //   break
-        default:
-          console.log('Something went wrong: ', error.toString())
-      }
-      //   this.setState({
-      //     error,
-      //   })
-    } else {
-      alert(`an error that's not related to google sign in occurred`)
-    }
-  }
-}
+import { observer } from 'mobx-react-lite'
+import { Platform, View } from 'react-native'
 
 export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
-  const {userStore} = useStores()
+    const { userStore } = useStores()
 
-  //   useEffect(() => {
-  //     const googleIdToken = getIdToken()
-  //   }, [])
+    const handleKakaoLoginPress = useCallback(async () => {
+        console.log(`[handleKakaoLoginPress]`)
+        const token: KakaoOAuthToken = await login()
+        // .then(token =>
+        //   console.log(`[handleKakaoLoginPress] token=${token}`),
+        // )
+        console.log(`[handleKakaoLoginPress] token=${token}`)
+        const profile = await getProfile()
+        console.log(`[handleKakaoLoginPress] profile=${profile}`)
+        await userStore.kakaoLogin(token.idToken, profile)
+    }, [])
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '428235231680-j847tt5013n612lk39j8rjp6gih61fsd.apps.googleusercontent.com',
-    })
-  }, [])
+    useHeader({ backButtonShown: false })
 
-  const handleKakaoLoginPress = useCallback(async () => {
-    console.log(`[handleKakaoLoginPress]`)
-    const token: KakaoOAuthToken = await login()
-    // .then(token =>
-    //   console.log(`[handleKakaoLoginPress] token=${token}`),
-    // )
-    console.log(`[handleKakaoLoginPress] token=${token}`)
-    const profile = await getProfile()
-    console.log(`[handleKakaoLoginPress] profile=${profile}`)
-    await userStore.kakaoLogin(token.idToken, profile)
-  }, [])
-
-  const handleGoogleLoginPress = useCallback(async () => {
-    try {
-      const {type, data} = await GoogleSignin.signIn()
-      const idToken = data?.idToken
-      if (type === 'success' && !!data.idToken) {
-        userStore.googleLogin(data.user).then(() => {
-          saveString('googleIdToken', data?.idToken as string)
-        })
-      } else {
-        // sign in was cancelled by user
-        setTimeout(() => {
-          console.log('cancelled')
-        }, 500)
-      }
-    } catch (error) {
-      if (isErrorWithCode(error)) {
-        console.log('error', error.message)
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            console.log(
-              'in progress',
-              'operation (eg. sign in) already in progress',
-            )
-            break
-          // case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-          //   // android only
-          //   console.log('play services not available or outdated')
-          //   break
-          default:
-            console.log('Something went wrong: ', error.toString())
-        }
-        //   this.setState({
-        //     error,
-        //   })
-      } else {
-        alert(`an error that's not related to google sign in occurred`)
-      }
-    }
-  }, [])
-
-  useHeader({backButtonShown: false})
-
-  return (
-    <Screen>
-      <View style={{alignItems: 'center', padding: 64}}>
-        <Image source={appIcon} containerStyle={{}} style={{}} />
-        <Text style={{fontSize: 32, padding: 24}}>TRIP TODO</Text>
-      </View>
-      <Container fixed={false}>
-        <KakaoLoginButton onPress={handleKakaoLoginPress} />
-        <GoogleLoginButton onPress={handleGoogleLoginPress} />
-        <GoogleLoginButton
-          onPress={() => {
-            userStore.setProp('id', '0')
-          }}
-        />
-      </Container>
-    </Screen>
-  )
+    return (
+        <GoogleOAuthProvider clientId={process.env.GOOGLE_OAUTH_CLIENT_ID_WEB}>
+            <Screen>
+                <View style={{ alignItems: 'center', padding: 64 }}>
+                    <Image source={appIcon} containerStyle={{}} style={{}} />
+                    <Text style={{ fontSize: 32, padding: 24 }}>TRIP TODO</Text>
+                </View>
+                <Container fixed={false}>
+                    {/* <KakaoLoginButton onPress={handleKakaoLoginPress} /> */}
+                    <GoogleLoginButton />
+                    {
+                        Platform.OS === 'web' &&
+                        <LoginButton
+                            onPress={async () => {
+                                await userStore.guestLogin()
+                            }}
+                            title="로그인 없이 사용해보기"
+                        />
+                    }
+                </Container>
+            </Screen>
+        </GoogleOAuthProvider>
+    )
 })
 
 const saveIdToken = async (idToken: string) => {
-  saveString('googleIdToken', idToken)
+    saveString('googleIdToken', idToken)
 }
 
 const getIdToken = async () => {
-  return loadString('googleIdToken')
+    return loadString('googleIdToken')
 }
