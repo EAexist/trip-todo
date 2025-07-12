@@ -11,26 +11,25 @@ import {
     ReservationSnapshot,
     ReservationStoreSnapshot,
 } from '@/models/ReservationStore'
-import { PresetTodoContentSnapshotIn, TodoSnapshotIn } from '@/models/Todo'
-import { TripStore, TripStoreSnapshot } from '@/models/TripStore'
+import { TodoSnapshotIn } from '@/models/Todo'
+import { PresetSnapshotIn, TripStore, TripStoreSnapshot } from '@/models/TripStore'
 import { UserStoreSnapshot } from '@/models/UserStore'
-import { User } from '@react-native-google-signin/google-signin'
 import { KakaoProfile } from '@react-native-seoul/kakao-login'
 import { ApiResponse, ApisauceInstance, create } from 'apisauce'
 import {
-    uploadAsync,
     FileSystemUploadOptions,
-    FileSystemUploadType,
     FileSystemUploadResult,
+    FileSystemUploadType,
+    uploadAsync,
 } from 'expo-file-system'
 import {
     type ApiConfig,
     GoogleUserDTO,
+    PresetDTO,
     TodoDTO,
-    TodoPresetDTO,
     type TripDTO,
     UserAccountDTO,
-    mapToPresetTodo,
+    mapToPreset,
     mapToTodo,
     mapToTodoDTO,
     mapToTrip,
@@ -458,16 +457,16 @@ export class Api {
      */
     async getTodoPreset(
         id: string,
-    ): Promise<ApiResult<PresetTodoContentSnapshotIn[]>> {
-        const response: ApiResponse<TodoPresetDTO[]> = await this.apisauce.get(
+    ): Promise<ApiResult<PresetSnapshotIn[]>> {
+        const response: ApiResponse<PresetDTO[]> = await this.apisauce.get(
             `/trip/${id}/todoPreset`,
         )
-        const presetResponse = handleResponse<TodoPresetDTO[]>(response)
+        const presetResponse = handleResponse<PresetDTO[]>(response)
         return presetResponse.kind === 'ok'
             ? {
                 ...presetResponse,
                 data: presetResponse.data.map(presetDTO =>
-                    mapToPresetTodo(presetDTO),
+                    mapToPreset(presetDTO),
                 ),
             }
             : presetResponse

@@ -28,7 +28,7 @@ export async function setupRootStore(rootStore: RootStore) {
     let restoredState: RootStoreSnapshot | undefined | null
 
     try {
-        // storage.clear()
+        storage.clear()
         console.log('[setupRootStore]')
         // load the last known state from AsyncStorage
         restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ??
