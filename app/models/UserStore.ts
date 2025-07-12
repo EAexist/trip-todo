@@ -14,7 +14,6 @@ export const UserStoreModel = types
     .actions(withSetPropAction)
     .views(store => ({
         get isAuthenticated() {
-            //   return true
             console.log(`[UserStore.isAuthenticated] store.id=${store.id}`)
             return !!store.id
         },

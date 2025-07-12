@@ -15,6 +15,7 @@ import {
 import { withSetPropAction } from './helpers/withSetPropAction'
 import {
     CATEGORY_TO_TITLE,
+    LocationPairModel,
     PresetTodoContentModel,
     Todo,
     TodoModel,
@@ -57,6 +58,7 @@ export const TripStoreModel = types
         activeItem: types.maybeNull(types.reference(TodoModel)),
         accomodation: types.map(AccomodationItemModel),
         preset: types.map(types.array(PresetItemModel)),
+        recommendedFlight: types.array(LocationPairModel)
     })
     .actions(withSetPropAction)
     .actions(store => ({
@@ -166,6 +168,15 @@ export const TripStoreModel = types
                     })
                     store.setProp('preset', Object.fromEntries(map.entries()))
                     store.updatePreset()
+                }
+            })
+        },
+        async fetchRecommendedFlight() {
+            console.log('[fetchRecommendedFlight]')
+            api.getRecommendedFlight(store.id).then(response => {
+                if (response.kind == 'ok') {
+                    store.setProp('recommendedFlight', response.data)
+                    console.log(`[fetchRecommendedFlight] data=${response.data}`)
                 }
             })
         },

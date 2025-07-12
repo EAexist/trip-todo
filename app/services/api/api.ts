@@ -11,7 +11,7 @@ import {
     ReservationSnapshot,
     ReservationStoreSnapshot,
 } from '@/models/ReservationStore'
-import { TodoSnapshotIn } from '@/models/Todo'
+import { LocationPair, TodoSnapshotIn } from '@/models/Todo'
 import { PresetSnapshotIn, TripStore, TripStoreSnapshot } from '@/models/TripStore'
 import { UserStoreSnapshot } from '@/models/UserStore'
 import { KakaoProfile } from '@react-native-seoul/kakao-login'
@@ -471,6 +471,22 @@ export class Api {
             }
             : presetResponse
     }
+
+
+    /**
+     * Gets a list of recent React Native Radio episodes.
+     */
+    async getRecommendedFlight(
+        id: string,
+    ): Promise<ApiResult<LocationPair[]>> {
+        const response: ApiResponse<LocationPair[]> = await this.apisauce.get(
+            `/trip/${id}/recommendedFlight`,
+        )
+        console.log(`[api.getRecommendedFlight] response=${JSON.stringify(response)}`)
+        const presetResponse = handleResponse<LocationPair[]>(response)
+        return presetResponse
+    }
+
 
     /**
      * Gets a list of recent React Native Radio episodes.
