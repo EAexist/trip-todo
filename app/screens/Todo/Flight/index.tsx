@@ -41,7 +41,7 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
         } = useStores()
         const { navigateWithTrip } = useNavigate()
 
-        useLayoutEffect(() => {
+        useEffect(() => {
             tripStore.fetchRecommendedFlight()
         }, [])
 
@@ -88,7 +88,7 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
             [todo],
         )
 
-        const recommendationContent = (tripStore.recommendedFlight.length > 0) ? (
+        const renderRecommendationContent = useCallback(() => (tripStore.recommendedFlight.length > 0) ? (
             <View style={{ paddingVertical: 8 }}>
                 <ListSubheader title={'추천 항공편'} />
                 <FlatList
@@ -103,13 +103,13 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
                     keyExtractor={item => `${item.departure}-${item.arrival}`}
                 />
             </View>
-        ) : undefined
+        ) : <></>, [tripStore.recommendedFlight])
 
         return (
             <Screen>
                 <ContentTitle title={'출발지를 선택해주세요'} />
                 <AirportAutocomplete
-                    recommendationContent={recommendationContent}
+                    renderRecommendationContent={renderRecommendationContent}
                     handlePressSearchResult={handlePressSearchResult}
                 />
                 <Fab.Container>
@@ -118,7 +118,7 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
                         color={'secondary'}
                         navigateProps={{
                             name: 'TodolistSetting',
-                            params: { todoId: todo.id, isAirportSet: true },
+                            params: { todoId: todo.id, isInitializing: true },
                         }}
                         promiseBeforeNavigate={async () => {
                             tripStore.patchTodo(todo)
@@ -140,7 +140,7 @@ const ArrivalAirportSettingScreen = withTodo<'ArrivalAirportSetting'>(
             todo.setArrival(location)
             navigateWithTrip('RoundTripSetting', {
                 todoId: todo.id,
-                isAirportSet: true,
+                isInitializing: true,
             })
         }, [])
 
@@ -203,7 +203,7 @@ const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo }) => {
                     title={'추가하기'}
                     navigateProps={{
                         name: 'TodolistSetting',
-                        params: { todoId: todo.id, isAirportSet: true },
+                        params: { todoId: todo.id, isInitializing: true },
                     }}
                     promiseBeforeNavigate={async () => {
                         createCustomTodo({ ...roundTripStore }).then(() => patchTodo(todo))
@@ -214,7 +214,7 @@ const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo }) => {
                     color={'secondary'}
                     navigateProps={{
                         name: 'TodolistSetting',
-                        params: { todoId: todo.id, isAirportSet: true },
+                        params: { todoId: todo.id, isInitializing: true },
                     }}
                     promiseBeforeNavigate={async () => {
                         patchTodo(todo)

@@ -49,6 +49,7 @@ export const useHandleAddTodo = () => {
                 if (todo)
                     navigateWithTrip('TodoCreate', {
                         todoId: todo?.id,
+                        isInitializing: true,
                     })
             })
         },

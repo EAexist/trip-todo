@@ -30,20 +30,32 @@ import {
 
 export const TodoCreateScreen = withTodo<'TodoCreate'>(({ todo, params }) => {
     const { navigateWithTrip } = useNavigate()
+    const [isInitializing, setIsInitializing] = useState(params?.isInitializing)
+    const { tripStore: { deleteTodo } } = useStores()
 
     useFocusEffect(
         useCallback(() => {
-            console.log(`[TodoCreateScreen] isInitialized=${params?.isAirportSet}`)
-            if (todo?.type === 'flight' && !params?.isAirportSet) {
-                if (todo?.departure === null) {
-                    console.log('[TodoCreateScreen] todo?.departure === null')
-                    navigateWithTrip('DepartureAirportSetting', { todoId: todo.id })
+            console.log(`[TodoCreateScreen] isInitialized=${isInitializing}`)
+            if (todo?.type === 'flight') {
+                if (isInitializing) {
+                    setIsInitializing(false)
+                    if (todo?.departure === null) {
+                        console.log('[TodoCreateScreen] todo?.departure === null')
+                        navigateWithTrip('DepartureAirportSetting', { todoId: todo.id })
+                    }
+
+                } else {
+                    deleteTodo(todo).then(() => goBack())
                 }
-            } else {
-                goBack()
             }
-        }, [todo?.departure, params?.isAirportSet]),
+        }, [todo?.departure, isInitializing]),
     )
+
+
+    // const handleBackPressBeforeNavigate = useCallback(async () => {
+    //     if (!isConfirmed && isBeforeInitialization) await tripStore.deleteTodo(todo)
+    // }, [tripStore, todo])
+
 
     return todo.type === 'custom' ? (
         <TodoEditScreenBase todo={todo} isBeforeInitialization={true} />
