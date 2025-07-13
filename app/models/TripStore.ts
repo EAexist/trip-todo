@@ -15,13 +15,12 @@ import {
 import { withSetPropAction } from './helpers/withSetPropAction'
 import {
     CATEGORY_TO_TITLE,
-    LocationPairModel,
+    FlightModel,
     PresetTodoContentModel,
     Todo,
     TodoModel,
-    TodoSnapshotIn,
+    TodoSnapshotIn
 } from './Todo'
-import { ka } from 'date-fns/locale'
 
 export const PresetItemModel = types
     .model('Preset')
@@ -58,7 +57,7 @@ export const TripStoreModel = types
         activeItem: types.maybeNull(types.reference(TodoModel)),
         accomodation: types.map(AccomodationItemModel),
         preset: types.map(types.array(PresetItemModel)),
-        recommendedFlight: types.array(LocationPairModel)
+        recommendedFlight: types.array(FlightModel)
     })
     .actions(withSetPropAction)
     .actions(store => ({
@@ -378,7 +377,7 @@ export const TripStoreModel = types
                 month: 'short',
             })
             const year = this.endDate?.getFullYear()
-            return `${date} ${monthLocale && `${monthLocale}/`}${month} ${year}`
+            return this.endDate ? `${date} ${monthLocale && `${monthLocale}/`}${month} ${year}` : '여행이 끝나는 날'
         },
         get nonEmptysections() {
             return Array.from(store.todolist.entries())
@@ -424,15 +423,22 @@ export const TripStoreModel = types
                 })
                 .filter(({ data }) => data.length > 0)
         },
-        get deleteFlaggedTrip() {
-            return this.sectionedNonEmptyTrip.map(({ title, data }) => {
-                // const completeData = data.sort((a, b) =>
-                //   a.isFlaggedToDelete === b.isFlaggedToDelete
-                //     ? 0
-                //     : b.isFlaggedToDelete
-                //       ? -1
-                //       : 1,
-                // )
+        get deleteFlaggedCompletedTrip() {
+            return this.completedTrip.map(({ title, data }) => {
+                return {
+                    title,
+                    data: data.toSorted((a, b) =>
+                        a.isFlaggedToDelete === b.isFlaggedToDelete
+                            ? 0
+                            : b.isFlaggedToDelete
+                                ? -1
+                                : 1,
+                    ),
+                }
+            })
+        },
+        get deleteFlaggedIncompleteTrip() {
+            return this.incompleteTrip.map(({ title, data }) => {
                 return {
                     title,
                     data: data.toSorted((a, b) =>

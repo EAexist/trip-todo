@@ -21,7 +21,10 @@ export const RootStoreModel = types
             type: 'flight',
             category: 'reservation',
             title: '',
-            iconId: '✈️',
+            icon: {
+                name: '✈️',
+                type: 'tossface'
+            },
             note: '',
             isFlaggedToDelete: false,
             orderKey: -1,
@@ -64,6 +67,7 @@ export const RootStoreModel = types
                 if (response.kind === 'ok') {
                     console.log('changed')
                     rootStore.setProp('tripStore', response.data as TripStoreSnapshot)
+                    rootStore.tripStore.setProp('todolist', { 'reservation': [], 'foreign': [], 'goods': [] })
                     await rootStore.userStore.fetchUserAccount()
                 }
             })

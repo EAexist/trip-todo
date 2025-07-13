@@ -20,29 +20,6 @@ export const CATEGORY_TO_TITLE: { [key: string]: string } = {
 //   presetId: -1,
 // }
 
-export const PresetTodoContentModel = types.model('PresetTodoContent').props({
-    id: types.identifier,
-    type: types.string,
-    category: types.string,
-    title: types.string,
-    iconId: types.string,
-})
-
-export interface PresetTodoContent
-    extends Instance<typeof PresetTodoContentModel> { }
-export interface PresetTodoContentSnapshotOut
-    extends SnapshotOut<typeof PresetTodoContentModel> { }
-export interface PresetTodoContentSnapshotIn
-    extends SnapshotIn<typeof PresetTodoContentModel> { }
-
-export const LocationModel = types.model('Location').props({
-    name: types.string,
-    title: types.string,
-    nation: types.string,
-    region: types.maybe(types.string),
-    iataCode: types.maybe(types.string),
-})
-
 export interface Location {
     name: string
     title: string
@@ -56,12 +33,63 @@ export interface LocationPair {
     arrival: Location
 }
 
-export const LocationPairModel = types
-    .model('LocationPair')
+export const LocationModel = types.model('Location').props({
+    name: types.string,
+    title: types.string,
+    nation: types.string,
+    region: types.maybe(types.string),
+    iataCode: types.maybe(types.string),
+})
+
+export const AirportModel = types.model('Airport').props({
+    airportName: types.string,
+    cityName: types.string,
+    ISONationCode2Digit: types.string,
+    iataCode: types.string,
+})
+
+export interface Airport {
+    airportName: string
+    cityName: string
+    ISONationCode2Digit: string
+    iataCode: string
+}
+
+export interface Flight {
+    departure: Airport
+    arrival: Airport
+}
+
+export const FlightModel = types
+    .model('Flight')
     .props({
-        departure: LocationModel,
-        arrival: LocationModel,
+        departure: AirportModel,
+        arrival: AirportModel,
     })
+
+export const IconModel = types
+    .model('Icon')
+    .props({
+        name: types.string,
+        type: types.string,
+    })
+
+export interface Icon extends SnapshotOut<typeof IconModel> { }
+
+export const PresetTodoContentModel = types.model('PresetTodoContent').props({
+    id: types.identifier,
+    type: types.string,
+    category: types.string,
+    title: types.string,
+    icon: IconModel,
+})
+
+export interface PresetTodoContent
+    extends Instance<typeof PresetTodoContentModel> { }
+export interface PresetTodoContentSnapshotOut
+    extends SnapshotOut<typeof PresetTodoContentModel> { }
+export interface PresetTodoContentSnapshotIn
+    extends SnapshotIn<typeof PresetTodoContentModel> { }
 
 /**
  * This represents a Trip
@@ -73,7 +101,8 @@ export const TodoModel = types
         type: types.string,
         category: types.string,
         title: types.string,
-        iconId: types.string,
+        // iconId: types.maybe(types.string),
+        icon: IconModel,
         note: types.string,
         completeDateISOString: types.maybeNull(types.string), // Ex: 2022-08-12 21:05:36
         isFlaggedToDelete: false,

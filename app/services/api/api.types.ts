@@ -111,7 +111,7 @@ export const mapToTodo: (todo: TodoDTO) => Partial<TodoSnapshotIn> = todo => ({
     id: todo.id?.toString(),
     title: todo.title || '',
     note: todo.note || '',
-    iconId: todo.iconId || '',
+    icon: todo.icon || '',
     isFlaggedToDelete: false,
 })
 

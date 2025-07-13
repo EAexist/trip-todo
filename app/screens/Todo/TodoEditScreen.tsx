@@ -9,7 +9,7 @@ import { Screen } from '@/components/Screen'
 import { TextInfoListItem } from '@/components/TextInfoListItem'
 import { TransText } from '@/components/TransText'
 import { useStores } from '@/models'
-import { CATEGORY_TO_TITLE, Todo } from '@/models/Todo'
+import { CATEGORY_TO_TITLE, Icon, Todo } from '@/models/Todo'
 import { goBack, useNavigate } from '@/navigators'
 import { useHeader } from '@/utils/useHeader'
 import { withTodo } from '@/utils/withTodo'
@@ -41,7 +41,7 @@ export const TodoCreateScreen = withTodo<'TodoCreate'>(({ todo, params }) => {
                     setIsInitializing(false)
                     if (todo?.departure === null) {
                         console.log('[TodoCreateScreen] todo?.departure === null')
-                        navigateWithTrip('DepartureAirportSetting', { todoId: todo.id })
+                        navigateWithTrip('DepartureAirportSetting', { todoId: todo.id, callerName: params.callerName })
                     }
 
                 } else {
@@ -133,32 +133,51 @@ export const CustomTodoEditScreen: FC<{
         categoryBottomSheetModalRef.current?.present()
     }, [categoryBottomSheetModalRef])
 
-    const iconMenu = [
-        { iconId: '🛌' },
-        { iconId: '📖' },
-        { iconId: '💱' },
-        { iconId: '📶' },
-        { iconId: '📝' },
-        { iconId: '🧴' },
-        { iconId: '🔌' },
-        { iconId: '🕶' },
-        { iconId: '🧳' },
-        { iconId: '☂️' },
-    ]
+    const ICONS = [
+        { name: '🛌', type: 'tossface' },
+        { name: '💱', type: 'tossface' },
+        { name: '💲', type: 'tossface' },
+        { name: '📶', type: 'tossface' },
+        { name: '📝', type: 'tossface' },
+        { name: '🔌', type: 'tossface' },
+        { name: '🧳', type: 'tossface' },
+        { name: '🎒', type: 'tossface' },
+        { name: '📸', type: 'tossface' },
+        { name: '☂️', type: 'tossface' },
+        { name: '💊', type: 'tossface' },
+        { name: '🧴', type: 'tossface' },
+        { name: '💄', type: 'tossface' },
+        { name: '🪒', type: 'tossface' },
+        { name: '🕶', type: 'tossface' },
+        { name: '✈️', type: 'tossface' },
+        { name: '🛫', type: 'tossface' },
+        { name: '🚄', type: 'tossface' },
+        { name: '🚆', type: 'tossface' },
+        { name: '🚕', type: 'tossface' },
+        { name: '⛴', type: 'tossface' },
+        { name: '🎢', type: 'tossface' },
+        { name: '⛩', type: 'tossface' },
+        { name: '🐶', type: 'tossface' },
+        { name: '🐱', type: 'tossface' },
+        { name: '⭐️', type: 'tossface' },]
+
+    const iconMenu: { icon: Icon }[] = ICONS.map(icon => ({ icon }))
 
     const handlePress = useCallback(
-        (iconId: string) => {
-            todo.setProp('iconId', iconId)
+        (icon: Icon) => {
+            todo.setProp('icon', icon)
             iconBottomSheetModalRef.current?.close()
         },
         [iconBottomSheetModalRef, todo],
     )
-    const renderIconListItem: ListRenderItem<{ iconId: string }> = useCallback(
+    const renderIconListItem: ListRenderItem<{ icon: Icon }> = useCallback(
         ({ item }) => {
             return (
-                <TouchableOpacity onPress={() => handlePress(item.iconId)}>
+                <TouchableOpacity onPress={() => handlePress(item.icon)}>
                     <Avatar
-                        iconId={item.iconId}
+                        // iconId={item.iconId}
+                        icon={item.icon}
+                        fontSize={28}
                         size={'xlarge'}
                         containerStyle={$iconAvataContainerStyle}
                     />
@@ -211,7 +230,9 @@ export const CustomTodoEditScreen: FC<{
                 <Title>
                     <ListItem containerStyle={$listItemContainerStyle}>
                         <TouchableOpacity onPress={handleIconPress}>
-                            <Avatar iconId={todo.iconId} size="xlarge" />
+                            <Avatar icon={todo.icon}
+                                fontSize={28}
+                                size={'xlarge'} />
                         </TouchableOpacity>
                         <ListItem.Content>
                             <ControlledListItemInput
@@ -257,7 +278,7 @@ export const CustomTodoEditScreen: FC<{
                     </TransText>
                 </TextInfoListItem>
                 <Fab.Container>
-                    <Fab.Button onPress={handleConfirmPress} title={'확인'} />
+                    <Fab.Button disabled={title.length == 0} onPress={handleConfirmPress} title={'확인'} />
                 </Fab.Container>
                 <IconDropdownBottomSheet />
                 <CategoryDropdownBottomSheet />
@@ -266,7 +287,7 @@ export const CustomTodoEditScreen: FC<{
                     <FlatList
                         data={iconMenu}
                         renderItem={renderIconListItem}
-                        keyExtractor={item => item.iconId}
+                        keyExtractor={item => item.icon.name}
                         numColumns={4}
                         columnWrapperStyle={$d}
                         contentContainerStyle={$s}

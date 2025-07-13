@@ -28,6 +28,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { MainTabNavigator, MainTabParamList } from './MainTabNavigator'
 import { GestureHandlerRootViewWrapper } from '@/components/BottomSheetModal'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { Platform, View, ViewStyle } from 'react-native'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -44,15 +45,16 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
  */
 export type TripStackProps = { tripId: string }
 export type TodoStackProps = TripStackProps & { todoId: string }
+export type FlightSettingStackProps = TodoStackProps & { callerName: 'TodolistSetting' | 'TodolistAdd' }
 
 export type AppStackParamList = {
     // 🔥 Your screens go here
 
     /* Login */
-    Login: undefined
+    Login: {}
 
     /* Create Trip */
-    Welcome: undefined
+    Welcome: {}
     DestinationSetting: TripStackProps
     DestinationSearch: TripStackProps
     ScheduleSetting: TripStackProps
@@ -93,15 +95,15 @@ export type TodoAppStackParamList = {
     /* Edit Todo */
     TodoTitle: TodoStackProps
     TodoNote: TodoStackProps
-    TodoCreate: TodoStackProps & { isInitializing: boolean }
+    TodoCreate: FlightSettingStackProps & { isInitializing: boolean }
     TodoEdit: TodoStackProps
 
     /* Flight */
-    DepartureAirportSetting: TodoStackProps
-    ArrivalAirportSetting: TodoStackProps
-    DepartureAirportEdit: TodoStackProps
-    ArrivalAirportEdit: TodoStackProps
-    RoundTripSetting: TodoStackProps
+    DepartureAirportSetting: FlightSettingStackProps
+    ArrivalAirportSetting: FlightSettingStackProps
+    DepartureAirportEdit: FlightSettingStackProps
+    ArrivalAirportEdit: FlightSettingStackProps
+    RoundTripSetting: FlightSettingStackProps
 }
 
 /**
@@ -271,25 +273,45 @@ export const AppNavigator = observer(function AppNavigator(
             <ThemeProvider theme={theme}>
                 <GestureHandlerRootViewWrapper>
                     <BottomSheetModalProvider>
-                        <NavigationContainer
-                            ref={navigationRef}
-                            theme={{
-                                ...navigationTheme,
-                                colors: {
-                                    ...navigationTheme.colors,
-                                    background: 'white',
-                                },
-                            }}
-                            {...props}>
-                            <FabProvider>
-                                <Screens.ErrorBoundary catchErrors={Config.catchErrors}>
-                                    <AppStack />
-                                </Screens.ErrorBoundary>
-                            </FabProvider>
-                        </NavigationContainer>
+                        <View style={$outerContainerStyle}>
+                            <View style={$innerContainerStyle}>
+                                <NavigationContainer
+                                    ref={navigationRef}
+                                    theme={{
+                                        ...navigationTheme,
+                                        colors: {
+                                            ...navigationTheme.colors,
+                                            background: 'white',
+                                        },
+                                    }}
+                                    {...props}>
+                                    <FabProvider>
+                                        <Screens.ErrorBoundary catchErrors={Config.catchErrors}>
+                                            <AppStack />
+                                        </Screens.ErrorBoundary>
+                                    </FabProvider>
+                                </NavigationContainer>
+                            </View>
+                        </View>
                     </BottomSheetModalProvider>
                 </GestureHandlerRootViewWrapper>
             </ThemeProvider>
         </AppThemeProvider>
     )
 })
+
+const $outerContainerStyle: ViewStyle = {
+    flex: 1,
+    alignItems: 'center',
+    ...Platform.OS === 'web' ? {
+    } : {}
+}
+const $innerContainerStyle: ViewStyle = {
+    ...Platform.OS === 'web' ? {
+        width: 480,
+        maxWidth: 480,
+        flex: 1,
+        backgroundColor: 'white',
+        boxShadow: '0 0 20px #0000000d'
+    } : {}
+}

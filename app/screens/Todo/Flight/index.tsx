@@ -4,7 +4,7 @@ import ListSubheader from '@/components/ListSubheader'
 import { Screen } from '@/components/Screen'
 import { TransText } from '@/components/TransText'
 import { useStores } from '@/models'
-import { Location, LocationPair, Todo } from '@/models/Todo'
+import { Flight, Location, LocationPair, Todo } from '@/models/Todo'
 import { AppStackScreenProps, goBack, useNavigate } from '@/navigators'
 import { useTodo } from '@/utils/useTodo'
 import { withTodo } from '@/utils/withTodo'
@@ -35,7 +35,7 @@ import { Observer } from 'mobx-react-lite'
 // }
 
 const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
-    ({ todo }) => {
+    ({ todo, params: { callerName } }) => {
         const {
             tripStore,
         } = useStores()
@@ -45,36 +45,32 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
             tripStore.fetchRecommendedFlight()
         }, [])
 
-        const recommendationData: LocationPair[] = [
-            {
-                departure: {
-                    name: '인천국제공항',
-                    title: '인천',
-                    nation: 'kr',
-                    iataCode: 'ICN',
-                },
-                arrival: {
-                    name: '도쿠시마공항',
-                    title: '도쿠시마',
-                    nation: 'jp',
-                    iataCode: 'TKS',
-                },
-            },
-        ]
         const handlePressRecommendationChip = useCallback(
-            (locationPair: LocationPair) => {
-                todo.setDeparture(locationPair.departure)
-                todo.setArrival(locationPair.arrival)
+            (flight: Flight) => {
+                todo.setDeparture({
+                    name: flight.departure.airportName,
+                    title: flight.departure.cityName,
+                    nation: flight.departure.ISONationCode2Digit,
+                    region: flight.departure.cityName,
+                    iataCode: flight.departure.iataCode,
+                })
+                todo.setArrival({
+                    name: flight.arrival.airportName,
+                    title: flight.arrival.cityName,
+                    nation: flight.arrival.ISONationCode2Digit,
+                    region: flight.arrival.cityName,
+                    iataCode: flight.arrival.iataCode,
+                })
                 tripStore.patchTodo(todo).then(() => {
-                    navigateWithTrip('RoundTripSetting', { todoId: todo.id })
+                    navigateWithTrip('RoundTripSetting', { todoId: todo.id, callerName })
                 })
             },
             [],
         )
-        const renderRecommendationChip: ListRenderItem<LocationPair> = useCallback(
+        const renderRecommendationChip: ListRenderItem<Flight> = useCallback(
             ({ item }) => (
                 <Chip
-                    title={`${item.departure?.title} → ${item.arrival?.title}`}
+                    title={`${item.departure?.cityName}(${item.departure?.iataCode}) → ${item.arrival?.cityName}(${item.arrival?.iataCode})`}
                     onPress={() => handlePressRecommendationChip(item)}
                 />
             ),
@@ -83,7 +79,7 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
         const handlePressSearchResult = useCallback(
             async (location: Location) => {
                 todo.setDeparture(location)
-                navigateWithTrip('ArrivalAirportSetting', { todoId: todo.id })
+                navigateWithTrip('ArrivalAirportSetting', { todoId: todo.id, callerName })
             },
             [todo],
         )
@@ -117,8 +113,8 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
                         title={'공항 결정은 나중에 할래요'}
                         color={'secondary'}
                         navigateProps={{
-                            name: 'TodolistSetting',
-                            params: { todoId: todo.id, isInitializing: true },
+                            name: callerName,
+                            // params: { todoId: todo.id, isInitializing: true },
                         }}
                         promiseBeforeNavigate={async () => {
                             tripStore.patchTodo(todo)
@@ -131,7 +127,7 @@ const DepartureAirportSettingScreen = withTodo<'DepartureAirportSetting'>(
 )
 
 const ArrivalAirportSettingScreen = withTodo<'ArrivalAirportSetting'>(
-    ({ todo }) => {
+    ({ todo, params: { callerName } }) => {
         const { navigateWithTrip } = useNavigate()
         useEffect(() => {
             console.log('[ArrivalAirportSettingScreenBase] Hello')
@@ -141,6 +137,7 @@ const ArrivalAirportSettingScreen = withTodo<'ArrivalAirportSetting'>(
             navigateWithTrip('RoundTripSetting', {
                 todoId: todo.id,
                 isInitializing: true,
+                callerName
             })
         }, [])
 
@@ -158,7 +155,7 @@ const ArrivalAirportSettingScreen = withTodo<'ArrivalAirportSetting'>(
     },
 )
 
-const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo }) => {
+const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo, params: { callerName } }) => {
     const {
         tripStore: { patchTodo, createCustomTodo },
         roundTripStore,
@@ -202,8 +199,8 @@ const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo }) => {
                 <Fab.NextButton
                     title={'추가하기'}
                     navigateProps={{
-                        name: 'TodolistSetting',
-                        params: { todoId: todo.id, isInitializing: true },
+                        name: callerName,
+                        // params: { todoId: todo.id, isInitializing: true },
                     }}
                     promiseBeforeNavigate={async () => {
                         createCustomTodo({ ...roundTripStore }).then(() => patchTodo(todo))
@@ -213,8 +210,8 @@ const RoundTripSettingScreen = withTodo<'RoundTripSetting'>(({ todo }) => {
                     title={'건너뛰기'}
                     color={'secondary'}
                     navigateProps={{
-                        name: 'TodolistSetting',
-                        params: { todoId: todo.id, isInitializing: true },
+                        name: callerName,
+                        // params: { todoId: todo.id, isInitializing: true },
                     }}
                     promiseBeforeNavigate={async () => {
                         patchTodo(todo)

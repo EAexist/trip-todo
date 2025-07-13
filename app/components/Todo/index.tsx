@@ -17,7 +17,7 @@ import { Avatar, AvatarProps } from '../Avatar'
 import { ListItemCaption } from '../ListItemCaption'
 import { useFocusEffect } from '@react-navigation/native'
 
-interface TodoBaseProps extends Pick<AvatarProps, 'iconId'>, ListItemProps {
+interface TodoBaseProps extends Pick<AvatarProps, 'icon'>, ListItemProps {
     title: string
     subtitle?: string
     caption?: string
@@ -30,7 +30,7 @@ interface TodoBaseProps extends Pick<AvatarProps, 'iconId'>, ListItemProps {
 }
 
 export const TodoBase: FC<TodoBaseProps> = ({
-    iconId,
+    icon,
     title,
     subtitle,
     caption,
@@ -43,12 +43,9 @@ export const TodoBase: FC<TodoBaseProps> = ({
 }) => {
     return (
         <ListItem {...props}>
-            <Avatar iconId={iconId} size="small" {...avatarProps} />
+            <Avatar icon={icon} size="small" {...avatarProps} />
             <ListItem.Content
-                style={contentStyle || {}}
-                onPress={() => {
-                    console.log('HII')
-                }}>
+                style={contentStyle || {}}>
                 <ListItem.Title style={titleStyle || {}}>
                     <Trans>{title}</Trans>
                     {!!caption && <ListItemCaption>{caption}</ListItemCaption>}
@@ -66,7 +63,7 @@ export const TodoBase: FC<TodoBaseProps> = ({
 
 export type TodoProps = { id: string } & Pick<
     TodoBaseProps,
-    'iconId' | 'title' | 'subtitle'
+    'icon' | 'title' | 'subtitle'
 >
 // {
 //   iconId: string
@@ -298,6 +295,13 @@ export const AccomodationTodo: FC<{ todo: Todo }> = ({ todo }) => {
 export const ReorderTodo: FC<{ todo: Todo }> = ({ todo }) => {
     return (
         <TodoBase
+            subtitle={
+                todo.type == 'flight' || todo.type == 'flightTicket'
+                    ? todo.flightTitle
+                    : todo.note !== ''
+                        ? todo.note
+                        : undefined
+            }
             rightContent={<ListItem.Chevron name="drag-handle" type="material" />}
             {...todo}
         />
@@ -324,6 +328,13 @@ export const DeleteTodo: FC<{ todo: Todo }> = observer(({ todo }) => {
 
     return (
         <TodoBase
+            subtitle={
+                todo.type == 'flight' || todo.type == 'flightTicket'
+                    ? todo.flightTitle
+                    : todo.note !== ''
+                        ? todo.note
+                        : undefined
+            }
             rightContent={
                 <ListItem.CheckBox
                     onPress={handlePress}

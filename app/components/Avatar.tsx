@@ -1,41 +1,40 @@
 import {
-  Avatar as RNEAvatar,
-  AvatarProps as RNEAvatarProps,
-  Text,
+    Avatar as RNEAvatar,
+    AvatarProps as RNEAvatarProps,
+    Text,
 } from '@rneui/themed'
-import {PropsWithChildren} from 'react'
-import {StyleSheet} from 'react-native'
+import { PropsWithChildren } from 'react'
+import { StyleSheet } from 'react-native'
 
-export type AvatarIconType = 'tossface' | 'icon'
 export interface AvatarProps extends RNEAvatarProps {
-  iconId?: string
-  type?: AvatarIconType
+    // iconId?: string
+    fontSize?: number
 }
 
 export const Avatar = ({
-  type = 'tossface',
-  iconId,
-  children,
-  icon,
-  ...props
+    // iconId,
+    children,
+    icon,
+    fontSize,
+    ...props
 }: PropsWithChildren<AvatarProps>) => {
-  return (
-    <RNEAvatar
-      {...(type === 'tossface' && !icon
-        ? {renderCustomContent: <Text style={styles.titleStyle}>{iconId}</Text>}
-        : {icon})}
-      {...props}>
-      {children}
-    </RNEAvatar>
-  )
+    return (
+        <RNEAvatar
+            {...((!icon?.type || icon?.type === 'tossface')
+                ? { renderCustomContent: <Text style={{ ...styles.titleStyle, fontSize }}>{icon?.name}</Text> }
+                : { icon })}
+            {...props}>
+            {children}
+        </RNEAvatar>
+    )
 }
 
 const styles = StyleSheet.create({
-  titleStyle: {
-    fontFamily: 'Tossface',
-    textAlign: 'center',
-    overflow: 'hidden',
-  },
+    titleStyle: {
+        fontFamily: 'Tossface',
+        textAlign: 'center',
+        overflow: 'hidden',
+    },
 })
 
 // export default withTheme<AvatarProps>(Avatar, 'Avatar')

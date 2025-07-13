@@ -1,85 +1,76 @@
 import ContentTitle from '@/components/Layout/Content'
 import ListSubheader from '@/components/ListSubheader'
-import {Screen} from '@/components/Screen'
-import {useStores} from '@/models'
-import {Todo} from '@/models/Todo'
-import {Divider} from '@rneui/themed'
-import {observer} from 'mobx-react-lite'
+import { Screen } from '@/components/Screen'
+import { useStores } from '@/models'
+import { Todo } from '@/models/Todo'
+import { Divider } from '@rneui/themed'
+import { observer } from 'mobx-react-lite'
 import {
-  ComponentType,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
+    ComponentType,
+    PropsWithChildren,
+    useCallback,
+    useEffect,
+    useState,
 } from 'react'
 import {
-  DefaultSectionT,
-  SectionList,
-  SectionListProps,
-  SectionListRenderItem,
+    DefaultSectionT,
+    SectionList,
+    SectionListProps,
+    SectionListRenderItem,
 } from 'react-native'
 
-export interface CheckListEditScreenBaseProps<SectionT = DefaultSectionT>
-  extends Pick<
-    SectionListProps<any, SectionT>,
-    'renderItem' | 'renderSectionHeader' | 'sections' | 'keyExtractor'
-  > {
-  title: string
-  instruction?: string
-  Todo?: ComponentType<{item: Todo}>
+export interface TodolistEditScreenBaseProps<SectionT = DefaultSectionT>
+    extends Pick<
+        SectionListProps<any, SectionT>,
+        'renderItem' | 'renderSectionHeader' | 'sections' | 'keyExtractor' | 'renderSectionFooter'
+    > {
+    title: string
+    instruction?: string
+    Todo?: ComponentType<{ item: Todo }>
 }
 
-const CheckListEditScreenBase = observer(function <
-  SectionT extends DefaultSectionT,
+const TodolistEditScreenBase = observer(function <
+    SectionT extends DefaultSectionT,
 >({
-  // headerRightComponent,
-  title,
-  instruction,
-  renderItem,
-  renderSectionHeader,
-  Todo,
-  sections,
-  children,
-  keyExtractor,
-}: PropsWithChildren<CheckListEditScreenBaseProps<SectionT>>) {
-  // const {tripStore} = useStores()
-  // useEffect(() => {
-  //   rootStore.fetchTrip('30').then(() => {
-  //     console.log(tripStore)
-  //   })
-  // }, [])
+    // headerRightComponent,
+    title,
+    instruction,
+    renderItem,
+    renderSectionHeader,
+    renderSectionFooter,
+    Todo,
+    sections,
+    children,
+    keyExtractor,
+}: PropsWithChildren<TodolistEditScreenBaseProps<SectionT>>) {
 
-  const [activeTabIndex, setActiveTabIndex] = useState(0)
-  // Handler for tab changes
-  const handleTabChange = useCallback(
-    (newIndex: number) => {
-      setActiveTabIndex(newIndex)
-    },
-    [setActiveTabIndex],
-  )
+    const [activeTabIndex, setActiveTabIndex] = useState(0)
+    // Handler for tab changes
+    const handleTabChange = useCallback(
+        (newIndex: number) => {
+            setActiveTabIndex(newIndex)
+        },
+        [setActiveTabIndex],
+    )
+    const renderSectionHeaderInner = useCallback(
+        ({ section: { title } }: { section: DefaultSectionT }) => (
+            <ListSubheader lg title={title} />
+        ),
+        [],
+    )
 
-  const renderItemInner: SectionListRenderItem<Todo, DefaultSectionT> =
-    useCallback(({item}) => (Todo ? <Todo item={item} /> : <></>), [Todo])
+    const renderSectionFooterInner = useCallback(
+        ({ section: { isLast } }: { section: DefaultSectionT }) =>
+            isLast ? <></> : <Divider />,
+        [],
+    )
 
-  const renderSectionHeaderInner = useCallback(
-    ({section: {title}}: {section: DefaultSectionT}) => (
-      <ListSubheader lg title={title} />
-    ),
-    [],
-  )
+    const keyExtractorInner = useCallback((item: any) => item.id, [])
 
-  const renderSectionFooter = useCallback(
-    ({section: {isLast}}: {section: DefaultSectionT}) =>
-      isLast ? <></> : <Divider />,
-    [],
-  )
-
-  const keyExtractorInner = useCallback((item: any) => item.id, [])
-
-  return (
-    <Screen>
-      <ContentTitle title={title} subtitle={instruction} />
-      {/* <Tab
+    return (
+        <Screen>
+            <ContentTitle title={title} subtitle={instruction} />
+            {/* <Tab
           value={activeTabIndex}
           onChange={handleTabChange}
           // indicatorStyle={tripStyles.TabIndicator}
@@ -92,25 +83,25 @@ const CheckListEditScreenBase = observer(function <
             keyExtractor={(item) => item.title}
           />
         </Tab> */}
-      <SectionList
-        sections={sections.map((section, index) => ({
-          ...section,
-          isLast: index === sections.length - 1,
-        }))}
-        keyExtractor={keyExtractor || keyExtractorInner}
-        renderItem={renderItem || renderItemInner}
-        renderSectionHeader={renderSectionHeader || renderSectionHeaderInner}
-        renderSectionFooter={renderSectionFooter}
-      />
-      {children}
-    </Screen>
-  )
+            <SectionList
+                sections={sections.map((section, index) => ({
+                    ...section,
+                    isLast: index === sections.length - 1,
+                }))}
+                keyExtractor={keyExtractor || keyExtractorInner}
+                renderItem={renderItem}
+                renderSectionHeader={renderSectionHeader || renderSectionHeaderInner}
+                renderSectionFooter={renderSectionFooter || renderSectionFooterInner}
+            />
+            {children}
+        </Screen>
+    )
 })
 
-export default CheckListEditScreenBase
+export default TodolistEditScreenBase
 
 // const styles = StyleSheet.create({
-//   CheckListEditScreenBase: {
+//   TodolistEditScreenBase: {
 //     backgroundColor: '#ffffff',
 //     flex: 1,
 //     paddingBottom: 12, // Corresponds to 0.75rem bottom padding

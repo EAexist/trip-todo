@@ -11,7 +11,7 @@ import {
     ReservationSnapshot,
     ReservationStoreSnapshot,
 } from '@/models/ReservationStore'
-import { LocationPair, TodoSnapshotIn } from '@/models/Todo'
+import { Flight, LocationPair, TodoSnapshotIn } from '@/models/Todo'
 import { PresetSnapshotIn, TripStore, TripStoreSnapshot } from '@/models/TripStore'
 import { UserStoreSnapshot } from '@/models/UserStore'
 import { KakaoProfile } from '@react-native-seoul/kakao-login'
@@ -478,12 +478,12 @@ export class Api {
      */
     async getRecommendedFlight(
         id: string,
-    ): Promise<ApiResult<LocationPair[]>> {
-        const response: ApiResponse<LocationPair[]> = await this.apisauce.get(
+    ): Promise<ApiResult<Flight[]>> {
+        const response: ApiResponse<Flight[]> = await this.apisauce.get(
             `/trip/${id}/recommendedFlight`,
         )
         console.log(`[api.getRecommendedFlight] response=${JSON.stringify(response)}`)
-        const presetResponse = handleResponse<LocationPair[]>(response)
+        const presetResponse = handleResponse<Flight[]>(response)
         return presetResponse
     }
 

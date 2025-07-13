@@ -22,14 +22,15 @@ import {
     TextStyle,
     View,
 } from 'react-native'
-import CheckListEditScreenBase, {
-    CheckListEditScreenBaseProps,
+import TodolistEditScreenBase, {
+    TodolistEditScreenBaseProps,
 } from './TodolistEditScreenBase'
 
 interface TodolistAddScreenBaseProps
-    extends Pick<CheckListEditScreenBaseProps, 'title' | 'instruction'> {
+    extends Pick<TodolistEditScreenBaseProps, 'title' | 'instruction'> {
     fab: ReactNode
     tripId: string
+    callerName: 'TodolistSetting' | 'TodolistAdd'
 }
 
 export const useAddFlaggedPreset = () => {
@@ -40,7 +41,7 @@ export const useAddFlaggedPreset = () => {
     return addFlaggedPreset
 }
 
-export const useHandleAddTodo = () => {
+export const useHandleAddTodo = ({ callerName }: { callerName?: 'TodolistSetting' | 'TodolistAdd' }) => {
     const { tripStore } = useStores()
     const { navigateWithTrip } = useNavigate()
     const handleAddTodo = useCallback(
@@ -50,6 +51,7 @@ export const useHandleAddTodo = () => {
                     navigateWithTrip('TodoCreate', {
                         todoId: todo?.id,
                         isInitializing: true,
+                        callerName
                     })
             })
         },
@@ -61,7 +63,7 @@ export const useHandleAddTodo = () => {
 }
 
 export const TodolistAddScreenBase = observer(
-    ({ title, instruction, fab, tripId }: TodolistAddScreenBaseProps) => {
+    ({ title, instruction, fab, tripId, callerName }: TodolistAddScreenBaseProps) => {
         const rootStore = useStores()
         const { tripStore } = rootStore
 
@@ -77,7 +79,7 @@ export const TodolistAddScreenBase = observer(
             })
         }, [])
 
-        const { handleAddTodo } = useHandleAddTodo()
+        const { handleAddTodo } = useHandleAddTodo({})
 
         const renderItem: SectionListRenderItem<
             { todo?: Todo; preset?: Preset },
@@ -102,7 +104,7 @@ export const TodolistAddScreenBase = observer(
                 <View>
                     <ListSubheader lg title={title} />
                     <TodoBase
-                        avatarProps={{ icon: { name: 'plus' } }}
+                        avatarProps={{ icon: { name: 'add', type: 'material' } }}
                         titleStyle={$titleStyleHighlighted}
                         {...(category === 'reservation'
                             ? {
@@ -134,7 +136,7 @@ export const TodolistAddScreenBase = observer(
 
         return (
             <GestureHandlerRootViewWrapper>
-                <CheckListEditScreenBase
+                <TodolistEditScreenBase
                     title={title}
                     instruction={instruction}
                     renderItem={renderItem}
@@ -142,19 +144,20 @@ export const TodolistAddScreenBase = observer(
                     sections={tripStore.todolistWithPreset}
                     keyExtractor={keyExtractor}>
                     {fab}
-                    <ReservationTypeDropDownBottomSheet ref={bottomSheetRef} />
-                </CheckListEditScreenBase>
+                    <ReservationTypeDropDownBottomSheet ref={bottomSheetRef} callerName={callerName} />
+                </TodolistEditScreenBase>
             </GestureHandlerRootViewWrapper>
         )
     },
 )
 
 const ReservationTypeDropDownBottomSheet = ({
-    ref,
+    ref, callerName
 }: {
     ref: RefObject<BottomSheetModal | null>
+    callerName: 'TodolistSetting' | 'TodolistAdd'
 }) => {
-    const { handleAddTodo } = useHandleAddTodo()
+    const { handleAddTodo } = useHandleAddTodo({ callerName })
 
     const { useActiveKey, handleBottomSheetModalChange, activate } =
         useNavigationBottomSheet(ref)
@@ -173,17 +176,17 @@ const ReservationTypeDropDownBottomSheet = ({
         {
             type: 'flight',
             title: '항공권',
-            avatarProps: { iconId: '✈️', containerStyle: { backgroundColor: 'bisque' } },
+            avatarProps: { icon: { name: '✈️' }, containerStyle: { backgroundColor: 'bisque' } },
         },
         // {
         //   type: 'train',
         //   title: '열차',
-        //   avatarProps: {iconId: '🚅', containerStyle: {backgroundColor: 'bisque'}},
+        //   avatarProps: {icon: {name: '🚅'}, containerStyle: {backgroundColor: 'bisque'}},
         // },
         {
             type: 'custom',
             title: '직접 입력',
-            avatarProps: { iconId: '✏️', containerStyle: { backgroundColor: 'bisque' } },
+            avatarProps: { icon: { name: '✏️' }, containerStyle: { backgroundColor: 'bisque' } },
         },
         // {
         //     type: 'accomodation',

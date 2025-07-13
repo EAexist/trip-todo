@@ -38,7 +38,7 @@ const GooglePlacesSearchBar = () => {
     //   const {navigateWithTrip} = useNavigate()
 
     const handlePress = useCallback((data: GooglePlaceData) => {
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
         tripStore
             .createDestination({
                 description: data.description,
