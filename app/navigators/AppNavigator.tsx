@@ -271,10 +271,10 @@ export const AppNavigator = observer(function AppNavigator(
     return (
         <AppThemeProvider value={{ themeScheme, setThemeContextOverride }}>
             <ThemeProvider theme={theme}>
-                <GestureHandlerRootViewWrapper>
-                    <BottomSheetModalProvider>
-                        <View style={$outerContainerStyle}>
-                            <View style={$innerContainerStyle}>
+                <View style={$outerContainerStyle}>
+                    <View style={$innerContainerStyle}>
+                        <GestureHandlerRootViewWrapper>
+                            <BottomSheetModalProvider>
                                 <NavigationContainer
                                     ref={navigationRef}
                                     theme={{
@@ -291,10 +291,10 @@ export const AppNavigator = observer(function AppNavigator(
                                         </Screens.ErrorBoundary>
                                     </FabProvider>
                                 </NavigationContainer>
-                            </View>
-                        </View>
-                    </BottomSheetModalProvider>
-                </GestureHandlerRootViewWrapper>
+                            </BottomSheetModalProvider>
+                        </GestureHandlerRootViewWrapper>
+                    </View>
+                </View>
             </ThemeProvider>
         </AppThemeProvider>
     )
