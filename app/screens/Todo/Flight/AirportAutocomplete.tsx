@@ -93,7 +93,7 @@ export const AirportAutocomplete: FC<AirportAutocompleteProps> = ({
             {...googlePlacesAutocompleteConfig}
             requestUrl={{
                 useOnPlatform: 'web',
-                url: `${process.env.EXPO_PUBLIC_API_URL}/proxy/airport`,
+                url: `${process.env.API_URL}/proxy/airport`,
             }}
             ref={ref}
             onPress={handlePress}

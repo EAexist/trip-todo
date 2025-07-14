@@ -93,7 +93,7 @@ function handleDeleteResponse(response: ApiResponse<void>): ApiResult<null> {
  * Configuring the apisauce instance.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-    baseURL: process.env.EXPO_PUBLIC_API_URL,
+    baseURL: process.env.API_URL,
     //   withCredentials: true,
     timeout: 10000,
 }

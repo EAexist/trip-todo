@@ -16,7 +16,7 @@ export const googlePlacesAutocompleteConfig: Partial<GooglePlacesAutocompletePro
 {
     requestUrl: {
         useOnPlatform: 'web', // or "all"
-        url: `${process.env.EXPO_PUBLIC_API_URL}/proxy`, // or any proxy server that hits https://maps.googleapis.com/maps/api
+        url: `${process.env.API_URL}/proxy`, // or any proxy server that hits https://maps.googleapis.com/maps/api
         //   headers: {
         //     Accept: 'application/json',
         //   },
