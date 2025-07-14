@@ -20,6 +20,7 @@ export const GoogleLoginButton: FC<ButtonProps> = props => {
     const handleLayout = useCallback(
         (event: LayoutChangeEvent) => {
             setWidth(event.nativeEvent.layout.width)
+            console.log(event.nativeEvent.layout.width)
         },
         [setWidth],
     )
@@ -33,7 +34,8 @@ export const GoogleLoginButton: FC<ButtonProps> = props => {
                 }}
                 size='large'
                 shape='pill'
-                width={width}
+                width={400}
+            // width={width.toString()}
             />
         </View>
     )

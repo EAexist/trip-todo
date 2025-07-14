@@ -15,7 +15,7 @@ import {
 } from '@react-native-seoul/kakao-login'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Image, Text } from '@rneui/themed'
-import * as appIcon from 'assets/images/app/app-icon.png'
+import * as appLogo from 'assets/images/app/logo.png'
 import { observer } from 'mobx-react-lite'
 import { Platform, View } from 'react-native'
 
@@ -39,9 +39,11 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
     return (
         <GoogleOAuthProvider clientId={process.env.GOOGLE_OAUTH_CLIENT_ID_WEB}>
             <Screen>
-                <View style={{ alignItems: 'center', padding: 64 }}>
-                    <Image source={appIcon} containerStyle={{}} style={{}} />
-                    <Text style={{ fontSize: 32, padding: 24 }}>TRIP TODO</Text>
+                <View style={{}}>
+                    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 24, height: 480 }}>
+                        <Image source={appLogo} containerStyle={{}} style={{ width: 72, height: 72 }} />
+                        <Text style={{ fontWeight: 700, fontSize: 36, letterSpacing: -1 }}>TRIP TODO</Text>
+                    </View>
                 </View>
                 <Container fixed={false}>
                     {/* <KakaoLoginButton onPress={handleKakaoLoginPress} /> */}
