@@ -159,7 +159,6 @@ const $containerStyle: (fixed: boolean) => ViewStyle = fixed => ({
     paddingBottom: 2 * 16,
     paddingHorizontal: 1.25 * 16,
     paddingVertical: 1.25 * 16,
-    alignItems: 'center',
     ...(fixed
         ? {
             bottom: 0,

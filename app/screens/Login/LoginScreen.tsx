@@ -39,25 +39,29 @@ export const LoginScreen: FC<AppStackScreenProps<'Login'>> = observer(() => {
     return (
         <GoogleOAuthProvider clientId={process.env.GOOGLE_OAUTH_CLIENT_ID_WEB}>
             <Screen>
-                <View style={{}}>
-                    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 16, height: 480 }}>
-                        <Image source={appLogo} containerStyle={{}} style={{ width: 96, height: 96 }} />
-                        <Text style={{ fontWeight: 700, fontSize: 36, letterSpacing: -1 }}>TRIP TODO</Text>
+                {/* <View style={{}}> */}
+                <View style={{ alignItems: 'center', justifyContent: 'center', gap: 16, flex: 1 }} >
+                    <Image source={appLogo} containerStyle={{}} style={{ width: 96, height: 96 }} />
+                    <Text style={{ fontWeight: 700, fontSize: 36, letterSpacing: -1 }}>TRIP TODO</Text>
+                </View>
+                {/* </View> */}
+                <View style={{ alignItems: 'center' }}>
+                    <View style={{ width: "100%", maxWidth: 440 }}>
+                        <Container fixed={false}>
+                            {/* <KakaoLoginButton onPress={handleKakaoLoginPress} /> */}
+                            <GoogleLoginButton />
+                            {
+                                Platform.OS === 'web' &&
+                                <LoginButton
+                                    onPress={async () => {
+                                        await userStore.guestLogin()
+                                    }}
+                                    title="로그인 없이 사용해보기"
+                                />
+                            }
+                        </Container>
                     </View>
                 </View>
-                <Container fixed={false}>
-                    {/* <KakaoLoginButton onPress={handleKakaoLoginPress} /> */}
-                    <GoogleLoginButton />
-                    {
-                        Platform.OS === 'web' &&
-                        <LoginButton
-                            onPress={async () => {
-                                await userStore.guestLogin()
-                            }}
-                            title="로그인 없이 사용해보기"
-                        />
-                    }
-                </Container>
             </Screen>
         </GoogleOAuthProvider>
     )

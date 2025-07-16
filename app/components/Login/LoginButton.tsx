@@ -52,8 +52,8 @@ const $loginButtonStyle = StyleSheet.create(
                 paddingVertical: 2,
                 paddingHorizontal: 10,
                 paddingRight: 16,
-                width: 400,
-                maxWidth: 400,
+                // width: 400,
+                // maxWidth: 400,
             },
             titleStyle: { flexGrow: 1, fontSize: 14 },
             symbolContainerStyle: {

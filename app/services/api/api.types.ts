@@ -145,6 +145,7 @@ export const mapToTrip: (tripDTO: TripDTO) => TripStoreSnapshot = tripDTO => {
     return {
         ...tripDTO,
         id: tripDTO.id.toString(),
+        title: tripDTO.title || "",
         todoMap: tripDTO.todolist.reduce((acc: { [key: string]: any }, todoDTO) => {
             if (todoDTO.id) acc[todoDTO.id?.toString()] = mapToTodo(todoDTO)
             return acc

@@ -308,8 +308,9 @@ const $outerContainerStyle: ViewStyle = {
 }
 const $innerContainerStyle: ViewStyle = {
     ...Platform.OS === 'web' ? {
-        width: 480,
-        maxWidth: 480,
+        // width: 480,
+        width: '100%',
+        // maxWidth: 480,
         flex: 1,
         backgroundColor: 'white',
         boxShadow: '0 0 20px #0000000d'

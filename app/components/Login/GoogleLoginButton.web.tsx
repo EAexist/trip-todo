@@ -34,7 +34,8 @@ export const GoogleLoginButton: FC<ButtonProps> = props => {
                 }}
                 size='large'
                 shape='pill'
-                width={400}
+                width={width}
+            // width={400}
             // width={width.toString()}
             />
         </View>
