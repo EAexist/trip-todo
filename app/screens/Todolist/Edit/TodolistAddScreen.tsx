@@ -5,8 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { FC, useCallback } from 'react'
 import { TodolistAddScreenBase } from './TodolistAddScreenBase'
 
-interface TodolistAddScreenProps
-    extends AuthenticatedStackScreenProps<'TodolistAdd'> {}
+interface TodolistAddScreenProps extends AuthenticatedStackScreenProps<'TodolistAdd'> {}
 
 export const TodolistAddScreen: FC<TodolistAddScreenProps> = observer(({}) => {
     const tripStore = useTripStore()
@@ -22,7 +21,7 @@ export const TodolistAddScreen: FC<TodolistAddScreenProps> = observer(({}) => {
     useHeader({
         rightActionTitle: '삭제',
         onRightPress: handleToDeleteScreenPress,
-        backNavigateProps: { name: 'Main' },
+        // backNavigateProps: { name: 'Main' },
         onBackPressBeforeNavigate: onBackPressBeforeNavigate,
     })
 

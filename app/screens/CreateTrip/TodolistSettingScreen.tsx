@@ -14,10 +14,10 @@ export const TodolistSettingScreen: FC<
     const fetchTodoPreset = useActionWithApiStatus(tripStore.fetchTodoPreset)
 
     useHeader({
-        backButtonShown: true,
-        backNavigateProps: {
-            name: 'TitleSetting',
-        },
+        // backButtonShown: true,
+        // backNavigateProps: {
+        //     name: 'TitleSetting',
+        // },
     })
 
     const [isLoaded, setIsLoaded] = useState(tripStore.todoPreset.length > 0)

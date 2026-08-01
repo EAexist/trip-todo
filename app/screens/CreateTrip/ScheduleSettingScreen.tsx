@@ -237,10 +237,10 @@ export const EditTripScheduleScreenBase: FC<EditScreenBaseProps> = ({
 
 export const TripScheduleSettingScreen: FC = () => {
     useHeader({
-        backButtonShown: true,
-        backNavigateProps: {
-            name: 'DestinationSetting',
-        },
+        // backButtonShown: true,
+        // backNavigateProps: {
+        //     name: 'DestinationSetting',
+        // },
     })
     return <EditTripScheduleScreenBase isInitialSettingScreen={true} />
 }
