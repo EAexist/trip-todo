@@ -18,12 +18,12 @@ export const RootStoreModel = types
         isSynced: types.optional(types.boolean, true),
     })
     .actions(withSetPropAction)
-    .views((self) => ({
+    .views(self => ({
         get isAuthenticated() {
             return self.userStore !== null
         },
     }))
-    .actions((self) => ({
+    .actions(self => ({
         ensureSync: flow(function* () {
             if (self.isSynced) return { success: true }
             const result = yield sync_db()
@@ -34,15 +34,21 @@ export const RootStoreModel = types
             return { success: true }
         }) as () => Promise<{
             success: boolean
-        }>
+        }>,
     }))
-    .actions((self) => ({
+    .actions(self => ({
         setUser: (userStore: UserStoreSnapshotIn) => {
             self.setProp('userStore', UserStoreModel.create(userStore))
         },
     }))
-    .actions((self) => ({
-        kakaoLogin: flow(function* ({ idToken, profile }: { idToken: string, profile: KakaoProfile }) {
+    .actions(self => ({
+        kakaoLogin: flow(function* ({
+            idToken,
+            profile,
+        }: {
+            idToken: string
+            profile: KakaoProfile
+        }) {
             return api.kakaoLogin(idToken, profile).then(response => {
                 if (response.kind === 'ok') {
                     self.setUser(response.data)
@@ -50,7 +56,11 @@ export const RootStoreModel = types
                 return response
             })
         }),
-        googleLogin: flow(function* ({ googleUser }: { googleUser: GoogleUserDTO }) {
+        googleLogin: flow(function* ({
+            googleUser,
+        }: {
+            googleUser: GoogleUserDTO
+        }) {
             return api.googleLogin(googleUser).then(response => {
                 if (response.kind == 'ok') {
                     self.setUser(response.data)
@@ -58,36 +68,44 @@ export const RootStoreModel = types
                 return response
             })
         }),
-        adminGoogleLoginWithIdToken: flow(function* ({ idToken }: { idToken: string }) {
-            const authRes: ApiResult<UserStoreSnapshotIn> = yield api.adminGoogleLoginWithIdToken(idToken)
+        adminGoogleLoginWithIdToken: flow(function* ({
+            idToken,
+        }: {
+            idToken: string
+        }) {
+            const authRes: ApiResult<UserStoreSnapshotIn> =
+                yield api.adminGoogleLoginWithIdToken(idToken)
             if (authRes.kind !== 'ok') return authRes
 
             self.setUser(authRes.data)
 
             if (self.userStore === null) {
-                throw new Error("Failed to initialize UserStore")
+                throw new Error('Failed to initialize UserStore')
             }
 
-            const quotaRes: ApiResult<void> = yield self.resourceQuotaStore.fetch()
+            const quotaRes: ApiResult<void> =
+                yield self.resourceQuotaStore.fetch()
             if (quotaRes.kind !== 'ok') return quotaRes
             return yield self.userStore.fetchActiveTrip()
         }),
         webBrowserLogin: flow(function* () {
-            const authResponse: ApiResult<UserStoreSnapshotIn> = yield api.webBrowserLogin()
+            const authResponse: ApiResult<UserStoreSnapshotIn> =
+                yield api.webBrowserLogin()
             if (authResponse.kind !== 'ok') return authResponse
 
             self.setUser(authResponse.data)
 
             if (self.userStore === null) {
-                throw new Error("Failed to initialize UserStore")
+                throw new Error('Failed to initialize UserStore')
             }
 
-            const quotaResponse: ApiResult<VoidFunction> = yield self.resourceQuotaStore.fetch()
+            const quotaResponse: ApiResult<VoidFunction> =
+                yield self.resourceQuotaStore.fetch()
             if (quotaResponse.kind !== 'ok') return quotaResponse
 
             const activeTripResponse = yield self.userStore.fetchActiveTrip()
-            if (activeTripResponse.kind !== 'ok') return activeTripResponse
-            return
+            return activeTripResponse
+            // if (activeTripResponse.kind !== 'ok') return activeTripResponse
         }),
         logout: flow(function* () {
             return yield withDbSync(self, async () => {
@@ -99,8 +117,8 @@ export const RootStoreModel = types
 /**
  * The RootStore instance.
  */
-export interface RootStore extends Instance<typeof RootStoreModel> { }
+export interface RootStore extends Instance<typeof RootStoreModel> {}
 /**
  * The data of a RootStore.
  */
-export interface RootStoreSnapshot extends SnapshotOut<typeof RootStoreModel> { }
+export interface RootStoreSnapshot extends SnapshotOut<typeof RootStoreModel> {}

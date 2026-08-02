@@ -30,11 +30,8 @@ const TripListItemSkeleton: FC = () => (
 export const TripListScreenBase: FC = observer(({}) => {
     const userStore = useUserStore()
     const tripStore = useTripStore()
-    const {
-        createTripWithApiStatus,
-        setActiveTripWithApiStatus,
-        fetchTripSummaryWithApiStatus,
-    } = useActionsWithApiStatus()
+    const { createTripWithApiStatus, setActiveTripWithApiStatus } =
+        useActionsWithApiStatus()
     const { navigateWithTrip } = useNavigate()
     const { t } = useLingui()
 
@@ -110,9 +107,6 @@ export const TripListScreenBase: FC = observer(({}) => {
 
     useFocusEffect(
         useCallback(() => {
-            // fetchTripSummaryWithApiStatus({}).then(() => {
-            //     setIsTripSummaryLoaded(true)
-            // })
             setIsTripSummaryLoaded(false)
             userStore.fetchTripSummary().then(() => {
                 setIsTripSummaryLoaded(true)
