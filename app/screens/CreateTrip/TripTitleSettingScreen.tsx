@@ -63,10 +63,10 @@ const TripTitleEditScreenBase: FC<EditScreenBaseProps> = ({
 
 export const TripTitleSettingScreen: FC = () => {
     useHeader({
-        backButtonShown: true,
-        backNavigateProps: {
-            name: 'ScheduleSetting',
-        },
+        // backButtonShown: true,
+        // backNavigateProps: {
+        //     name: 'ScheduleSetting',
+        // },
     })
     return <TripTitleEditScreenBase isInitialSettingScreen={true} />
 }
