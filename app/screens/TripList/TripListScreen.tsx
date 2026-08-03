@@ -16,6 +16,13 @@ export const TripListScreen: FC<
 const TripListGuard = observer(() => {
     const { activeTrip } = useUserStore()
 
+    useHeader({
+        backgroundColor: 'secondary',
+        rightActionTitle: '삭제',
+        onRightPress: () => navigate('TripDelete'),
+        centerComponent: <HeaderCenterTitle title={'여행 목록'} />,
+    })
+
     if (!activeTrip) {
         return (
             <LoadingScreen
@@ -27,13 +34,6 @@ const TripListGuard = observer(() => {
             />
         )
     }
-
-    useHeader({
-        backgroundColor: 'secondary',
-        rightActionTitle: '삭제',
-        onRightPress: () => navigate('TripDelete'),
-        centerComponent: <HeaderCenterTitle title={'여행 목록'} />,
-    })
 
     return <TripListScreenBase />
 })
