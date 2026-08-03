@@ -11,7 +11,7 @@
     Expo Universal Mobile App
     <br />
     <br />
-    <a href="https://travel-todo-git-staging-matchalab-project.vercel.app">View Demo</a>
+    <a href="https://travel-todo-demo.vercel.app">View Demo</a>
   </p>
 </div>
 
