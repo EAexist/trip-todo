@@ -6,10 +6,16 @@ module.exports = function (api) {
         plugins: [
             '@lingui/babel-plugin-lingui-macro',
             //   ['module:react-native-dotenv'],
-        ], env: {
+        ],
+        env: {
             production: {
-                plugins: ['transform-remove-console'],
+                plugins: [
+                    [
+                        'transform-remove-console',
+                        { exclude: ['error', 'warn'] },
+                    ],
+                ],
             },
-        }
+        },
     }
 }
